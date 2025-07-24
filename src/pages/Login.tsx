@@ -102,7 +102,7 @@ export default function Login() {
 					<Link
 						to={"/daftar"}
 						className="text-[#70B748] hover:text-green-600 font-medium">
-						masuk
+						daftar
 					</Link>
 				</p>
 			</div>
