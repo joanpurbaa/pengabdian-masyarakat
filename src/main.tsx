@@ -6,6 +6,7 @@ import "./index.css";
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const Quiz = lazy(() => import("./pages/Quiz"));
 
 const router = createBrowserRouter([
 	{
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
 	{
 		path: "/daftar",
 		element: <Register />,
+	},
+	{
+		path: "/quiz",
+		element: <Quiz />,
 	},
 ]);
 
