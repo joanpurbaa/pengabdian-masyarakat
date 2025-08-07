@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { lazy, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import Result from "./pages/Result";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
 	{
 		path: "/daftar",
 		element: <Register />,
+	},
+	{
+		path: "/result",
+		element: <Result />,
 	},
 ]);
 

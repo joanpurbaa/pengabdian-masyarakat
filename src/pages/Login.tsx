@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 export default function Login() {
 	const [activeTab, setActiveTab] = useState("warga");
@@ -7,6 +7,8 @@ export default function Login() {
 		email: "",
 		password: "",
 	});
+
+	const navigate = useNavigate();
 
 	const handleInputChange = (e: { target: { name: string; value: string } }) => {
 		const { name, value } = e.target;
@@ -17,7 +19,9 @@ export default function Login() {
 	};
 
 	const handleSubmit = () => {
-		console.log("Login form submitted:", { ...formData, userType: activeTab });
+		if (activeTab == "warga") {
+			navigate("/");
+		}
 	};
 
 	return (
