@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function Home() {
+	const navigate = useNavigate();
+
 	const [answers, setAnswers] = useState({
 		q1: "",
 		q2: "",
@@ -17,6 +20,8 @@ export default function Home() {
 
 	const handleSubmit = () => {
 		console.log("Jawaban:", answers);
+
+		navigate("/result");
 	};
 
 	return (
