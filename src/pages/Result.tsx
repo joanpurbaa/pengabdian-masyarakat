@@ -106,7 +106,7 @@ export default function Result() {
 		const tidakLabelY = centerY + Math.sin(tidakLabelAngle) * (radius + 50);
 
 		return (
-			<div className="relative w-[300px] h-[300px]">
+			<div className="relative w-[300px] h-[300px] z-10">
 				<svg width="300" height="300" className="transform -rotate-90">
 					{yaCount > 0 && (
 						<path d={yaPathData} fill="#70B748" stroke="white" strokeWidth="2" />
@@ -121,7 +121,7 @@ export default function Result() {
 
 				{yaCount > 0 && (
 					<div
-						className="absolute bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-semibold"
+						className="absolute bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-semibold z-20"
 						style={{
 							left: `${yaLabelX - 25}px`,
 							top: `${yaLabelY - 20}px`,
@@ -143,7 +143,7 @@ export default function Result() {
 
 				{tidakCount > 0 && (
 					<div
-						className="absolute bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-semibold"
+						className="absolute bg-gray-800 text-white px-3 py-2 rounded-lg text-sm font-semibold z-20"
 						style={{
 							left: `${tidakLabelX - 45}px`,
 							top: `${tidakLabelY - 20}px`,
@@ -175,39 +175,51 @@ export default function Result() {
 
 	return (
 		<>
-			<main>
-				<section className="grid grid-cols-12 items-center py-56">
-					<div className="col-start-3 col-end-6 space-y-3">
+			<main className="relative">
+				<img
+					className="fixed -z-10 -bottom-20 -right-20 w-[300px] lg:w-[500px]"
+					src="/berat.png"
+					alt=""
+				/>
+				<img
+					className="fixed -z-10 -bottom-10 -left-10 w-[100px] lg:w-[300px] scale-x-[-1]"
+					src="/berat.png"
+					alt=""
+				/>
+
+				<section className="relative z-10 flex flex-col lg:grid grid-cols-12 items-center px-5 sm:px-10 lg:px-0 py-20 lg:py-56 gap-20 lg:gap-0">
+					<div className="w-full flex flex-col items-start col-start-2 col-end-7 xl:col-end-6 2xl:col-start-3 2xl:col-end-6 space-y-3">
 						<div className="flex items-center text-zinc-800 gap-2">
-							<FileHeart className="w-10 h-10 text-zinc-800" />
-							<p className="text-2xl font-bold">Presentase depresi kamu</p>
+							<FileHeart className="w-6 sm:w-10 h-6 sm:h-10 text-zinc-800" />
+							<p className="text-lg sm:text-2xl font-bold">Presentase depresi kamu</p>
 						</div>
-						<h1 className="text-8xl font-bold text-red-400">BERAT</h1>
-						<p className="text-xl text-zinc-800">
+						<h1 className="text-5xl sm:text-8xl font-bold text-red-400">BERAT</h1>
+						<p className="text-base sm:text-xl text-zinc-800">
 							Kamu butuh bantuan dan itu nggak apa-apa. Coba hubungi tenaga profesional
 							atau cerita ke orang yang kamu percaya.
 						</p>
 					</div>
-					<div className="col-start-9 col-end-11 flex justify-center items-center">
+					<div className="w-full col-start-10 col-end-12 2xl:col-start-9 2xl:col-end-11 flex justify-center items-center">
 						<PieChart yaCount={yaCount} tidakCount={tidakCount} />
 					</div>
 				</section>
-				<section className="px-4 pb-20">
+
+				<section className="relative z-10 px-4 pb-20">
 					<div className="max-w-6xl mx-auto">
 						<div className="bg-white rounded-lg overflow-hidden shadow-lg">
 							<div className="bg-[#439017] text-white">
-								<div className="grid grid-cols-12 py-4 px-6">
+								<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
 									<div className="col-span-1 text-center font-semibold">No</div>
 									<div className="col-span-8 text-center font-semibold">Pertanyaan</div>
 									<div className="col-span-3 text-center font-semibold">Jawaban</div>
 								</div>
 							</div>
 
-							<div className="divide-y divide-gray-200">
+							<div className="bg-white divide-y divide-gray-200">
 								{questions.map((item, index) => (
 									<div
 										key={index}
-										className="grid grid-cols-12 py-4 px-6 hover:bg-gray-50">
+										className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50">
 										<div className="col-span-1 text-center text-gray-700">{item.no}</div>
 										<div className="col-span-8 text-gray-700 px-4">{item.question}</div>
 										<div className="col-span-3 text-center">
@@ -228,7 +240,7 @@ export default function Result() {
 						<div className="flex justify-end mt-8">
 							<button
 								onClick={() => handleRepeatTheQuiz()}
-								className="cursor-pointer bg-[#439017] hover:bg-green-600 text-white font-semibold px-8 py-3 rounded-lg transition-colors duration-200">
+								className="cursor-pointer bg-[#439017] hover:bg-green-600 text-white text-sm sm:text-base font-semibold px-8 py-3 rounded-lg transition-colors duration-200">
 								Ulangi kuesioner
 							</button>
 						</div>

@@ -112,7 +112,7 @@ export default function Home() {
 
 				<button
 					onClick={handleSubmit}
-					className="w-full bg-[#70B748] hover:bg-green-600 text-xs sm:text-base text-white font-medium py-3 px-4 rounded-lg mt-6 transition-colors">
+					className="cursor-pointer w-full bg-[#70B748] hover:bg-green-600 text-xs sm:text-base text-white font-medium py-3 px-4 rounded-lg mt-6 transition-colors">
 					Selesai
 				</button>
 			</div>
