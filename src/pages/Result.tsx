@@ -187,7 +187,7 @@ export default function Result() {
 					alt=""
 				/>
 
-				<section className="relative z-10 flex flex-col lg:grid grid-cols-12 items-center px-5 sm:px-10 lg:px-0 py-20 lg:py-56 gap-20 lg:gap-0">
+				<section className="relative z-10 flex flex-col lg:grid grid-cols-12 items-center px-5 sm:px-10 lg:px-0 py-10 sm:py-20 lg:py-56 gap-20 lg:gap-0">
 					<div className="w-full flex flex-col items-start col-start-2 col-end-7 xl:col-end-6 2xl:col-start-3 2xl:col-end-6 space-y-3">
 						<div className="flex items-center text-zinc-800 gap-2">
 							<FileHeart className="w-6 sm:w-10 h-6 sm:h-10 text-zinc-800" />
