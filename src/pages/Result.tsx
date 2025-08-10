@@ -177,12 +177,12 @@ export default function Result() {
 		<>
 			<main className="relative">
 				<img
-					className="fixed -z-10 -bottom-20 -right-20 w-[250px] lg:w-[500px]"
+					className="fixed -z-10 -bottom-10 sm:-bottom-20 -right-20 w-[250px] lg:w-[500px]"
 					src="/berat.png"
 					alt=""
 				/>
 				<img
-					className="fixed -z-10 -bottom-10 -left-10 w-[150px] lg:w-[300px] scale-x-[-1]"
+					className="fixed -z-10 -bottom-5 sm:-bottom-10 -left-10 w-[150px] lg:w-[300px] scale-x-[-1]"
 					src="/berat.png"
 					alt=""
 				/>
