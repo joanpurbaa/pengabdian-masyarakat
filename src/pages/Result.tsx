@@ -204,7 +204,7 @@ export default function Result() {
 					</div>
 				</section>
 
-				<section className="relative z-10 px-4 pb-20">
+				<section className="relative z-10 mt-20 px-4 pb-20">
 					<div className="max-w-6xl mx-auto">
 						<div className="bg-white rounded-lg overflow-hidden shadow-lg">
 							<div className="bg-[#439017] text-white">
