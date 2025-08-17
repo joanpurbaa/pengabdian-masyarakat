@@ -5,11 +5,11 @@ import { DoubleArrowIcon } from "../icon/doubleArrowIcon";
 import { RightArrowIcon } from "../icon/rightArrowIcon";
 import RWSection from "../components/admin/adminComponent/RWSection";
 import { Heart, UserIcon } from "lucide-react";
+import RTSection from "../components/admin/adminComponent/RTSection";
 
 export default function Admin() {
-	const location = useLocation();
-	const url = new URLSearchParams(location.search);
-	const panel = url.get("panel");
+	const location = useLocation().pathname;
+	const pathSegments = location.split("/").filter(Boolean);
 
 	const [responsiveSidebar, setResponsiveSidebar] = useState<boolean>(false);
 	const [showLogoutText, setShowLogoutText] = useState<boolean>(
@@ -18,8 +18,6 @@ export default function Admin() {
 	const [showMinimizeText, setShowMinimizeText] = useState<boolean>(
 		!responsiveSidebar
 	);
-
-	const userRole = localStorage.getItem("userRole");
 
 	function handleMobileResponsive() {
 		return responsiveSidebar
@@ -42,6 +40,22 @@ export default function Admin() {
 
 		return () => clearTimeout(delay);
 	}, [responsiveSidebar]);
+
+	const renderMainContent = () => {
+		if (pathSegments.length === 1 && pathSegments[0] === "admin") {
+			return <RWSection />;
+		}
+
+		if (
+			pathSegments.length === 2 &&
+			pathSegments[0] === "admin" &&
+			pathSegments[1].startsWith("rw")
+		) {
+			return <RTSection />;
+		}
+
+		return <RWSection />;
+	};
 
 	return (
 		<>
@@ -105,7 +119,7 @@ export default function Admin() {
 						className={`w-full overflow-y-auto bg-white ${
 							responsiveSidebar ? "col-span-11 w-full" : "col-span-10"
 						} flex flex-col gap-[20px] px-[20px] pt-28 pb-5`}>
-						{panel == "admin-manage" && userRole === "super-admin" && <RWSection />}
+						{renderMainContent()}
 					</main>
 				</section>
 			</section>

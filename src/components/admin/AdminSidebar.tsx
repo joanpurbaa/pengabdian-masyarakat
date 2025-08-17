@@ -8,9 +8,7 @@ export default function AdminSideBar({
 	responsiveSidebar: boolean;
 }) {
 	const [sectionLabel, setSectionLabel] = useState<boolean>(!responsiveSidebar);
-	const location = useLocation();
-	const url = new URLSearchParams(location.search);
-	const panel = url.get("panel");
+	const location = useLocation().pathname;
 
 	// Pake localStorage -> get role (admin/super-admin)
 	const userRole = localStorage.getItem("userRole");
@@ -34,10 +32,10 @@ export default function AdminSideBar({
 			{userRole === "super-admin" && (
 				<>
 					<hr className="border-white" />
-					<Link className="block" to={"/admin?panel=admin-manage"}>
+					<Link className="block" to={"/admin"}>
 						<li
 							className={`flex ${responsiveSidebar && "justify-center"} items-center ${
-								panel == "admin-manage"
+								location.split("/")[1] == "admin"
 									? "bg-[#439017] text-white text-base"
 									: "bg-transparent text-white text-base font-normal"
 							} gap-[20px] p-[10px] rounded-[8px]`}>
@@ -55,7 +53,7 @@ export default function AdminSideBar({
 			<Link className="block" to={"/admin?panel=about-us"}>
 				<li
 					className={`flex ${responsiveSidebar && "justify-center"} items-center ${
-						panel == "about-us"
+						location.split("/")[1] == "about-us"
 							? "bg-[#439017] text-white text-base"
 							: "bg-transparent text-white text-base font-normal"
 					} gap-[20px] p-[10px] rounded-[8px]`}>

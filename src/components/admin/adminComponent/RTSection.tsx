@@ -1,21 +1,20 @@
 import { useState } from "react";
-import { Link } from "react-router";
 
-export default function RWSection() {
+export default function RTSection() {
 	const [rwData] = useState([
-		{ id: "1", jumlahRT: 2, tingkatDepresi: 68 },
-		{ id: "2", jumlahRT: 2, tingkatDepresi: 30 },
-		{ id: "3", jumlahRT: 2, tingkatDepresi: 98 },
-		{ id: "4", jumlahRT: 2, tingkatDepresi: 17 },
-		{ id: "5", jumlahRT: 2, tingkatDepresi: 45 },
+		{ id: "RW 1", jumlahRT: 2, tingkatDepresi: 68 },
+		{ id: "RW 2", jumlahRT: 2, tingkatDepresi: 30 },
+		{ id: "RW 3", jumlahRT: 2, tingkatDepresi: 98 },
+		{ id: "RW 4", jumlahRT: 2, tingkatDepresi: 17 },
+		{ id: "RW 5", jumlahRT: 2, tingkatDepresi: 45 },
 	]);
 
-	const overallDepressionRate = 75;
+	const overallDepressionRate = 68;
 
 	return (
 		<>
 			<div className="bg-[#70B748] rounded-xl p-6 text-white relative overflow-hidden">
-				<h2 className="text-lg font-medium mb-2">Tingkat Depresi Disemua RW</h2>
+				<h2 className="text-lg font-medium mb-2">Tingkat Depresi Disemua RT</h2>
 				<div className="text-6xl font-bold mb-4">{overallDepressionRate}%</div>
 
 				<div className="absolute -right-10 -bottom-10">
@@ -45,7 +44,7 @@ export default function RWSection() {
 							<div
 								key={rw.id}
 								className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50">
-								<div className="col-span-3 text-gray-700 font-medium">RW {rw.id}</div>
+								<div className="col-span-3 text-gray-700 font-medium">{rw.id}</div>
 								<div className="col-span-3 text-center text-gray-700">
 									{rw.jumlahRT}
 								</div>
@@ -53,11 +52,9 @@ export default function RWSection() {
 									{rw.tingkatDepresi}%
 								</div>
 								<div className="col-span-3 text-center">
-									<Link to={`/admin/rw${rw.id}`}>
-										<button className="bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-											Lihat
-										</button>
-									</Link>
+									<button className="bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+										Lihat
+									</button>
 								</div>
 							</div>
 						))}

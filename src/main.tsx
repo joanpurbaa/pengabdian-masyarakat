@@ -27,6 +27,7 @@ const router = createBrowserRouter([
 		element: <Result />,
 	},
 	{ path: "/admin", element: <Admin /> },
+	{ path: "/admin/:rwId", element: <Admin /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
