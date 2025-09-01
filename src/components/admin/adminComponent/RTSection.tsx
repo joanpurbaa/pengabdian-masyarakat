@@ -1,12 +1,12 @@
 import { useState } from "react";
+import { Link } from "react-router";
 
-export default function RTSection() {
-	const [rwData] = useState([
-		{ id: "RW 1", jumlahRT: 2, tingkatDepresi: 68 },
-		{ id: "RW 2", jumlahRT: 2, tingkatDepresi: 30 },
-		{ id: "RW 3", jumlahRT: 2, tingkatDepresi: 98 },
-		{ id: "RW 4", jumlahRT: 2, tingkatDepresi: 17 },
-		{ id: "RW 5", jumlahRT: 2, tingkatDepresi: 45 },
+export default function RTSection({ rwId }: { rwId: string }) {
+	const [rtData] = useState([
+		{ id: "1", jumlahKeluarga: 3, tingkatDepresi: 50 },
+		{ id: "2", jumlahKeluarga: 11, tingkatDepresi: 72 },
+		{ id: "3", jumlahKeluarga: 8, tingkatDepresi: 45 },
+		{ id: "4", jumlahKeluarga: 6, tingkatDepresi: 38 },
 	]);
 
 	const overallDepressionRate = 68;
@@ -30,8 +30,10 @@ export default function RTSection() {
 				<div className="bg-white rounded-lg overflow-hidden shadow-lg">
 					<div className="bg-[#439017] text-white">
 						<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
-							<div className="col-span-3 font-semibold">Nama RW</div>
-							<div className="col-span-3 text-center font-semibold">Jumlah RT</div>
+							<div className="col-span-3 font-semibold">Nama RT</div>
+							<div className="col-span-3 text-center font-semibold">
+								Jumlah Keluarga
+							</div>
 							<div className="col-span-3 text-center font-semibold">
 								Tingkat Depresi
 							</div>
@@ -40,28 +42,44 @@ export default function RTSection() {
 					</div>
 
 					<div className="bg-white divide-y divide-gray-200">
-						{rwData.map((rw) => (
+						{rtData.map((rt) => (
 							<div
-								key={rw.id}
+								key={rt.id}
 								className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50">
-								<div className="col-span-3 text-gray-700 font-medium">{rw.id}</div>
+								<div className="col-span-3 text-gray-700 font-medium">RT {rt.id}</div>
 								<div className="col-span-3 text-center text-gray-700">
-									{rw.jumlahRT}
+									{rt.jumlahKeluarga}
 								</div>
 								<div className="col-span-3 text-center text-gray-700 font-medium">
-									{rw.tingkatDepresi}%
+									<span
+										className={`px-2 py-1 rounded-full ${
+											rt.tingkatDepresi >= 70
+												? "bg-red-100 text-red-800"
+												: rt.tingkatDepresi >= 40
+												? "bg-yellow-100 text-yellow-800"
+												: "bg-green-100 text-green-800"
+										}`}>
+										{rt.tingkatDepresi}%
+									</span>
 								</div>
 								<div className="col-span-3 text-center">
-									<button className="bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-										Lihat
-									</button>
+									<Link to={`/admin/rw${rwId}/rt${rt.id}`}>
+										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+											Lihat
+										</button>
+									</Link>
 								</div>
 							</div>
 						))}
 					</div>
 				</div>
 
-				<div className="mt-4 text-white font-medium">Data RW</div>
+				<div className="mt-4 text-white font-medium">
+					<Link to="/admin" className="hover:underline">
+						Data RW
+					</Link>{" "}
+					/ Data RW {rwId}
+				</div>
 			</div>
 		</>
 	);

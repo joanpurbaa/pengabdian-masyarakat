@@ -6,23 +6,18 @@ import { RightArrowIcon } from "../icon/rightArrowIcon";
 import RWSection from "../components/admin/adminComponent/RWSection";
 import { Heart, UserIcon } from "lucide-react";
 import RTSection from "../components/admin/adminComponent/RTSection";
+import KeluargaSection from "../components/admin/adminComponent/KeluargaSection";
 
 export default function Admin() {
 	const location = useLocation().pathname;
 	const pathSegments = location.split("/").filter(Boolean);
 
-	const [responsiveSidebar, setResponsiveSidebar] = useState<boolean>(false);
-	const [showLogoutText, setShowLogoutText] = useState<boolean>(
-		!responsiveSidebar
-	);
-	const [showMinimizeText, setShowMinimizeText] = useState<boolean>(
-		!responsiveSidebar
-	);
+	const [responsiveSidebar, setResponsiveSidebar] = useState(false);
+	const [showLogoutText, setShowLogoutText] = useState(!responsiveSidebar);
+	const [showMinimizeText, setShowMinimizeText] = useState(!responsiveSidebar);
 
 	function handleMobileResponsive() {
-		return responsiveSidebar
-			? setResponsiveSidebar(false)
-			: setResponsiveSidebar(true);
+		setResponsiveSidebar(!responsiveSidebar);
 	}
 
 	useEffect(() => {
@@ -51,7 +46,19 @@ export default function Admin() {
 			pathSegments[0] === "admin" &&
 			pathSegments[1].startsWith("rw")
 		) {
-			return <RTSection />;
+			const rwId = pathSegments[1].replace("rw", "");
+			return <RTSection rwId={rwId} />;
+		}
+
+		if (
+			pathSegments.length === 3 &&
+			pathSegments[0] === "admin" &&
+			pathSegments[1].startsWith("rw") &&
+			pathSegments[2].startsWith("rt")
+		) {
+			const rwId = pathSegments[1].replace("rw", "");
+			const rtId = pathSegments[2].replace("rt", "");
+			return <KeluargaSection rwId={rwId} rtId={rtId} />;
 		}
 
 		return <RWSection />;
@@ -79,7 +86,7 @@ export default function Admin() {
 						/>
 					</section>
 				</header>
-				<section className={`h-full flex bg-[#0B0D12]`}>
+				<section className="h-full flex bg-[#0B0D12]">
 					<aside
 						className={`transition-all ease-in-out duration-300 ${
 							responsiveSidebar ? "w-[100px]" : "w-[400px]"
@@ -107,7 +114,7 @@ export default function Admin() {
 								href="/masuk"
 								className={`flex items-center text-base lg:text-xl text-white font-normal ${
 									!responsiveSidebar && "border-[2px] border-white"
-								}  rounded-full px-[30px] lg:px-[60px] py-[8px] lg:py-[12px] gap-[10px]`}>
+								} rounded-full px-[30px] lg:px-[60px] py-[8px] lg:py-[12px] gap-[10px]`}>
 								{showLogoutText && "Logout"}
 								<div className="flex justify-center items-center border border-white border-full rounded-full w-[36px] h-[36px]">
 									<RightArrowIcon className="w-3 lg:w-5" fill="white" />

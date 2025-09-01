@@ -50,11 +50,22 @@ export default function RWSection() {
 									{rw.jumlahRT}
 								</div>
 								<div className="col-span-3 text-center text-gray-700 font-medium">
-									{rw.tingkatDepresi}%
+									<div className="col-span-2 text-center text-gray-700 font-medium">
+										<span
+											className={`px-2 py-1 rounded-full ${
+												rw.tingkatDepresi >= 70
+													? "bg-red-100 text-red-800"
+													: rw.tingkatDepresi >= 40
+													? "bg-yellow-100 text-yellow-800"
+													: "bg-green-100 text-green-800"
+											}`}>
+											{rw.tingkatDepresi}%
+										</span>
+									</div>
 								</div>
 								<div className="col-span-3 text-center">
 									<Link to={`/admin/rw${rw.id}`}>
-										<button className="bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
 									</Link>
