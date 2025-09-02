@@ -7,6 +7,8 @@ import RWSection from "../components/admin/adminComponent/RWSection";
 import { Heart, UserIcon } from "lucide-react";
 import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/KeluargaSection";
+import DetailKeluargaSection from "../components/admin/adminComponent/DetailKeluargaSection";
+import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
 
 export default function Admin() {
 	const location = useLocation().pathname;
@@ -59,6 +61,40 @@ export default function Admin() {
 			const rwId = pathSegments[1].replace("rw", "");
 			const rtId = pathSegments[2].replace("rt", "");
 			return <KeluargaSection rwId={rwId} rtId={rtId} />;
+		}
+
+		if (
+			pathSegments.length === 4 &&
+			pathSegments[0] === "admin" &&
+			pathSegments[1].startsWith("rw") &&
+			pathSegments[2].startsWith("rt") &&
+			pathSegments[3].startsWith("keluarga")
+		) {
+			const rwId = pathSegments[1].replace("rw", "");
+			const rtId = pathSegments[2].replace("rt", "");
+			const keluargaId = pathSegments[3].replace("keluarga", "");
+			return (
+				<DetailKeluargaSection rwId={rwId} rtId={rtId} keluargaId={keluargaId} />
+			);
+		}
+
+		if (
+			pathSegments.length === 5 &&
+			pathSegments[0] === "admin" &&
+			pathSegments[1].startsWith("rw") &&
+			pathSegments[2].startsWith("rt") &&
+			pathSegments[3].startsWith("keluarga")
+		) {
+			const rwId = pathSegments[1].replace("rw", "");
+			const rtId = pathSegments[2].replace("rt", "");
+			const keluargaId = pathSegments[3].replace("keluarga", "");
+			return (
+				<DetailAnggotaKeluargaSection
+					rwId={rwId}
+					rtId={rtId}
+					keluargaId={keluargaId}
+				/>
+			);
 		}
 
 		return <RWSection />;
