@@ -5,10 +5,12 @@ export default function DetailAnggotaKeluargaSection({
 	rwId,
 	rtId,
 	keluargaId,
+	anggotaName,
 }: {
 	rwId: string;
 	rtId: string;
 	keluargaId: string;
+	anggotaName: string;
 }) {
 	const location = useLocation().pathname;
 	const pathSegments = location.split("/").filter(Boolean);
@@ -115,22 +117,22 @@ export default function DetailAnggotaKeluargaSection({
 						Data RW
 					</Link>{" "}
 					/{" "}
-					<Link to={`/admin/rw${rwId}`} className="hover:underline">
-						Data RW {rwId}
+					<Link to={`/admin/${rwId}`} className="hover:underline">
+						Data {rwId}
 					</Link>{" "}
 					/{" "}
-					<Link to={`/admin/rw${rwId}/rt${rtId}`} className="hover:underline">
-						Data RT {rtId}
+					<Link to={`/admin/${rwId}/${rtId}`} className="hover:underline">
+						Data {rtId}
 					</Link>{" "}
 					/{" "}
 					<Link
-						to={`/admin/rw${rwId}/rt${rtId}/keluarga${keluargaData.id}`}
+						to={`/admin/${rwId}/${rtId}/${keluargaData.id}`}
 						className="hover:underline">
 						Keluarga {keluargaData.kepalaKeluarga}
 					</Link>{" "}
 					/{" "}
 					<Link
-						to={`/admin/rw${rwId}/rt${rtId}/keluarga${keluargaData.id}`}
+						to={`/admin/${rwId}/${rtId}/${keluargaData.id}`}
 						className="hover:underline">
 						{anggotaDetail?.nama}
 					</Link>

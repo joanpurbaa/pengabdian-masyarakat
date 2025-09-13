@@ -91,7 +91,7 @@ export default function KeluargaSection({
 									</span>
 								</div>
 								<div className="col-span-4 text-center">
-									<Link to={`/admin/rw${rwId}/rt${rtId}/keluarga${keluarga.id}`}>
+									<Link to={`/admin/${rwId}/${rtId}/keluarga${keluarga.id}`}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
@@ -107,11 +107,11 @@ export default function KeluargaSection({
 						Data RW
 					</Link>{" "}
 					/
-					<Link to={`/admin/rw${rwId}`} className="hover:underline">
+					<Link to={`/admin/${rwId}`} className="hover:underline">
 						{" "}
-						Data RW {rwId}
+						Data {rwId}
 					</Link>{" "}
-					/ Data RT {rtId}
+					/ Data {rtId}
 				</div>
 			</div>
 		</>

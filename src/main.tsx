@@ -2,12 +2,12 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { lazy, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import Result from "./pages/Result";
-import Admin from "./pages/Admin";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
+const Admin = lazy(() => import("./pages/Admin"));
+const Result = lazy(() => import("./pages/Result"));
 
 const router = createBrowserRouter([
 	{
@@ -26,11 +26,26 @@ const router = createBrowserRouter([
 		path: "/result",
 		element: <Result />,
 	},
-	{ path: "/admin", element: <Admin /> },
-	{ path: "/admin/:rwId", element: <Admin /> },
-	{ path: "/admin/:rwId/:rtId", element: <Admin /> },
-	{ path: "/admin/:rwId/:rtId/:keluargaId", element: <Admin /> },
-	{ path: "/admin/:rwId/:rtId/:keluargaId/:anggotaName", element: <Admin /> },
+	{
+		path: "/admin",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/:rwId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/:rwId/:rtId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/:rwId/:rtId/:keluargaId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/:rwId/:rtId/:keluargaId/:anggotaName",
+		element: <Admin />,
+	},
 ]);
 
 createRoot(document.getElementById("root")!).render(

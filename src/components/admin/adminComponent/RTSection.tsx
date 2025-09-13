@@ -63,7 +63,7 @@ export default function RTSection({ rwId }: { rwId: string }) {
 									</span>
 								</div>
 								<div className="col-span-3 text-center">
-									<Link to={`/admin/rw${rwId}/rt${rt.id}`}>
+									<Link to={`/admin/${rwId}/rt${rt.id}`}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
@@ -78,7 +78,7 @@ export default function RTSection({ rwId }: { rwId: string }) {
 					<Link to="/admin" className="hover:underline">
 						Data RW
 					</Link>{" "}
-					/ Data RW {rwId}
+					/ {rwId}
 				</div>
 			</div>
 		</>

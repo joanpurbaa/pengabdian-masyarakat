@@ -74,7 +74,7 @@ export default function DetailKeluargaSection({
 								</div>
 								<div className="col-span-3 text-center">
 									<Link
-										to={`/admin/rw${rwId}/rt${rtId}/keluarga${keluargaId}/${anggota.nama.replace(
+										to={`/admin/${rwId}/${rtId}/${keluargaId}/${anggota.nama.replace(
 											/\s+/g,
 											"-"
 										)}-${anggota.id}`}>
@@ -93,16 +93,16 @@ export default function DetailKeluargaSection({
 						Data RW
 					</Link>{" "}
 					/{" "}
-					<Link to={`/admin/rw${rwId}`} className="hover:underline">
-						Data RW {rwId}
+					<Link to={`/admin/${rwId}`} className="hover:underline">
+						Data {rwId}
 					</Link>{" "}
 					/{" "}
-					<Link to={`/admin/rw${rwId}/rt${rtId}`} className="hover:underline">
-						Data RT {rtId}
+					<Link to={`/admin/${rwId}/${rtId}`} className="hover:underline">
+						Data {rtId}
 					</Link>{" "}
 					/{" "}
 					<Link
-						to={`/admin/rw${rwId}/rt${rtId}/keluarga${keluargaData.id}`}
+						to={`/admin/${rwId}/${rtId}/${keluargaData.id}`}
 						className="hover:underline">
 						Keluarga {keluargaData.kepalaKeluarga}
 					</Link>

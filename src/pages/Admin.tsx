@@ -1,4 +1,4 @@
-import { useLocation } from "react-router";
+import { useLocation, useSearchParams } from "react-router";
 import AdminSidebar from "../components/admin/AdminSidebar";
 import { useEffect, useState } from "react";
 import { DoubleArrowIcon } from "../icon/doubleArrowIcon";
@@ -9,10 +9,13 @@ import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/KeluargaSection";
 import DetailKeluargaSection from "../components/admin/adminComponent/DetailKeluargaSection";
 import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
+import KelolaRwRt from "../components/admin/adminComponent/KelolaRwRt";
 
 export default function Admin() {
 	const location = useLocation().pathname;
+	const [searchParams] = useSearchParams();
 	const pathSegments = location.split("/").filter(Boolean);
+	const currentPanel = searchParams.get("panel");
 
 	const [responsiveSidebar, setResponsiveSidebar] = useState(false);
 	const [showLogoutText, setShowLogoutText] = useState(!responsiveSidebar);
@@ -39,60 +42,45 @@ export default function Admin() {
 	}, [responsiveSidebar]);
 
 	const renderMainContent = () => {
-		if (pathSegments.length === 1 && pathSegments[0] === "admin") {
+		if (currentPanel === "kelola-rw-rt") {
+			return <KelolaRwRt />;
+		}
+
+		if (pathSegments.length === 1) {
 			return <RWSection />;
 		}
 
-		if (
-			pathSegments.length === 2 &&
-			pathSegments[0] === "admin" &&
-			pathSegments[1].startsWith("rw")
-		) {
-			const rwId = pathSegments[1].replace("rw", "");
+		if (pathSegments.length === 2) {
+			const rwId = pathSegments[1];
 			return <RTSection rwId={rwId} />;
 		}
 
-		if (
-			pathSegments.length === 3 &&
-			pathSegments[0] === "admin" &&
-			pathSegments[1].startsWith("rw") &&
-			pathSegments[2].startsWith("rt")
-		) {
-			const rwId = pathSegments[1].replace("rw", "");
-			const rtId = pathSegments[2].replace("rt", "");
+		if (pathSegments.length === 3) {
+			const rwId = pathSegments[1];
+			const rtId = pathSegments[2];
 			return <KeluargaSection rwId={rwId} rtId={rtId} />;
 		}
 
-		if (
-			pathSegments.length === 4 &&
-			pathSegments[0] === "admin" &&
-			pathSegments[1].startsWith("rw") &&
-			pathSegments[2].startsWith("rt") &&
-			pathSegments[3].startsWith("keluarga")
-		) {
-			const rwId = pathSegments[1].replace("rw", "");
-			const rtId = pathSegments[2].replace("rt", "");
-			const keluargaId = pathSegments[3].replace("keluarga", "");
+		if (pathSegments.length === 4) {
+			const rwId = pathSegments[1];
+			const rtId = pathSegments[2];
+			const keluargaId = pathSegments[3];
 			return (
 				<DetailKeluargaSection rwId={rwId} rtId={rtId} keluargaId={keluargaId} />
 			);
 		}
 
-		if (
-			pathSegments.length === 5 &&
-			pathSegments[0] === "admin" &&
-			pathSegments[1].startsWith("rw") &&
-			pathSegments[2].startsWith("rt") &&
-			pathSegments[3].startsWith("keluarga")
-		) {
-			const rwId = pathSegments[1].replace("rw", "");
-			const rtId = pathSegments[2].replace("rt", "");
-			const keluargaId = pathSegments[3].replace("keluarga", "");
+		if (pathSegments.length === 5) {
+			const rwId = pathSegments[1];
+			const rtId = pathSegments[2];
+			const keluargaId = pathSegments[3];
+			const anggotaName = pathSegments[4];
 			return (
 				<DetailAnggotaKeluargaSection
 					rwId={rwId}
 					rtId={rtId}
 					keluargaId={keluargaId}
+					anggotaName={anggotaName}
 				/>
 			);
 		}
