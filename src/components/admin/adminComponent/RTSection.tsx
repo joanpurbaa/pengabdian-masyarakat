@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 export default function RTSection({ rwId }: { rwId: string }) {
+	const location = useLocation();
+	const currentSection = location.pathname.split("/")[2];
+
 	const [rtData] = useState([
 		{ id: "1", jumlahKeluarga: 3, tingkatDepresi: 50 },
 		{ id: "2", jumlahKeluarga: 11, tingkatDepresi: 72 },
@@ -63,7 +66,7 @@ export default function RTSection({ rwId }: { rwId: string }) {
 									</span>
 								</div>
 								<div className="col-span-3 text-center">
-									<Link to={`/admin/${rwId}/rt${rt.id}`}>
+									<Link to={`/admin/${currentSection}/${rwId}/rt${rt.id}`}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>

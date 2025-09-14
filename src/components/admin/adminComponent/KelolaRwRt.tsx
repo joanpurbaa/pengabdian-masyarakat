@@ -103,7 +103,7 @@ export default function KelolaRwRt() {
 											<td className="py-4 px-6">
 												<Link
 													to={"/admin?panel=kelola-rw-rt/rw1"}
-													className="cursor-pointer bg-[#70B748] hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+													className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 													Lihat
 												</Link>
 											</td>

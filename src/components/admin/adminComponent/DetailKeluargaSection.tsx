@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 export default function DetailKeluargaSection({
 	rwId,
@@ -10,6 +10,9 @@ export default function DetailKeluargaSection({
 	rtId: string;
 	keluargaId: string;
 }) {
+	const location = useLocation();
+	const currentSection = location.pathname.split("/")[2];
+
 	const [keluargaData] = useState({
 		id: keluargaId,
 		kepalaKeluarga: "Asep Purnomo",
@@ -74,7 +77,7 @@ export default function DetailKeluargaSection({
 								</div>
 								<div className="col-span-3 text-center">
 									<Link
-										to={`/admin/${rwId}/${rtId}/${keluargaId}/${anggota.nama.replace(
+										to={`/admin/${currentSection}/${rwId}/${rtId}/${keluargaId}/${anggota.nama.replace(
 											/\s+/g,
 											"-"
 										)}-${anggota.id}`}>

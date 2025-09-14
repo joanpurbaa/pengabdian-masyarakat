@@ -64,7 +64,7 @@ export default function RWSection() {
 									</div>
 								</div>
 								<div className="col-span-3 text-center">
-									<Link to={`/admin/rw${rw.id}`}>
+									<Link to={`/admin/responden/rw${rw.id}`}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>

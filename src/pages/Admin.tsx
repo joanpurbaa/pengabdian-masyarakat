@@ -1,4 +1,4 @@
-import { useLocation, useSearchParams } from "react-router";
+import { useLocation } from "react-router";
 import AdminSidebar from "../components/admin/AdminSidebar";
 import { useEffect, useState } from "react";
 import { DoubleArrowIcon } from "../icon/doubleArrowIcon";
@@ -13,9 +13,7 @@ import KelolaRwRt from "../components/admin/adminComponent/KelolaRwRt";
 
 export default function Admin() {
 	const location = useLocation().pathname;
-	const [searchParams] = useSearchParams();
 	const pathSegments = location.split("/").filter(Boolean);
-	const currentPanel = searchParams.get("panel");
 
 	const [responsiveSidebar, setResponsiveSidebar] = useState(false);
 	const [showLogoutText, setShowLogoutText] = useState(!responsiveSidebar);
@@ -42,47 +40,58 @@ export default function Admin() {
 	}, [responsiveSidebar]);
 
 	const renderMainContent = () => {
-		if (currentPanel === "kelola-rw-rt") {
-			return <KelolaRwRt />;
+		const currentSection = pathSegments[1];
+
+		if (currentSection === "kelola-rw-rt") {
+			if (pathSegments.length === 2) {
+				return <KelolaRwRt />;
+			}
+			if (pathSegments.length === 3) {
+				const rwId = pathSegments[2];
+				return <RTSection rwId={rwId} />;
+			}
+			if (pathSegments.length === 4) {
+				const rwId = pathSegments[2];
+				const rtId = pathSegments[3];
+				return <KeluargaSection rwId={rwId} rtId={rtId} />;
+			}
 		}
 
-		if (pathSegments.length === 1) {
-			return <RWSection />;
-		}
-
-		if (pathSegments.length === 2) {
-			const rwId = pathSegments[1];
-			return <RTSection rwId={rwId} />;
-		}
-
-		if (pathSegments.length === 3) {
-			const rwId = pathSegments[1];
-			const rtId = pathSegments[2];
-			return <KeluargaSection rwId={rwId} rtId={rtId} />;
-		}
-
-		if (pathSegments.length === 4) {
-			const rwId = pathSegments[1];
-			const rtId = pathSegments[2];
-			const keluargaId = pathSegments[3];
-			return (
-				<DetailKeluargaSection rwId={rwId} rtId={rtId} keluargaId={keluargaId} />
-			);
-		}
-
-		if (pathSegments.length === 5) {
-			const rwId = pathSegments[1];
-			const rtId = pathSegments[2];
-			const keluargaId = pathSegments[3];
-			const anggotaName = pathSegments[4];
-			return (
-				<DetailAnggotaKeluargaSection
-					rwId={rwId}
-					rtId={rtId}
-					keluargaId={keluargaId}
-					anggotaName={anggotaName}
-				/>
-			);
+		if (currentSection === "responden") {
+			if (pathSegments.length === 2) {
+				return <RWSection />;
+			}
+			if (pathSegments.length === 3) {
+				const rwId = pathSegments[2];
+				return <RTSection rwId={rwId} />;
+			}
+			if (pathSegments.length === 4) {
+				const rwId = pathSegments[2];
+				const rtId = pathSegments[3];
+				return <KeluargaSection rwId={rwId} rtId={rtId} />;
+			}
+			if (pathSegments.length === 5) {
+				const rwId = pathSegments[2];
+				const rtId = pathSegments[3];
+				const keluargaId = pathSegments[4];
+				return (
+					<DetailKeluargaSection rwId={rwId} rtId={rtId} keluargaId={keluargaId} />
+				);
+			}
+			if (pathSegments.length === 6) {
+				const rwId = pathSegments[2];
+				const rtId = pathSegments[3];
+				const keluargaId = pathSegments[4];
+				const anggotaName = pathSegments[5];
+				return (
+					<DetailAnggotaKeluargaSection
+						rwId={rwId}
+						rtId={rtId}
+						keluargaId={keluargaId}
+						anggotaName={anggotaName}
+					/>
+				);
+			}
 		}
 
 		return <RWSection />;

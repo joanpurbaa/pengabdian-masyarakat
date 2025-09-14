@@ -27,23 +27,35 @@ const router = createBrowserRouter([
 		element: <Result />,
 	},
 	{
-		path: "/admin",
+		path: "/admin/responden",
 		element: <Admin />,
 	},
 	{
-		path: "/admin/:rwId",
+		path: "/admin/responden/:rwId",
 		element: <Admin />,
 	},
 	{
-		path: "/admin/:rwId/:rtId",
+		path: "/admin/responden/:rwId/:rtId",
 		element: <Admin />,
 	},
 	{
-		path: "/admin/:rwId/:rtId/:keluargaId",
+		path: "/admin/responden/:rwId/:rtId/:keluargaId",
 		element: <Admin />,
 	},
 	{
-		path: "/admin/:rwId/:rtId/:keluargaId/:anggotaName",
+		path: "/admin/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/kelola-rw-rt",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/kelola-rw-rt/:rwId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin/kelola-rw-rt/:rwId/:rtId",
 		element: <Admin />,
 	},
 ]);
