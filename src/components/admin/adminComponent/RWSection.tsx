@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 export default function RWSection() {
+	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
+
 	const [rwData] = useState([
 		{ id: "1", jumlahRT: 2, tingkatDepresi: 68 },
 		{ id: "2", jumlahRT: 2, tingkatDepresi: 30 },
@@ -64,7 +66,12 @@ export default function RWSection() {
 									</div>
 								</div>
 								<div className="col-span-3 text-center">
-									<Link to={`/admin/responden/rw${rw.id}`}>
+									<Link
+										to={
+											pathSegments[0] == "admin"
+												? `/admin/responden/rw${rw.id}`
+												: `/admin-medis/responden/rw${rw.id}`
+										}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
@@ -75,7 +82,17 @@ export default function RWSection() {
 					</div>
 				</div>
 
-				<div className="mt-4 text-white font-medium">Data RW</div>
+				<div className="mt-4 text-white font-medium">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/responden`
+								: `/admin-medis/responden`
+						}
+						className="hover:underline">
+						Data RW
+					</Link>{" "}
+				</div>
 			</div>
 		</>
 	);

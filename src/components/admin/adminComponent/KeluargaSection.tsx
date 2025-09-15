@@ -10,6 +10,7 @@ export default function KeluargaSection({
 }) {
 	const location = useLocation();
 	const currentSection = location.pathname.split("/")[2];
+	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 
 	const [keluargaData] = useState([
 		{
@@ -60,13 +61,13 @@ export default function KeluargaSection({
 					<div className="bg-[#439017] text-white">
 						<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
 							<div className="col-span-4 font-semibold">Kepala Keluarga</div>
-							<div className="col-span-2 text-center font-semibold">Jumlah</div>
 							<div className="col-span-2 text-center font-semibold">
+								Jumlah Anggota Keluarga
+							</div>
+							<div className="col-span-3 text-center font-semibold">
 								Tingkat Depresi
 							</div>
-							<div className="col-span-4 text-center font-semibold">
-								Lihat Keluarga
-							</div>
+							<div className="col-span-3 text-center font-semibold">Lihat</div>
 						</div>
 					</div>
 
@@ -81,7 +82,7 @@ export default function KeluargaSection({
 								<div className="col-span-2 text-center text-gray-700">
 									{keluarga.jumlahAnggota}
 								</div>
-								<div className="col-span-2 text-center text-gray-700 font-medium">
+								<div className="col-span-3 text-center text-gray-700 font-medium">
 									<span
 										className={`px-2 py-1 rounded-full ${
 											keluarga.tingkatDepresi >= 70
@@ -93,9 +94,13 @@ export default function KeluargaSection({
 										{keluarga.tingkatDepresi}%
 									</span>
 								</div>
-								<div className="col-span-4 text-center">
+								<div className="col-span-3 text-center">
 									<Link
-										to={`/admin/${currentSection}/${rwId}/${rtId}/keluarga${keluarga.id}`}>
+										to={
+											pathSegments[0] == "admin"
+												? `/admin/${currentSection}/${rwId}/${rtId}/keluarga${keluarga.id}`
+												: `/admin-medis/${currentSection}/${rwId}/${rtId}/keluarga${keluarga.id}`
+										}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
@@ -107,15 +112,35 @@ export default function KeluargaSection({
 				</div>
 
 				<div className="mt-4 text-white font-medium">
-					<Link to="/admin" className="hover:underline">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/responden`
+								: `/admin-medis/responden`
+						}
+						className="hover:underline">
 						Data RW
 					</Link>{" "}
-					/
-					<Link to={`/admin/${rwId}`} className="hover:underline">
-						{" "}
+					/{" "}
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/${currentSection}/${rwId}`
+								: `/admin-medis/${currentSection}/${rwId}`
+						}
+						className="hover:underline">
 						Data {rwId}
 					</Link>{" "}
-					/ Data {rtId}
+					/{" "}
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/${currentSection}/${rwId}/${rtId}`
+								: `/admin-medis/${currentSection}/${rwId}/${rtId}`
+						}
+						className="hover:underline">
+						Data {rtId}
+					</Link>
 				</div>
 			</div>
 		</>

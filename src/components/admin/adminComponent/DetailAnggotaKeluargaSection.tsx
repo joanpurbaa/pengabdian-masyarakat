@@ -12,8 +12,8 @@ export default function DetailAnggotaKeluargaSection({
 	keluargaId: string;
 	anggotaName: string;
 }) {
-	const location = useLocation().pathname;
-	const pathSegments = location.split("/").filter(Boolean);
+	const currentSection = useLocation().pathname.split("/")[2];
+	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 	const lastSegment = pathSegments[pathSegments.length - 1];
 	const anggotaId = lastSegment.split("-").pop();
 
@@ -75,7 +75,7 @@ export default function DetailAnggotaKeluargaSection({
 				</div>
 			</div>
 
-			<div className="bg-[#70B748] rounded-xl p-6 mt-4">
+			<div className="flex flex-col bg-[#70B748] rounded-xl p-6 mt-4 gap-5">
 				<div className="bg-white rounded-lg overflow-hidden shadow-lg">
 					<div className="bg-[#439017] text-white">
 						<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
@@ -112,30 +112,63 @@ export default function DetailAnggotaKeluargaSection({
 					</div>
 				</div>
 
-				<div className="mt-4 text-white font-medium">
-					<Link to="/admin" className="hover:underline">
-						Data RW
-					</Link>{" "}
-					/{" "}
-					<Link to={`/admin/${rwId}`} className="hover:underline">
-						Data {rwId}
-					</Link>{" "}
-					/{" "}
-					<Link to={`/admin/${rwId}/${rtId}`} className="hover:underline">
-						Data {rtId}
-					</Link>{" "}
-					/{" "}
-					<Link
-						to={`/admin/${rwId}/${rtId}/${keluargaData.id}`}
-						className="hover:underline">
-						Keluarga {keluargaData.kepalaKeluarga}
-					</Link>{" "}
-					/{" "}
-					<Link
-						to={`/admin/${rwId}/${rtId}/${keluargaData.id}`}
-						className="hover:underline">
-						{anggotaDetail?.nama}
-					</Link>
+				<div className="flex justify-between items-center">
+					<div className="mt-4 text-white font-medium">
+						<Link
+							to={
+								pathSegments[0] == "admin"
+									? `/admin/responden`
+									: `/admin-medis/responden`
+							}
+							className="hover:underline">
+							Data RW
+						</Link>{" "}
+						/{" "}
+						<Link
+							to={
+								pathSegments[0] == "admin"
+									? `/admin/${currentSection}/${rwId}`
+									: `/admin-medis/${currentSection}/${rwId}`
+							}
+							className="hover:underline">
+							Data {rwId}
+						</Link>{" "}
+						/{" "}
+						<Link
+							to={
+								pathSegments[0] == "admin"
+									? `/admin/${currentSection}/${rwId}/${rtId}`
+									: `/admin-medis/${currentSection}/${rwId}/${rtId}`
+							}
+							className="hover:underline">
+							Data {rtId}
+						</Link>{" "}
+						/{" "}
+						<Link
+							to={
+								pathSegments[0] == "admin"
+									? `/admin/${currentSection}/${rwId}/${rtId}/${keluargaId}`
+									: `/admin-medis/${currentSection}/${rwId}/${rtId}/${keluargaId}`
+							}
+							className="hover:underline">
+							Keluarga {keluargaData.kepalaKeluarga}
+						</Link>{" "}
+						/{" "}
+						<Link
+							to={
+								pathSegments[0] == "admin"
+									? `/admin/${currentSection}/${rwId}/${rtId}/${keluargaId}/${anggotaName}`
+									: `/admin-medis/${currentSection}/${rwId}/${rtId}/${keluargaId}/${anggotaName}`
+							}
+							className="hover:underline">
+							{anggotaDetail?.nama}
+						</Link>
+					</div>
+					{pathSegments[0] !== "admin" && (
+						<div className="bg-[#439017] text-white p-3 rounded-md">
+							Lihat detail kuisioner
+						</div>
+					)}
 				</div>
 			</div>
 		</>

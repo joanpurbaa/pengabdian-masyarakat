@@ -10,8 +10,8 @@ export default function DetailKeluargaSection({
 	rtId: string;
 	keluargaId: string;
 }) {
-	const location = useLocation();
-	const currentSection = location.pathname.split("/")[2];
+	const currentSection = useLocation().pathname.split("/")[2];
+	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 
 	const [keluargaData] = useState({
 		id: keluargaId,
@@ -51,7 +51,7 @@ export default function DetailKeluargaSection({
 							<div className="col-span-3 text-center font-semibold">
 								Tingkat Depresi
 							</div>
-							<div className="col-span-3 text-center font-semibold">Lihat Detail</div>
+							<div className="col-span-3 text-center font-semibold">Lihat</div>
 						</div>
 					</div>
 
@@ -77,10 +77,16 @@ export default function DetailKeluargaSection({
 								</div>
 								<div className="col-span-3 text-center">
 									<Link
-										to={`/admin/${currentSection}/${rwId}/${rtId}/${keluargaId}/${anggota.nama.replace(
-											/\s+/g,
-											"-"
-										)}-${anggota.id}`}>
+										to={
+											pathSegments[0] == "admin"
+												? `/admin/${currentSection}/${rwId}/${rtId}/${keluargaId}/${anggota.nama.replace(
+														/\s+/g,"-"
+												  )}-${anggota.id}`
+												: `/admin-medis/${currentSection}/${rwId}/${rtId}/${keluargaId}/${anggota.nama.replace(
+														/\s+/g,
+														"-"
+												  )}-${anggota.id}`
+										}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
@@ -92,20 +98,42 @@ export default function DetailKeluargaSection({
 				</div>
 
 				<div className="mt-4 text-white font-medium">
-					<Link to="/admin" className="hover:underline">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/responden`
+								: `/admin-medis/responden`
+						}
+						className="hover:underline">
 						Data RW
 					</Link>{" "}
 					/{" "}
-					<Link to={`/admin/${rwId}`} className="hover:underline">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/${currentSection}/${rwId}`
+								: `/admin-medis/${currentSection}/${rwId}`
+						}
+						className="hover:underline">
 						Data {rwId}
 					</Link>{" "}
 					/{" "}
-					<Link to={`/admin/${rwId}/${rtId}`} className="hover:underline">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/${currentSection}/${rwId}/${rtId}`
+								: `/admin-medis/${currentSection}/${rwId}/${rtId}`
+						}
+						className="hover:underline">
 						Data {rtId}
 					</Link>{" "}
 					/{" "}
 					<Link
-						to={`/admin/${rwId}/${rtId}/${keluargaData.id}`}
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/${currentSection}/${rwId}/${rtId}/${keluargaId}`
+								: `/admin-medis/${currentSection}/${rwId}/${rtId}/${keluargaId}`
+						}
 						className="hover:underline">
 						Keluarga {keluargaData.kepalaKeluarga}
 					</Link>

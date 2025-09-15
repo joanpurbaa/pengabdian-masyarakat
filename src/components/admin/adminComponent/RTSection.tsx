@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router";
 
 export default function RTSection({ rwId }: { rwId: string }) {
-	const location = useLocation();
-	const currentSection = location.pathname.split("/")[2];
+	const currentSection = useLocation().pathname.split("/")[2];
+	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 
 	const [rtData] = useState([
 		{ id: "1", jumlahKeluarga: 3, tingkatDepresi: 50 },
@@ -66,7 +66,12 @@ export default function RTSection({ rwId }: { rwId: string }) {
 									</span>
 								</div>
 								<div className="col-span-3 text-center">
-									<Link to={`/admin/${currentSection}/${rwId}/rt${rt.id}`}>
+									<Link
+										to={
+											pathSegments[0] == "admin"
+												? `/admin/${currentSection}/${rwId}/rt${rt.id}`
+												: `/admin-medis/${currentSection}/${rwId}/rt${rt.id}`
+										}>
 										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
 											Lihat
 										</button>
@@ -78,10 +83,25 @@ export default function RTSection({ rwId }: { rwId: string }) {
 				</div>
 
 				<div className="mt-4 text-white font-medium">
-					<Link to="/admin" className="hover:underline">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/responden`
+								: `/admin-medis/responden`
+						}
+						className="hover:underline">
 						Data RW
 					</Link>{" "}
-					/ {rwId}
+					/{" "}
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/${currentSection}/${rwId}`
+								: `/admin-medis/${currentSection}/${rwId}`
+						}
+						className="hover:underline">
+						Data {rwId}
+					</Link>
 				</div>
 			</div>
 		</>

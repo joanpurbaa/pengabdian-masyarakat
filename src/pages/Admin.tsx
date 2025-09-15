@@ -9,8 +9,8 @@ import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/KeluargaSection";
 import DetailKeluargaSection from "../components/admin/adminComponent/DetailKeluargaSection";
 import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
-import KelolaRwRt from "../components/admin/adminComponent/KelolaRw";
-import KelolaRt from "../components/admin/adminComponent/KelolaRt";
+import KelolaRwRt from "../components/admin/adminComponent/KelolaRwSection";
+import KelolaRt from "../components/admin/adminComponent/KelolaRtsection";
 
 export default function Admin() {
 	const location = useLocation().pathname;

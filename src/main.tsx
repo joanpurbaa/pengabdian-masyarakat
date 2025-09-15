@@ -58,6 +58,30 @@ const router = createBrowserRouter([
 		path: "/admin/kelola-rw/:rwId/:rtId",
 		element: <Admin />,
 	},
+	{
+		path: "/admin-medis/responden",
+		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/responden/:rwId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/responden/:rwId/:rtId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/kuisioner",
+		element: <Admin />,
+	},
 ]);
 
 createRoot(document.getElementById("root")!).render(
