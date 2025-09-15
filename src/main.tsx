@@ -47,15 +47,15 @@ const router = createBrowserRouter([
 		element: <Admin />,
 	},
 	{
-		path: "/admin/kelola-rw-rt",
+		path: "/admin/kelola-rw",
 		element: <Admin />,
 	},
 	{
-		path: "/admin/kelola-rw-rt/:rwId",
+		path: "/admin/kelola-rw/:rwId",
 		element: <Admin />,
 	},
 	{
-		path: "/admin/kelola-rw-rt/:rwId/:rtId",
+		path: "/admin/kelola-rw/:rwId/:rtId",
 		element: <Admin />,
 	},
 ]);

@@ -44,10 +44,10 @@ export default function AdminSideBar({
 				</li>
 			</Link>
 			<hr className="border-white" />
-			<Link className="block" to={"/admin/kelola-rw-rt"}>
+			<Link className="block" to={"/admin/kelola-rw"}>
 				<li
 					className={`flex ${responsiveSidebar && "justify-center"} items-center ${
-						currentSection === "kelola-rw-rt"
+						currentSection === "kelola-rw"
 							? "bg-[#439017] text-white text-base"
 							: "bg-transparent text-white text-base font-normal"
 					} gap-[20px] p-[10px] rounded-[8px]`}>

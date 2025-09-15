@@ -9,7 +9,8 @@ import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/KeluargaSection";
 import DetailKeluargaSection from "../components/admin/adminComponent/DetailKeluargaSection";
 import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
-import KelolaRwRt from "../components/admin/adminComponent/KelolaRwRt";
+import KelolaRwRt from "../components/admin/adminComponent/KelolaRw";
+import KelolaRt from "../components/admin/adminComponent/KelolaRt";
 
 export default function Admin() {
 	const location = useLocation().pathname;
@@ -42,13 +43,13 @@ export default function Admin() {
 	const renderMainContent = () => {
 		const currentSection = pathSegments[1];
 
-		if (currentSection === "kelola-rw-rt") {
+		if (currentSection === "kelola-rw") {
 			if (pathSegments.length === 2) {
 				return <KelolaRwRt />;
 			}
 			if (pathSegments.length === 3) {
 				const rwId = pathSegments[2];
-				return <RTSection rwId={rwId} />;
+				return <KelolaRt rwId={rwId} />;
 			}
 			if (pathSegments.length === 4) {
 				const rwId = pathSegments[2];
