@@ -101,23 +101,18 @@ export default function Admin() {
 	return (
 		<>
 			<section className="h-screen flex flex-col overflow-hidden">
-				<header className="fixed w-full bg-[#70B748] text-white flex justify-between items-center p-[20px] px-[40px]">
+				<header className="fixed w-full bg-[#70B748] text-white flex justify-between items-center p-[20px]">
 					<section>
 						<a className="flex items-center space-x-4 cursor-pointer" href="/">
 							<Heart className="fill-white w-10 h-10" />
 							<div className="text-base lg:text-[24px] font-semibold">Abdimas</div>
 						</a>
 					</section>
-					<section className="flex items-center gap-[15px] md:gap-[30px]">
+					<section className="flex justify-end items-center gap-[15px] md:gap-[30px]">
 						<div className="flex items-center gap-3">
 							<h3 className="text-base lg:text-xl font-medium">Sodikin</h3>
 							<UserIcon className="w-7 h-7" />
 						</div>
-						<img
-							className="w-[56px]"
-							src="/assets/logo/business-units/ltw-logo.webp"
-							alt=""
-						/>
 					</section>
 				</header>
 				<section className="h-full flex bg-[#0B0D12]">
