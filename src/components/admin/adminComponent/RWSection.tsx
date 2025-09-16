@@ -16,9 +16,11 @@ export default function RWSection() {
 
 	return (
 		<>
-			<div className="bg-[#70B748] rounded-xl p-6 text-white relative overflow-hidden">
-				<h2 className="text-lg font-medium mb-2">Tingkat Depresi Disemua RW</h2>
-				<div className="text-6xl font-bold mb-4">{overallDepressionRate}%</div>
+			<div className="bg-gray-100 flex flex-col justify-center rounded-xl p-6 relative overflow-hidden shadow-sm">
+				<div className="text-[#439017] text-6xl font-bold">
+					{overallDepressionRate}%
+					<p className="mt-2 text-lg">Warga Tidak Sehat Secara Mental Disemua RW</p>
+				</div>
 
 				<div className="absolute -right-10 -bottom-10">
 					<img
@@ -29,9 +31,9 @@ export default function RWSection() {
 				</div>
 			</div>
 
-			<div className="bg-[#70B748] rounded-xl p-6">
-				<div className="bg-white rounded-lg overflow-hidden shadow-lg">
-					<div className="bg-[#439017] text-white">
+			<div className="bg-gray-100 rounded-xl p-6 shadow-sm">
+				<div className="bg-white rounded-lg overflow-hidden shadow-sm">
+					<div className="bg-[#70B748] text-white">
 						<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
 							<div className="col-span-3 font-semibold">Nama RW</div>
 							<div className="col-span-3 text-center font-semibold">Jumlah RT</div>
@@ -82,7 +84,7 @@ export default function RWSection() {
 					</div>
 				</div>
 
-				<div className="mt-4 text-white font-medium">
+				<div className="mt-4 text-gray-600 font-medium">
 					<Link
 						to={
 							pathSegments[0] == "admin"

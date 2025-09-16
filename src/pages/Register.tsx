@@ -260,7 +260,7 @@ export default function Register() {
 					<div className="space-y-4">{renderContent()}</div>
 					<p className="text-center text-xs sm:text-base text-gray-600 mt-4">
 						Sudah punya akun?{" "}
-						<a href="#" className="text-[#70B748] hover:text-green-600 font-medium">
+						<a href="/masuk" className="text-[#70B748] hover:text-green-600 font-medium">
 							masuk
 						</a>
 					</p>

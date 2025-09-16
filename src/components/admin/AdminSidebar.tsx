@@ -28,7 +28,7 @@ export default function AdminSideBar({
 
 	return (
 		<>
-			<hr className="border-white" />
+			<hr className="border-zinc-300" />
 			<Link
 				className="block"
 				to={
@@ -37,8 +37,8 @@ export default function AdminSideBar({
 				<li
 					className={`flex ${responsiveSidebar && "justify-center"} items-center ${
 						currentSection === "responden"
-							? "bg-[#439017] text-white text-base"
-							: "bg-transparent text-white text-base font-normal"
+							? "bg-[#70B748] text-white text-base"
+							: "bg-transparent text-zinc-600 hover:text-[#70B748] text-base font-normal"
 					} gap-[20px] p-[10px] rounded-[8px]`}>
 					<FileHeartIcon className="w-6 h-6" />
 					{sectionLabel && (
@@ -48,7 +48,7 @@ export default function AdminSideBar({
 					)}
 				</li>
 			</Link>
-			<hr className="border-white" />
+			<hr className="border-zinc-300" />
 			<Link
 				className="block"
 				to={
@@ -57,8 +57,8 @@ export default function AdminSideBar({
 				<li
 					className={`flex ${responsiveSidebar && "justify-center"} items-center ${
 						currentSection === "kelola-rw" || currentSection === "kuisioner"
-							? "bg-[#439017] text-white text-base"
-							: "bg-transparent text-white text-base font-normal"
+							? "bg-[#70B748] text-white text-base"
+							: "bg-transparent text-zinc-600 hover:text-[#70B748] text-base font-normal"
 					} gap-[20px] p-[10px] rounded-[8px]`}>
 					{pathSegments[0] === "admin" ? (
 						<HouseIcon className="w-6 h-6" />
