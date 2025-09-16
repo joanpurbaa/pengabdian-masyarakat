@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import { lazy, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import MedisResult from "./pages/MedisResult";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
 	{
 		path: "/admin-medis/kuisioner",
 		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/result",
+		element: <MedisResult />,
 	},
 ]);
 

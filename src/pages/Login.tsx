@@ -94,12 +94,23 @@ export default function Login() {
 							required
 						/>
 					</div>
-					<button
-						type="button"
-						onClick={handleSubmit}
-						className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium">
-						Masuk
-					</button>
+					<Link
+						to={
+							activeTab === "warga"
+								? "/"
+								: activeTab === "admin"
+								? "/admin/responden"
+								: activeTab === "medis"
+								? "/admin-medis/responden"
+								: "/"
+						}>
+						<button
+							type="button"
+							onClick={handleSubmit}
+							className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium">
+							Masuk
+						</button>
+					</Link>
 				</div>
 				<p className="text-center text-xs sm:text-base text-gray-600 mt-4">
 					Belum punya akun?{" "}

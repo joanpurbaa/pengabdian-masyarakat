@@ -165,9 +165,11 @@ export default function DetailAnggotaKeluargaSection({
 						</Link>
 					</div>
 					{pathSegments[0] !== "admin" && (
-						<div className="bg-[#439017] text-white p-3 rounded-md">
-							Lihat detail kuisioner
-						</div>
+						<Link to={"/admin-medis/result"}>
+							<div className="bg-[#439017] text-white p-3 rounded-md">
+								Lihat detail kuisioner
+							</div>
+						</Link>
 					)}
 				</div>
 			</div>
