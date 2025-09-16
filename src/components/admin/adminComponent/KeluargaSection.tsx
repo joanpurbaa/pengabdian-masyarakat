@@ -16,8 +16,8 @@ export default function KeluargaSection({
 		{
 			id: "1",
 			nama: "Budi Santoso",
-			nim: "2023001",
-			statusPernikahan: "Menikah",
+			nik: "1504851201230001",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Petani",
 			jumlahAnak: 2,
 			pengulangan: 1,
@@ -27,8 +27,8 @@ export default function KeluargaSection({
 		{
 			id: "2",
 			nama: "Siti Aminah",
-			nim: "2023002",
-			statusPernikahan: "Menikah",
+			nik: "2203880305230002",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Ibu Rumah Tangga",
 			jumlahAnak: 3,
 			pengulangan: 2,
@@ -38,8 +38,8 @@ export default function KeluargaSection({
 		{
 			id: "3",
 			nama: "Ahmad Wijaya",
-			nim: "2023003",
-			statusPernikahan: "Menikah",
+			nik: "0812851104230003",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Guru",
 			jumlahAnak: 1,
 			pengulangan: 1,
@@ -49,8 +49,8 @@ export default function KeluargaSection({
 		{
 			id: "4",
 			nama: "Rini Susanti",
-			nim: "2023004",
-			statusPernikahan: "Menikah",
+			nik: "1509890207230004",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Pedagang",
 			jumlahAnak: 4,
 			pengulangan: 3,
@@ -60,8 +60,8 @@ export default function KeluargaSection({
 		{
 			id: "5",
 			nama: "Dewi Lestari",
-			nim: "2023005",
-			statusPernikahan: "Belum Menikah",
+			nik: "2401950308230005",
+			statusPernikahan: "Belum",
 			pekerjaan: "Mahasiswa",
 			jumlahAnak: 0,
 			pengulangan: 1,
@@ -71,8 +71,8 @@ export default function KeluargaSection({
 		{
 			id: "6",
 			nama: "Joko Prasetyo",
-			nim: "2023006",
-			statusPernikahan: "Menikah",
+			nik: "1206821109230006",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Karyawan",
 			jumlahAnak: 2,
 			pengulangan: 2,
@@ -82,8 +82,8 @@ export default function KeluargaSection({
 		{
 			id: "7",
 			nama: "Maya Sari",
-			nim: "2023007",
-			statusPernikahan: "Menikah",
+			nik: "2708860410230007",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Dokter",
 			jumlahAnak: 1,
 			pengulangan: 1,
@@ -93,8 +93,8 @@ export default function KeluargaSection({
 		{
 			id: "8",
 			nama: "Rahmat Hidayat",
-			nim: "2023008",
-			statusPernikahan: "Menikah",
+			nik: "0511801205230008",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Sopir",
 			jumlahAnak: 3,
 			pengulangan: 2,
@@ -104,8 +104,8 @@ export default function KeluargaSection({
 		{
 			id: "9",
 			nama: "Fitri Handayani",
-			nim: "2023009",
-			statusPernikahan: "Menikah",
+			nik: "1812870306230009",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Perawat",
 			jumlahAnak: 2,
 			pengulangan: 3,
@@ -115,8 +115,8 @@ export default function KeluargaSection({
 		{
 			id: "10",
 			nama: "Andi Saputra",
-			nim: "2023010",
-			statusPernikahan: "Belum Menikah",
+			nik: "2209961107230010",
+			statusPernikahan: "Belum",
 			pekerjaan: "Mahasiswa",
 			jumlahAnak: 0,
 			pengulangan: 1,
@@ -126,8 +126,8 @@ export default function KeluargaSection({
 		{
 			id: "11",
 			nama: "Nur Aisyah",
-			nim: "2023011",
-			statusPernikahan: "Menikah",
+			nik: "1405900208230011",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Guru",
 			jumlahAnak: 2,
 			pengulangan: 1,
@@ -137,8 +137,8 @@ export default function KeluargaSection({
 		{
 			id: "12",
 			nama: "Eko Setiawan",
-			nim: "2023012",
-			statusPernikahan: "Menikah",
+			nik: "0903781309230012",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Nelayan",
 			jumlahAnak: 4,
 			pengulangan: 2,
@@ -148,7 +148,7 @@ export default function KeluargaSection({
 		{
 			id: "13",
 			nama: "Lina Marlina",
-			nim: "2023013",
+			nik: "3110830410230013",
 			statusPernikahan: "Janda",
 			pekerjaan: "Pedagang",
 			jumlahAnak: 2,
@@ -159,8 +159,8 @@ export default function KeluargaSection({
 		{
 			id: "14",
 			nama: "Agus Kurniawan",
-			nim: "2023014",
-			statusPernikahan: "Menikah",
+			nik: "1607791105230014",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Karyawan",
 			jumlahAnak: 3,
 			pengulangan: 2,
@@ -170,8 +170,8 @@ export default function KeluargaSection({
 		{
 			id: "15",
 			nama: "Rosa Melati",
-			nim: "2023015",
-			statusPernikahan: "Belum Menikah",
+			nik: "2504980206230015",
+			statusPernikahan: "Belum",
 			pekerjaan: "Mahasiswa",
 			jumlahAnak: 0,
 			pengulangan: 1,
@@ -181,8 +181,8 @@ export default function KeluargaSection({
 		{
 			id: "16",
 			nama: "Hendra Gunawan",
-			nim: "2023016",
-			statusPernikahan: "Menikah",
+			nik: "1302811307230016",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Petani",
 			jumlahAnak: 2,
 			pengulangan: 2,
@@ -192,8 +192,8 @@ export default function KeluargaSection({
 		{
 			id: "17",
 			nama: "Yuni Kartika",
-			nim: "2023017",
-			statusPernikahan: "Menikah",
+			nik: "2906880108230017",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Perawat",
 			jumlahAnak: 1,
 			pengulangan: 1,
@@ -203,8 +203,8 @@ export default function KeluargaSection({
 		{
 			id: "18",
 			nama: "Doni Pratama",
-			nim: "2023018",
-			statusPernikahan: "Menikah",
+			nik: "1108841209230018",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Sopir",
 			jumlahAnak: 3,
 			pengulangan: 3,
@@ -214,8 +214,8 @@ export default function KeluargaSection({
 		{
 			id: "19",
 			nama: "Sari Indah",
-			nim: "2023019",
-			statusPernikahan: "Menikah",
+			nik: "0712870310230019",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Ibu Rumah Tangga",
 			jumlahAnak: 4,
 			pengulangan: 2,
@@ -225,8 +225,8 @@ export default function KeluargaSection({
 		{
 			id: "20",
 			nama: "Bayu Nugroho",
-			nim: "2023020",
-			statusPernikahan: "Menikah",
+			nik: "2001851011230020",
+			statusPernikahan: "Sudah",
 			pekerjaan: "Karyawan",
 			jumlahAnak: 2,
 			pengulangan: 1,
@@ -259,8 +259,8 @@ export default function KeluargaSection({
 						<div className="bg-[#70B748] text-white">
 							<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
 								<div className="col-span-2 font-semibold">Nama</div>
-								<div className="col-span-1 font-semibold">NIM</div>
-								<div className="col-span-2 font-semibold">Status</div>{" "}
+								<div className="col-span-2 font-semibold">NIK</div>
+								<div className="col-span-1 font-semibold">Pernikahan</div>{" "}
 								<div className="col-span-2 font-semibold">Kerja</div>{" "}
 								<div className="col-span-1 font-semibold">Anak</div>{" "}
 								<div className="col-span-1 font-semibold">Ulang</div>{" "}
@@ -278,8 +278,8 @@ export default function KeluargaSection({
 									<div className="col-span-2 text-gray-700 font-medium">
 										{keluarga.nama}
 									</div>
-									<div className="col-span-1 text-gray-700">{keluarga.nim}</div>
-									<div className="col-span-2 text-gray-700">
+									<div className="col-span-2 text-gray-700">{keluarga.nik}</div>
+									<div className="col-span-1 text-gray-700">
 										{keluarga.statusPernikahan}
 									</div>
 									<div className="col-span-2 text-gray-700">{keluarga.pekerjaan}</div>
