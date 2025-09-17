@@ -6,7 +6,7 @@ import { RightArrowIcon } from "../icon/rightArrowIcon";
 import RWSection from "../components/admin/adminComponent/RWSection";
 import { Heart, UserIcon } from "lucide-react";
 import RTSection from "../components/admin/adminComponent/RTSection";
-import KeluargaSection from "../components/admin/adminComponent/KeluargaSection";
+import KeluargaSection from "../components/admin/adminComponent/WargaSection";
 import DetailKeluargaSection from "../components/admin/adminComponent/DetailKeluargaSection";
 import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
 import KelolaRwRt from "../components/admin/adminComponent/KelolaRwSection";
