@@ -7,7 +7,6 @@ import RWSection from "../components/admin/adminComponent/RWSection";
 import { Heart, UserIcon } from "lucide-react";
 import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/WargaSection";
-import DetailKeluargaSection from "../components/admin/adminComponent/DetailKeluargaSection";
 import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
 import KelolaRwRt from "../components/admin/adminComponent/KelolaRwSection";
 import KelolaRt from "../components/admin/adminComponent/KelolaRtsection";
@@ -75,14 +74,6 @@ export default function Admin() {
 				const rwId = pathSegments[2];
 				const rtId = pathSegments[3];
 				const keluargaId = pathSegments[4];
-				return (
-					<DetailKeluargaSection rwId={rwId} rtId={rtId} keluargaId={keluargaId} />
-				);
-			}
-			if (pathSegments.length === 6) {
-				const rwId = pathSegments[2];
-				const rtId = pathSegments[3];
-				const keluargaId = pathSegments[4];
 				const anggotaName = pathSegments[5];
 				return (
 					<DetailAnggotaKeluargaSection
@@ -101,7 +92,7 @@ export default function Admin() {
 	return (
 		<>
 			<section className="h-screen flex flex-col overflow-hidden">
-				<header className="z-10 fixed w-full bg-gray-100 text-white flex justify-between items-center p-[20px] shadow-xs">
+				<header className="z-20 fixed w-full bg-gray-100 text-white flex justify-between items-center p-[20px] shadow-xs">
 					<section>
 						<a className="flex items-center space-x-4 cursor-pointer" href="/">
 							<Heart className="fill-[#70B748] text-[#70B748] w-10 h-10" />
@@ -112,7 +103,9 @@ export default function Admin() {
 					</section>
 					<section className="flex justify-end items-center gap-[15px] md:gap-[30px]">
 						<div className="flex items-center gap-3">
-							<h3 className="text-zinc-800 text-base lg:text-xl font-medium">Sodikin</h3>
+							<h3 className="text-zinc-800 text-base lg:text-xl font-medium">
+								Sodikin
+							</h3>
 							<UserIcon className="w-7 h-7 text-zinc-800" />
 						</div>
 					</section>

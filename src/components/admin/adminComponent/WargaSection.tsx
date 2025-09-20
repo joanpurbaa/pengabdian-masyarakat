@@ -1,5 +1,6 @@
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router";
 
 export default function WargaSection({
 	rwId = "RW01",
@@ -11,6 +12,8 @@ export default function WargaSection({
 	const [filterPopUp, setFilterPopUp] = useState(false);
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
+	const currentSection = useLocation().pathname.split("/")[2];
+	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 
 	const popupRef = useRef<HTMLDivElement>(null);
 
@@ -206,7 +209,7 @@ export default function WargaSection({
 	return (
 		<>
 			<div className="space-y-6">
-				<div className="bg-gray-100 rounded-xl p-6 text-white relative overflow-hidden shadow-sm">
+				<div className="bg-gray-100 rounded-xl p-6 relative overflow-hidden shadow-sm">
 					<div className="text-[#439017] text-6xl font-bold">
 						{overallDepressionRate}%
 						<p className="mt-2 text-lg">Warga Tidak Sehat Secara Mental</p>
@@ -321,9 +324,22 @@ export default function WargaSection({
 											</span>
 										</div>
 										<div className="col-span-3 text-center">
-											<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-												Lihat
-											</button>
+											<Link
+												to={
+													pathSegments[0] == "admin"
+														? `/admin/${currentSection}/${rwId}/${rtId}/${keluarga.nama.replace(
+																/\s+/g,
+																"-"
+														  )}-${keluarga.id}`
+														: `/admin-medis/${currentSection}/${rwId}/${rtId}/${keluarga.nama.replace(
+																/\s+/g,
+																"-"
+														  )}-${keluarga.id}`
+												}>
+												<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+													Lihat
+												</button>
+											</Link>
 										</div>
 									</div>
 								))
@@ -331,18 +347,45 @@ export default function WargaSection({
 						</div>
 					</div>
 
-					<div className="w-full mt-4 text-gray-600 font-medium text-start">
-						<a href="#" className="hover:underline">
-							Data RW
-						</a>{" "}
-						/{" "}
-						<a href="#" className="hover:underline">
-							Data {rwId}
-						</a>{" "}
-						/{" "}
-						<a href="#" className="hover:underline">
-							Data {rtId}
-						</a>
+					<div className="w-full flex justify-between items-center">
+						<div className="mt-4 text-gray-600 font-medium">
+							<Link
+								to={
+									pathSegments[0] == "admin"
+										? `/admin/responden`
+										: `/admin-medis/responden`
+								}
+								className="hover:underline">
+								Data RW
+							</Link>{" "}
+							/{" "}
+							<Link
+								to={
+									pathSegments[0] == "admin"
+										? `/admin/${currentSection}/${rwId}`
+										: `/admin-medis/${currentSection}/${rwId}`
+								}
+								className="hover:underline">
+								Data {rwId}
+							</Link>{" "}
+							/{" "}
+							<Link
+								to={
+									pathSegments[0] == "admin"
+										? `/admin/${currentSection}/${rwId}/${rtId}`
+										: `/admin-medis/${currentSection}/${rwId}/${rtId}`
+								}
+								className="hover:underline">
+								Data {rtId}
+							</Link>{" "}
+						</div>
+						{pathSegments[0] !== "admin" && (
+							<Link to={"/admin-medis/result"}>
+								<div className="bg-[#439017] text-white p-3 rounded-md">
+									Lihat detail kuisioner
+								</div>
+							</Link>
+						)}
 					</div>
 				</div>
 			</div>
