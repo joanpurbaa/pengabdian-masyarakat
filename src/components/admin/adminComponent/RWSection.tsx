@@ -1,43 +1,144 @@
-import { useState } from "react";
+import { Filter } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
+import {
+	filterRWByDateRange,
+	calculateRWStats,
+	calculateOverallStats,
+} from "../../../utils/filterUtils";
+import dataRW from "../../../data/data";
+import MentalHealthChart from "../../MentalHealthChart";
 
 export default function RWSection() {
+	const [filterPopUp, setFilterPopUp] = useState(false);
+	const [startDate, setStartDate] = useState("");
+	const [endDate, setEndDate] = useState("");
 	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 
-	const [rwData] = useState([
-		{ id: "1", jumlahRT: 2, tingkatDepresi: 68 },
-		{ id: "2", jumlahRT: 2, tingkatDepresi: 30 },
-		{ id: "3", jumlahRT: 2, tingkatDepresi: 98 },
-		{ id: "4", jumlahRT: 2, tingkatDepresi: 17 },
-		{ id: "5", jumlahRT: 2, tingkatDepresi: 45 },
-	]);
+	const popupRef = useRef<HTMLDivElement>(null);
 
-	const overallDepressionRate = 75;
+	useEffect(() => {
+		function handleClickOutside(event: MouseEvent) {
+			if (popupRef.current && !popupRef.current.contains(event.target as Node)) {
+				setFilterPopUp(false);
+			}
+		}
+		if (filterPopUp) {
+			document.addEventListener("mousedown", handleClickOutside);
+		}
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, [filterPopUp]);
+
+	const filteredRWData = filterRWByDateRange(dataRW, startDate, endDate);
+	const rwStats = filteredRWData.map(calculateRWStats);
+	const { overallDepressionRate } = calculateOverallStats(filteredRWData);
+
+	const handleApplyFilter = () => {
+		setFilterPopUp(false);
+	};
+
+	const handleClearFilter = () => {
+		setStartDate("");
+		setEndDate("");
+		setFilterPopUp(false);
+	};
 
 	return (
 		<>
-			<div className="bg-gray-100 flex flex-col justify-center rounded-xl p-6 relative overflow-hidden shadow-sm">
-				<div className="text-[#439017] text-6xl font-bold">
-					{overallDepressionRate}%
-					<p className="mt-2 text-lg">Warga Tidak Sehat Secara Mental Disemua RW</p>
+			<MentalHealthChart
+				overallDepressionRate={overallDepressionRate}
+				title={""}
+				subtitle={""}
+			/>
+			<div className="bg-gray-100 rounded-xl p-6 shadow-sm relative">
+				<div className="flex justify-between items-center pb-3">
+					<Link
+						to={
+							pathSegments[0] == "admin"
+								? `/admin/responden`
+								: `/admin-medis/responden`
+						}
+						className="hover:underline text-gray-600 font-medium">
+						Data RW
+					</Link>
+					<div className="flex justify-end gap-2">
+						{(startDate || endDate) && (
+							<button
+								onClick={handleClearFilter}
+								className="cursor-pointer bg-gray-500 hover:bg-gray-600 text-white flex items-center gap-2 p-3 rounded-md transition-colors">
+								<p className="font-medium">Clear Filter</p>
+							</button>
+						)}
+						<button
+							onClick={() => setFilterPopUp(!filterPopUp)}
+							className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white flex items-center gap-2 p-3 rounded-md transition-colors">
+							<p className="font-medium">Filter</p>
+							<Filter />
+						</button>
+					</div>
 				</div>
 
-				<div className="absolute -right-10 -bottom-10">
-					<img
-						src="/berat.png"
-						alt="Angry face"
-						className="w-44 h-44 object-contain"
-					/>
-				</div>
-			</div>
+				{filterPopUp && (
+					<div
+						ref={popupRef}
+						className="w-[300px] absolute top-20 right-6 bg-white shadow-2xl p-5 rounded-md z-10">
+						<p className="font-semibold">
+							Filter berdasarkan tanggal submit kuisioner warga
+						</p>
+						<ul className="mt-5 flex flex-col gap-5">
+							<li className="flex flex-col gap-3">
+								<label htmlFor="start">Dari Tanggal</label>
+								<input
+									className="border border-gray-400 p-2 rounded-md"
+									type="date"
+									id="start"
+									value={startDate}
+									onChange={(e) => {
+										setStartDate(e.target.value);
+										if (endDate && e.target.value > endDate) {
+											setEndDate("");
+										}
+									}}
+								/>
+							</li>
+							<li className="flex flex-col gap-3">
+								<label htmlFor="end">Sampai Tanggal</label>
+								<input
+									className="border border-gray-400 p-2 rounded-md"
+									type="date"
+									id="end"
+									value={endDate}
+									min={startDate}
+									onChange={(e) => setEndDate(e.target.value)}
+								/>
+							</li>
+							<li className="flex gap-2">
+								<button
+									type="button"
+									onClick={handleClearFilter}
+									className="cursor-pointer flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold p-2 rounded-md transition-colors">
+									Clear
+								</button>
+								<button
+									type="button"
+									onClick={handleApplyFilter}
+									className="cursor-pointer flex-1 bg-[#70B748] hover:bg-[#5a9639] text-white font-semibold p-2 rounded-md transition-colors">
+									Terapkan
+								</button>
+							</li>
+						</ul>
+					</div>
+				)}
 
-			<div className="bg-gray-100 rounded-xl p-6 shadow-sm">
 				<div className="bg-white rounded-lg overflow-hidden shadow-sm">
 					<div className="bg-[#70B748] text-white">
 						<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
 							<div className="col-span-3 font-semibold">Nama RW</div>
-							<div className="col-span-3 text-center font-semibold">Jumlah RT</div>
-							<div className="col-span-3 text-center font-semibold">
+							<div className="col-span-2 text-center font-semibold">Jumlah RT</div>
+							<div className="col-span-2 text-center font-semibold">Total Warga</div>
+							<div className="col-span-2 text-center font-semibold">
 								Tingkat Depresi
 							</div>
 							<div className="col-span-3 text-center font-semibold">Lihat</div>
@@ -45,15 +146,26 @@ export default function RWSection() {
 					</div>
 
 					<div className="bg-white divide-y divide-gray-200">
-						{rwData.map((rw) => (
-							<div
-								key={rw.id}
-								className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50">
-								<div className="col-span-3 text-gray-700 font-medium">RW {rw.id}</div>
-								<div className="col-span-3 text-center text-gray-700">
-									{rw.jumlahRT}
-								</div>
-								<div className="col-span-3 text-center text-gray-700 font-medium">
+						{rwStats.length === 0 ? (
+							<div className="py-8 text-center text-gray-500">
+								<p>Tidak ada data RW yang sesuai dengan filter tanggal yang dipilih.</p>
+								<p className="text-sm mt-2">
+									RW hanya ditampilkan jika ada warga yang submit kuisioner dalam rentang
+									tanggal tersebut.
+								</p>
+							</div>
+						) : (
+							rwStats.map((rw) => (
+								<div
+									key={rw.id}
+									className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50">
+									<div className="col-span-3 text-gray-700 font-medium">{rw.nama}</div>
+									<div className="col-span-2 text-center text-gray-700">
+										{rw.jumlahRT}
+									</div>
+									<div className="col-span-2 text-center text-gray-700">
+										{rw.totalWarga}
+									</div>
 									<div className="col-span-2 text-center text-gray-700 font-medium">
 										<span
 											className={`px-2 py-1 rounded-full ${
@@ -66,34 +178,31 @@ export default function RWSection() {
 											{rw.tingkatDepresi}%
 										</span>
 									</div>
+									<div className="col-span-3 text-center">
+										<Link
+											to={
+												pathSegments[0] == "admin"
+													? `/admin/responden/rw${rw.id}`
+													: `/admin-medis/responden/rw${rw.id}`
+											}>
+											<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+												Lihat
+											</button>
+										</Link>
+									</div>
 								</div>
-								<div className="col-span-3 text-center">
-									<Link
-										to={
-											pathSegments[0] == "admin"
-												? `/admin/responden/rw${rw.id}`
-												: `/admin-medis/responden/rw${rw.id}`
-										}>
-										<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-											Lihat
-										</button>
-									</Link>
-								</div>
-							</div>
-						))}
+							))
+						)}
 					</div>
 				</div>
 
-				<div className="mt-4 text-gray-600 font-medium">
-					<Link
-						to={
-							pathSegments[0] == "admin"
-								? `/admin/responden`
-								: `/admin-medis/responden`
-						}
-						className="hover:underline">
-						Data RW
-					</Link>{" "}
+				<div className="mt-4 flex justify-between items-center">
+					{(startDate || endDate) && (
+						<div className="text-sm text-gray-500">
+							Menampilkan {rwStats.length} RW dengan warga yang submit kuisioner dalam
+							periode ini
+						</div>
+					)}
 				</div>
 			</div>
 		</>

@@ -46,9 +46,9 @@ export default function KelolaRtSection({ rwId }: { rwId: string }) {
 		<>
 			<main className="grid grid-cols-12 gap-6">
 				<div className="col-span-6">
-					<div className="bg-[#70B748] rounded-2xl p-6 text-white relative overflow-hidden min-h-[200px]">
+					<div className="bg-gray-100 rounded-2xl p-6 relative overflow-hidden min-h-[200px] shadow-sm">
 						<div className="relative z-10">
-							<h1 className="text-6xl font-bold">{totalRw} RT</h1>
+							<h1 className="text-[#70B748] text-6xl font-bold">{totalRw} RT</h1>
 						</div>
 						<div className="absolute -right-7 -bottom-7">
 							<img src="/home2.svg" alt="Home Icon" className="w-40 h-40" />
@@ -57,9 +57,9 @@ export default function KelolaRtSection({ rwId }: { rwId: string }) {
 				</div>
 
 				<div className="col-span-6">
-					<div className="bg-[#70B748] rounded-2xl p-6 text-white relative overflow-hidden min-h-[200px]">
+					<div className="bg-gray-100 rounded-2xl p-6 relative overflow-hidden min-h-[200px] shadow-sm">
 						<div className="relative z-10">
-							<h1 className="text-6xl font-bold">{totalRt} RT</h1>
+							<h1 className="text-[#70B748] text-6xl font-bold">{totalRt} RT</h1>
 						</div>
 						<div className="absolute -right-7 -bottom-7">
 							<img src="/home2.svg" alt="Home Icon" className="w-40 h-40" />
@@ -71,12 +71,32 @@ export default function KelolaRtSection({ rwId }: { rwId: string }) {
 				</div>
 
 				<div className="col-span-12">
-					<div className="bg-[#70B748] rounded-2xl p-6">
-						<div className="flex justify-between items-center mb-6">
-							<h2 className="text-white text-xl font-semibold">Data RT</h2>
+					<div className="bg-gray-100 rounded-2xl p-6 shadow-sm">
+						<div className="flex justify-between items-center pb-3">
+							<div className="mt-4 text-zinc-600 font-medium">
+								<Link
+									to={
+										pathSegments[0] == "admin"
+											? `/admin/responden`
+											: `/admin-medis/responden`
+									}
+									className="hover:underline">
+									Data RW
+								</Link>{" "}
+								/{" "}
+								<Link
+									to={
+										pathSegments[0] == "admin"
+											? `/admin/${currentSection}/${rwId}`
+											: `/admin-medis/${currentSection}/${rwId}`
+									}
+									className="hover:underline">
+									Data {rwId}
+								</Link>
+							</div>
 							<button
 								onClick={() => setAddRwPopUp(true)}
-								className="cursor-pointer bg-[#439017] hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+								className="cursor-pointer bg-[#70B748] hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
 								<Plus size={16} />
 								Tambah RT
 							</button>
@@ -85,7 +105,7 @@ export default function KelolaRtSection({ rwId }: { rwId: string }) {
 						<div className="bg-white rounded-xl overflow-hidden">
 							<table className="w-full">
 								<thead>
-									<tr className="bg-[#439017] text-white">
+									<tr className="bg-[#70B748] text-white">
 										<th className="text-left py-4 px-6 font-medium">Nama RT</th>
 										<th className="text-left py-4 px-6 font-medium">Jumlah Keluarga</th>
 										<th className="text-left py-4 px-6 font-medium">Lihat</th>
@@ -117,28 +137,6 @@ export default function KelolaRtSection({ rwId }: { rwId: string }) {
 									))}
 								</tbody>
 							</table>
-						</div>
-
-						<div className="mt-4 text-white font-medium">
-							<Link
-								to={
-									pathSegments[0] == "admin"
-										? `/admin/responden`
-										: `/admin-medis/responden`
-								}
-								className="hover:underline">
-								Data RW
-							</Link>{" "}
-							/{" "}
-							<Link
-								to={
-									pathSegments[0] == "admin"
-										? `/admin/${currentSection}/${rwId}`
-										: `/admin-medis/${currentSection}/${rwId}`
-								}
-								className="hover:underline">
-								Data {rwId}
-							</Link>
 						</div>
 					</div>
 				</div>

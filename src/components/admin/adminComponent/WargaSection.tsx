@@ -1,6 +1,8 @@
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
+import dataRW from "../../../data/data";
+import MentalHealthChart from "../../MentalHealthChart";
 
 export default function WargaSection({
 	rwId = "RW01",
@@ -31,148 +33,20 @@ export default function WargaSection({
 		};
 	}, [filterPopUp]);
 
-	const [keluargaData] = useState([
-		{
-			id: "1",
-			nama: "Budi Santoso",
-			tanggalTerakhir: "2025-09-10",
-			tanggalDisplay: "10 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "2",
-			nama: "Siti Aminah",
-			tanggalTerakhir: "2025-09-11",
-			tanggalDisplay: "11 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "3",
-			nama: "Ahmad Wijaya",
-			tanggalTerakhir: "2025-09-12",
-			tanggalDisplay: "12 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "4",
-			nama: "Rini Susanti",
-			tanggalTerakhir: "2025-09-14",
-			tanggalDisplay: "14 September 2025",
-			statusMental: "Tidak Stabil",
-		},
-		{
-			id: "5",
-			nama: "Dewi Lestari",
-			tanggalTerakhir: "2025-09-15",
-			tanggalDisplay: "15 September 2025",
-			statusMental: "Tidak Stabil",
-		},
-		{
-			id: "6",
-			nama: "Joko Prasetyo",
-			tanggalTerakhir: "2025-09-13",
-			tanggalDisplay: "13 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "7",
-			nama: "Maya Sari",
-			tanggalTerakhir: "2025-09-12",
-			tanggalDisplay: "12 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "8",
-			nama: "Rahmat Hidayat",
-			tanggalTerakhir: "2025-09-10",
-			tanggalDisplay: "10 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "9",
-			nama: "Fitri Handayani",
-			tanggalTerakhir: "2025-09-09",
-			tanggalDisplay: "9 September 2025",
-			statusMental: "Tidak Stabil",
-		},
-		{
-			id: "10",
-			nama: "Andi Saputra",
-			tanggalTerakhir: "2025-09-08",
-			tanggalDisplay: "8 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "11",
-			nama: "Nur Aisyah",
-			tanggalTerakhir: "2025-09-07",
-			tanggalDisplay: "7 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "12",
-			nama: "Eko Setiawan",
-			tanggalTerakhir: "2025-09-06",
-			tanggalDisplay: "6 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "13",
-			nama: "Lina Marlina",
-			tanggalTerakhir: "2025-09-05",
-			tanggalDisplay: "5 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "14",
-			nama: "Agus Kurniawan",
-			tanggalTerakhir: "2025-09-04",
-			tanggalDisplay: "4 September 2025",
-			statusMental: "Tidak Stabil",
-		},
-		{
-			id: "15",
-			nama: "Rosa Melati",
-			tanggalTerakhir: "2025-09-03",
-			tanggalDisplay: "3 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "16",
-			nama: "Hendra Gunawan",
-			tanggalTerakhir: "2025-09-02",
-			tanggalDisplay: "2 September 2025",
-			statusMental: "Tidak Stabil",
-		},
-		{
-			id: "17",
-			nama: "Yuni Kartika",
-			tanggalTerakhir: "2025-09-01",
-			tanggalDisplay: "1 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "18",
-			nama: "Doni Pratama",
-			tanggalTerakhir: "2025-09-16",
-			tanggalDisplay: "16 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "19",
-			nama: "Sari Indah",
-			tanggalTerakhir: "2025-09-17",
-			tanggalDisplay: "17 September 2025",
-			statusMental: "Stabil",
-		},
-		{
-			id: "20",
-			nama: "Bayu Nugroho",
-			tanggalTerakhir: "2025-09-11",
-			tanggalDisplay: "11 September 2025",
-			statusMental: "Stabil",
-		},
-	]);
+	const getWargaData = () => {
+		const rwIdNum = rwId.replace(/[^0-9]/g, "");
+		const rtIdNum = rtId.replace(/[^0-9]/g, "");
+
+		const currentRW = dataRW.find((rw) => rw.id === rwIdNum);
+		if (!currentRW) return [];
+
+		const currentRT = currentRW.rt.find((rt) => rt.id === rtIdNum);
+		if (!currentRT) return [];
+
+		return currentRT.warga || [];
+	};
+
+	const keluargaData = getWargaData();
 
 	const filteredData = keluargaData.filter((keluarga) => {
 		const tanggalTerakhir = new Date(keluarga.tanggalTerakhir);
@@ -209,40 +83,67 @@ export default function WargaSection({
 	return (
 		<>
 			<div className="space-y-6">
-				<div className="bg-gray-100 rounded-xl p-6 relative overflow-hidden shadow-sm">
-					<div className="text-[#439017] text-6xl font-bold">
-						{overallDepressionRate}%
-						<p className="mt-2 text-lg">Warga Tidak Sehat Secara Mental</p>
-					</div>
-					<div className="absolute -right-10 -bottom-10">
-						<img
-							src="/berat.png"
-							alt="Angry face"
-							className="w-44 h-44 object-contain"
-						/>
-					</div>
-				</div>
+				<MentalHealthChart
+					overallDepressionRate={overallDepressionRate}
+					title="Statistik Kesehatan Mental Warga"
+					subtitle={`Persentase Kondisi Mental Warga di ${rwId} ${rtId}`}
+				/>
 				<div className="relative flex flex-col items-end bg-gray-100 rounded-xl p-6 shadow-sm gap-3">
-					<div className="flex gap-2">
-						{(startDate || endDate) && (
+					<div className="w-full flex justify-between items-center pb-3">
+						<div className="text-gray-600 font-medium">
+							<Link
+								to={
+									pathSegments[0] == "admin"
+										? `/admin/responden`
+										: `/admin-medis/responden`
+								}
+								className="hover:underline">
+								Data RW
+							</Link>{" "}
+							/{" "}
+							<Link
+								to={
+									pathSegments[0] == "admin"
+										? `/admin/${currentSection}/${rwId}`
+										: `/admin-medis/${currentSection}/${rwId}`
+								}
+								className="hover:underline">
+								Data {rwId}
+							</Link>{" "}
+							/{" "}
+							<Link
+								to={
+									pathSegments[0] == "admin"
+										? `/admin/${currentSection}/${rwId}/${rtId}`
+										: `/admin-medis/${currentSection}/${rwId}/${rtId}`
+								}
+								className="hover:underline">
+								Data {rtId}
+							</Link>{" "}
+						</div>
+						<div className="flex gap-2">
+							{(startDate || endDate) && (
+								<button
+									onClick={handleClearFilter}
+									className="cursor-pointer bg-gray-500 hover:bg-gray-600 text-white flex items-center gap-2 p-3 rounded-md transition-colors">
+									<p className="font-medium">Clear Filter</p>
+								</button>
+							)}
 							<button
-								onClick={handleClearFilter}
-								className="cursor-pointer bg-gray-500 hover:bg-gray-600 text-white flex items-center gap-2 p-3 rounded-md transition-colors">
-								<p className="font-medium">Clear Filter</p>
+								onClick={() => setFilterPopUp(!filterPopUp)}
+								className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white flex items-center gap-2 p-3 rounded-md transition-colors">
+								<p className="font-medium">Filter</p>
+								<Filter />
 							</button>
-						)}
-						<button
-							onClick={() => setFilterPopUp(!filterPopUp)}
-							className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white flex items-center gap-2 p-3 rounded-md transition-colors">
-							<p className="font-medium">Filter</p>
-							<Filter />
-						</button>
+						</div>
 					</div>
 					{filterPopUp && (
 						<div
 							ref={popupRef}
 							className="w-[300px] absolute top-20 bg-white shadow-2xl p-5 rounded-md z-10">
-							<p className="font-semibold">Filter periode tanggal</p>
+							<p className="font-semibold">
+								Filter berdasarkan tanggal submit kuisioner
+							</p>
 							<ul className="mt-5 flex flex-col gap-5">
 								<li className="flex flex-col gap-3">
 									<label htmlFor="start">Dari Tanggal</label>
@@ -300,7 +201,23 @@ export default function WargaSection({
 						<div className="bg-white divide-y divide-gray-200">
 							{filteredData.length === 0 ? (
 								<div className="py-8 text-center text-gray-500">
-									<p>Tidak ada data yang sesuai dengan filter tanggal yang dipilih.</p>
+									{keluargaData.length === 0 ? (
+										<>
+											<p>
+												Tidak ada data warga di {rwId} {rtId}.
+											</p>
+											<p className="text-sm mt-2">
+												Periksa kembali RW dan RT yang dipilih.
+											</p>
+										</>
+									) : (
+										<>
+											<p>Tidak ada data yang sesuai dengan filter tanggal yang dipilih.</p>
+											<p className="text-sm mt-2">
+												Total {keluargaData.length} warga tersedia di {rwId} {rtId}.
+											</p>
+										</>
+									)}
 								</div>
 							) : (
 								filteredData.map((keluarga) => (
@@ -327,17 +244,17 @@ export default function WargaSection({
 											<Link
 												to={
 													pathSegments[0] == "admin"
-														? `/admin/${currentSection}/${rwId}/${rtId}/${keluarga.nama.replace(
+														? `/admin/responden/${rwId}/${rtId}/${keluarga.nama.replace(
 																/\s+/g,
 																"-"
-														  )}-${keluarga.id}`
-														: `/admin-medis/${currentSection}/${rwId}/${rtId}/${keluarga.nama.replace(
+														  )}-${keluarga.id}/history`
+														: `/admin-medis/responden/${rwId}/${rtId}/${keluarga.nama.replace(
 																/\s+/g,
 																"-"
-														  )}-${keluarga.id}`
+														  )}-${keluarga.id}/history`
 												}>
 												<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-													Lihat
+													Lihat Riwayat
 												</button>
 											</Link>
 										</div>
@@ -348,44 +265,20 @@ export default function WargaSection({
 					</div>
 
 					<div className="w-full flex justify-between items-center">
-						<div className="mt-4 text-gray-600 font-medium">
-							<Link
-								to={
-									pathSegments[0] == "admin"
-										? `/admin/responden`
-										: `/admin-medis/responden`
-								}
-								className="hover:underline">
-								Data RW
-							</Link>{" "}
-							/{" "}
-							<Link
-								to={
-									pathSegments[0] == "admin"
-										? `/admin/${currentSection}/${rwId}`
-										: `/admin-medis/${currentSection}/${rwId}`
-								}
-								className="hover:underline">
-								Data {rwId}
-							</Link>{" "}
-							/{" "}
-							<Link
-								to={
-									pathSegments[0] == "admin"
-										? `/admin/${currentSection}/${rwId}/${rtId}`
-										: `/admin-medis/${currentSection}/${rwId}/${rtId}`
-								}
-								className="hover:underline">
-								Data {rtId}
-							</Link>{" "}
-						</div>
-						{pathSegments[0] !== "admin" && (
-							<Link to={"/admin-medis/result"}>
-								<div className="bg-[#439017] text-white p-3 rounded-md">
-									Lihat detail kuisioner
+						<div className="flex items-center gap-4">
+							{(startDate || endDate) && (
+								<div className="text-sm text-gray-500">
+									Menampilkan {filteredData.length} dari {keluargaData.length} warga
 								</div>
-							</Link>
-						)}
+							)}
+							{pathSegments[0] !== "admin" && (
+								<Link to={"/admin-medis/result"}>
+									<div className="bg-[#439017] text-white p-3 rounded-md">
+										Lihat detail kuisioner
+									</div>
+								</Link>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>
