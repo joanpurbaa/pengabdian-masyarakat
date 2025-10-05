@@ -16,6 +16,7 @@ export default function WargaSection({
 	const [endDate, setEndDate] = useState("");
 	const currentSection = useLocation().pathname.split("/")[2];
 	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
+	const panel = useLocation().pathname.split("/")[1];
 
 	const popupRef = useRef<HTMLDivElement>(null);
 
@@ -191,10 +192,27 @@ export default function WargaSection({
 					<div className="w-full bg-white rounded-lg overflow-hidden shadow-lg">
 						<div className="bg-[#70B748] text-white">
 							<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
-								<div className="col-span-3 font-semibold">Nama</div>
-								<div className="col-span-3 font-semibold">Terakhir Kali submit</div>
-								<div className="col-span-3 font-semibold">Mental</div>
-								<div className="col-span-3 font-semibold text-center">Aksi</div>
+								<div
+									className={`${
+										panel == "admin-medis" ? "col-span-3" : "col-span-4"
+									} font-semibold`}>
+									Nama
+								</div>
+								<div
+									className={`${
+										panel == "admin-medis" ? "col-span-3" : "col-span-4"
+									} font-semibold`}>
+									Terakhir Kali submit
+								</div>
+								<div
+									className={`${
+										panel == "admin-medis" ? "col-span-3" : "col-span-4"
+									} font-semibold`}>
+									Mental
+								</div>
+								{panel == "admin-medis" && (
+									<div className="col-span-3 font-semibold text-center">Aksi</div>
+								)}
 							</div>
 						</div>
 
@@ -224,13 +242,13 @@ export default function WargaSection({
 									<div
 										key={keluarga.id}
 										className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50">
-										<div className="col-span-3 text-gray-700 font-medium">
+										<div className={`${panel == "admin-medis" ? 'col-span-3' : 'col-span-4'} text-gray-700 font-medium`}>
 											{keluarga.nama}
 										</div>
-										<div className="col-span-3 text-gray-700">
+										<div className={`${panel == "admin-medis" ? 'col-span-3' : 'col-span-4'} text-gray-700`}>
 											{keluarga.tanggalDisplay}
 										</div>
-										<div className="col-span-3 font-medium">
+										<div className={`${panel == "admin-medis" ? 'col-span-3' : 'col-span-4'} font-medium`}>
 											<span
 												className={`px-2 py-1 rounded-full ${
 													keluarga.statusMental === "Stabil"
@@ -240,24 +258,26 @@ export default function WargaSection({
 												{keluarga.statusMental}
 											</span>
 										</div>
-										<div className="col-span-3 text-center">
-											<Link
-												to={
-													pathSegments[0] == "admin"
-														? `/admin/responden/${rwId}/${rtId}/${keluarga.nama.replace(
-																/\s+/g,
-																"-"
-														  )}-${keluarga.id}/history`
-														: `/admin-medis/responden/${rwId}/${rtId}/${keluarga.nama.replace(
-																/\s+/g,
-																"-"
-														  )}-${keluarga.id}/history`
-												}>
-												<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-													Lihat Riwayat
-												</button>
-											</Link>
-										</div>
+										{panel == "admin-medis" && (
+											<div className="col-span-3 text-center">
+												<Link
+													to={
+														pathSegments[0] == "admin"
+															? `/admin/responden/${rwId}/${rtId}/${keluarga.nama.replace(
+																	/\s+/g,
+																	"-"
+															  )}-${keluarga.id}/history`
+															: `/admin-medis/responden/${rwId}/${rtId}/${keluarga.nama.replace(
+																	/\s+/g,
+																	"-"
+															  )}-${keluarga.id}/history`
+													}>
+													<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+														Lihat Riwayat
+													</button>
+												</Link>
+											</div>
+										)}
 									</div>
 								))
 							)}

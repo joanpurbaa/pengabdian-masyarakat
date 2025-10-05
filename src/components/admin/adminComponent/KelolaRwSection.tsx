@@ -8,15 +8,16 @@ export default function KelolaRwSection() {
 	const [newJumlahRw, setNewJumlahRw] = useState<number>(1);
 
 	const [rwData, setRwData] = useState([
-		{ id: 1, name: "RW 1", jumlahRt: 2 },
-		{ id: 2, name: "RW 2", jumlahRt: 2 },
-		{ id: 3, name: "RW 3", jumlahRt: 2 },
-		{ id: 4, name: "RW 4", jumlahRt: 2 },
-		{ id: 5, name: "RW 5", jumlahRt: 2 },
+		{ id: 1, name: "RW 1", jumlahRt: 2, totalWarga: 15 },
+		{ id: 2, name: "RW 2", jumlahRt: 2, totalWarga: 12 },
+		{ id: 3, name: "RW 3", jumlahRt: 2, totalWarga: 8 },
+		{ id: 4, name: "RW 4", jumlahRt: 2, totalWarga: 0 },
+		{ id: 5, name: "RW 5", jumlahRt: 2, totalWarga: 0 },
 	]);
 
 	const totalRw = rwData.length;
 	const totalRt = rwData.reduce((sum, rw) => sum + rw.jumlahRt, 0);
+	const totalWarga = rwData.reduce((sum, rw) => sum + rw.totalWarga, 0);
 
 	const handleHapus = (id: number) => {
 		setRwData(rwData.filter((rw) => rw.id !== id));
@@ -32,7 +33,8 @@ export default function KelolaRwSection() {
 		const newRws = Array.from({ length: newJumlahRw }, (_, i) => ({
 			id: lastId + i + 1,
 			name: `RW ${lastId + i + 1}`,
-			jumlahRt: 2,
+			jumlahRt: 0,
+			totalWarga: 0,
 		}));
 
 		setRwData([...rwData, ...newRws]);
@@ -47,10 +49,11 @@ export default function KelolaRwSection() {
 	return (
 		<>
 			<main className="grid grid-cols-12 gap-6">
-				<div className="col-span-6">
+				<div className="col-span-4">
 					<div className="bg-gray-100 rounded-2xl p-6 relative overflow-hidden min-h-[200px] shadow-sm">
 						<div className="relative z-10">
-							<h1 className="text-[#70B748] text-6xl font-bold">{totalRw} RW</h1>
+							<h1 className="text-[#70B748] text-6xl font-bold">{totalRw}</h1>
+							<p className="text-gray-600 text-lg mt-2">Total RW</p>
 						</div>
 						<div className="absolute -right-7 -bottom-7">
 							<img src="/home2.svg" alt="Home Icon" className="w-40 h-40" />
@@ -58,16 +61,26 @@ export default function KelolaRwSection() {
 					</div>
 				</div>
 
-				<div className="col-span-6">
+				<div className="col-span-4">
 					<div className="bg-gray-100 rounded-2xl p-6 relative overflow-hidden min-h-[200px] shadow-sm">
 						<div className="relative z-10">
-							<h1 className="text-[#70B748] text-6xl font-bold">{totalRt} RT</h1>
+							<h1 className="text-[#70B748] text-6xl font-bold">{totalRt}</h1>
+							<p className="text-gray-600 text-lg mt-2">Total RT</p>
 						</div>
 						<div className="absolute -right-7 -bottom-7">
 							<img src="/home2.svg" alt="Home Icon" className="w-40 h-40" />
 						</div>
-						<div className="absolute -right-10 -bottom-3">
-							<img src="/home1.svg" alt="Home Icon" className="w-40 h-40" />
+					</div>
+				</div>
+
+				<div className="col-span-4">
+					<div className="bg-gray-100 rounded-2xl p-6 relative overflow-hidden min-h-[200px] shadow-sm">
+						<div className="relative z-10">
+							<h1 className="text-[#70B748] text-6xl font-bold">{totalWarga}</h1>
+							<p className="text-gray-600 text-lg mt-2">Total Warga</p>
+						</div>
+						<div className="absolute -right-7 -bottom-7">
+							<img src="/home2.svg" alt="Home Icon" className="w-40 h-40" />
 						</div>
 					</div>
 				</div>
@@ -75,16 +88,16 @@ export default function KelolaRwSection() {
 				<div className="col-span-12">
 					<div className="bg-gray-100 rounded-2xl p-6 shadow-sm">
 						<div className="flex justify-between items-center pb-3">
-							<div className="mt-4 text-gray-600 font-medium">
+							<div className="text-gray-600 font-medium">
 								<Link
 									to={
 										pathSegments[0] == "admin"
-											? `/admin/responden`
-											: `/admin-medis/responden`
+											? `/admin/kelola-rw`
+											: `/admin-medis/kelola-rw`
 									}
 									className="hover:underline">
-									Data RW
-								</Link>{" "}
+									Kelola RW
+								</Link>
 							</div>
 							<button
 								onClick={() => setAddRwPopUp(true)}
@@ -94,73 +107,92 @@ export default function KelolaRwSection() {
 							</button>
 						</div>
 
-						<div className="bg-white rounded-xl overflow-hidden">
-							<table className="w-full">
-								<thead>
-									<tr className="bg-[#70B748] text-white">
-										<th className="text-left py-4 px-6 font-medium">Nama RW</th>
-										<th className="text-left py-4 px-6 font-medium">Jumlah RT</th>
-										<th className="text-left py-4 px-6 font-medium">Lihat</th>
-										<th className="text-left py-4 px-6 font-medium">Hapus</th>
-									</tr>
-								</thead>
-								<tbody>
-									{rwData.map((rw, index) => (
-										<tr
-											key={rw.id}
-											className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}>
-											<td className="py-4 px-6 font-medium text-gray-900">{rw.name}</td>
-											<td className="py-4 px-6 text-gray-700">{rw.jumlahRt}</td>
-											<td className="py-4 px-6">
-												<Link
-													to={`/admin/kelola-rw/${rw.id}`}
-													className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-													Lihat
-												</Link>
-											</td>
-											<td className="py-4 px-6">
-												<button
-													onClick={() => handleHapus(rw.id)}
-													className="cursor-pointer bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-													Hapus
-												</button>
-											</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
+						<div className="bg-white rounded-xl overflow-hidden shadow-sm">
+							<div className="bg-[#70B748] text-white">
+								<div className="grid grid-cols-12 py-4 px-6 text-sm sm:text-base">
+									<div className="col-span-3 font-semibold">Nama RW</div>
+									<div className="col-span-2 text-center font-semibold">Jumlah RT</div>
+									<div className="col-span-2 text-center font-semibold">Total Warga</div>
+									<div className="col-span-3 text-center font-semibold">
+										Lihat Detail
+									</div>
+									<div className="col-span-2 text-center font-semibold">Aksi</div>
+								</div>
+							</div>
+
+							<div className="divide-y divide-gray-200">
+								{rwData.map((rw, index) => (
+									<div
+										key={rw.id}
+										className={`grid grid-cols-12 py-4 px-6 text-sm sm:text-base hover:bg-gray-50 ${
+											index % 2 === 0 ? "bg-white" : "bg-gray-50"
+										}`}>
+										<div className="col-span-3 text-gray-700 font-medium">{rw.name}</div>
+										<div className="col-span-2 text-center text-gray-700">
+											{rw.jumlahRt}
+										</div>
+										<div className="col-span-2 text-center text-gray-700">
+											{rw.totalWarga}
+										</div>
+										<div className="col-span-3 text-center">
+											<Link
+												to={
+													pathSegments[0] == "admin"
+														? `/admin/kelola-rw/rw${rw.id}`
+														: `/admin-medis/kelola-rw/rw${rw.id}`
+												}
+												className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors inline-block">
+												Kelola RT
+											</Link>
+										</div>
+										<div className="col-span-2 text-center">
+											<button
+												onClick={() => handleHapus(rw.id)}
+												className="cursor-pointer bg-red-400 hover:bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+												Hapus
+											</button>
+										</div>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</div>
 			</main>
 
 			{addRwPopUp && (
-				<div className="absolute top-0 left-0 z-10 w-full h-full flex justify-center items-center bg-black/50">
+				<div className="fixed top-0 left-0 z-50 w-full h-full flex justify-center items-center bg-black/50">
 					<div className="bg-white p-5 rounded-md space-y-5 w-[400px]">
-						<h1 className="font-bold">Tambah RW</h1>
+						<h1 className="font-bold text-lg">Tambah RW Baru</h1>
 						<form onSubmit={handleTambahRw}>
 							<ul className="space-y-6">
 								<li className="space-y-2">
-									<label className="block text-sm font-medium">Jumlah RW Baru</label>
+									<label className="block text-sm font-medium text-gray-700">
+										Jumlah RW Baru
+									</label>
 									<input
-										className="outline-none border w-full px-3 py-2 rounded-md"
+										className="outline-none border border-gray-300 w-full px-3 py-2 rounded-md focus:border-[#70B748] focus:ring-1 focus:ring-[#70B748]"
 										type="number"
 										value={newJumlahRw}
 										onChange={(e) => setNewJumlahRw(Number(e.target.value))}
 										min={1}
+										max={10}
 									/>
+									<p className="text-sm text-gray-500">
+										Maksimal 10 RW dapat ditambahkan sekaligus
+									</p>
 								</li>
-								<li className="flex gap-3">
+								<li className="flex gap-3 pt-4">
 									<button
 										type="button"
 										onClick={handleBatal}
-										className="cursor-pointer w-full bg-red-400 hover:bg-red-500 text-white rounded-md p-2">
+										className="cursor-pointer w-full bg-gray-400 hover:bg-gray-500 text-white rounded-md p-3 font-medium transition-colors">
 										Batal
 									</button>
 									<button
 										type="submit"
-										className="cursor-pointer w-full bg-[#70B748] hover:bg-green-600 text-white rounded-md p-2">
-										Tambah
+										className="cursor-pointer w-full bg-[#70B748] hover:bg-green-600 text-white rounded-md p-3 font-medium transition-colors">
+										Tambah RW
 									</button>
 								</li>
 							</ul>

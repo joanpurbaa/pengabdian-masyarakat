@@ -244,9 +244,9 @@ export default function HistorySection() {
 						<div className="bg-[#70B748] text-white">
 							<div className="grid grid-cols-12 text-sm sm:text-base py-4 px-6">
 								<div className="col-span-3 font-semibold">Tanggal Pengerjaan</div>
-								<div className="col-span-2 text-center font-semibold">Waktu</div>
+								<div className="col-span-1 text-center font-semibold">Waktu</div>
 								<div className="col-span-2 text-center font-semibold">Skor</div>
-								<div className="col-span-2 text-center font-semibold">
+								<div className="col-span-3 text-center font-semibold">
 									Status Mental
 								</div>
 								<div className="col-span-3 text-center font-semibold">Aksi</div>
@@ -269,13 +269,13 @@ export default function HistorySection() {
 										<div className="col-span-3 text-gray-700 font-medium">
 											{entry.tanggalDisplay}
 										</div>
-										<div className="col-span-2 text-center text-gray-700">
+										<div className="col-span-1 text-center text-gray-700">
 											{entry.waktuPengerjaan}
 										</div>
 										<div className="col-span-2 text-center text-gray-700 font-bold">
 											{entry.skor}
 										</div>
-										<div className="col-span-2 text-center text-gray-700 font-medium">
+										<div className="col-span-3 text-center text-gray-700 font-medium">
 											<span
 												className={`px-2 py-1 rounded-full ${
 													entry.statusMental === "Stabil"
@@ -286,9 +286,11 @@ export default function HistorySection() {
 											</span>
 										</div>
 										<div className="col-span-3 text-center">
-											<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
-												Lihat Detail
-											</button>
+											<Link to={"/admin-medis/responden/rw1/rt1/Budi-Santoso-1/history/tes"}>
+												<button className="cursor-pointer bg-[#70B748] hover:bg-[#5a9639] text-white px-4 py-2 rounded-md font-medium min-w-[80px] transition-colors">
+													Lihat Detail
+												</button>
+											</Link>
 										</div>
 									</div>
 								))

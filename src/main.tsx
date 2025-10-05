@@ -70,6 +70,14 @@ const router = createBrowserRouter([
 		element: <Admin />,
 	},
 	{
+		path: "/admin-medis/kelola-rw/:rwId",
+		element: <Admin />,
+	},
+	{
+		path: "/admin-medis/kelola-rw/:rwId/:rtId",
+		element: <Admin />,
+	},
+	{
 		path: "/admin-medis/responden",
 		element: <Admin />,
 	},
@@ -84,6 +92,10 @@ const router = createBrowserRouter([
 	{
 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
 		element: <HistorySection />,
+	},
+	{
+		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
+		element: <Result />,
 	},
 	{
 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
