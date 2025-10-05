@@ -8,9 +8,9 @@ import { Heart, UserIcon } from "lucide-react";
 import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/WargaSection";
 import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
-import KelolaRwRt from "../components/admin/adminComponent/KelolaRwSection";
-import KelolaRt from "../components/admin/adminComponent/KelolaRtsection";
 import Kuisioner from "../components/admin/adminComponent/Kuisioner";
+import KelolaRwSection from "../components/admin/adminComponent/KelolaRwSection";
+import KelolaRtSection from "../components/admin/adminComponent/KelolaRtSection";
 
 export default function Admin() {
 	const location = useLocation().pathname;
@@ -43,18 +43,17 @@ export default function Admin() {
 	const renderMainContent = () => {
 		const currentSection = pathSegments[1];
 
-		// ✅ Tambahkan kondisi ini
 		if (currentSection === "kuisioner") {
 			return <Kuisioner />;
 		}
 
 		if (currentSection === "kelola-rw") {
 			if (pathSegments.length === 2) {
-				return <KelolaRwRt />;
+				return <KelolaRwSection />;
 			}
 			if (pathSegments.length === 3) {
 				const rwId = pathSegments[2];
-				return <KelolaRt rwId={rwId} />;
+				return <KelolaRtSection rwId={rwId} />;
 			}
 			if (pathSegments.length === 4) {
 				const rwId = pathSegments[2];
