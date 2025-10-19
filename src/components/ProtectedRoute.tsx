@@ -1,6 +1,7 @@
-import { Navigate, useLocation } from "react-router";
+import { Navigate, useLocation }   from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface ProtectedRouteProps {
 	children: React.ReactNode;
@@ -12,6 +13,15 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
 	const { user, isLoading } = useAuth();
 	const location = useLocation();
+	const [tokenValid, setTokenValid] = useState(true);
+
+	// Check if token exists in localStorage
+	useEffect(() => {
+		const token = localStorage.getItem("authToken");
+		if (!token) {
+			setTokenValid(false);
+		}
+	}, []);
 
 	if (isLoading) {
 		return (
@@ -22,13 +32,9 @@ export default function ProtectedRoute({
 		);
 	}
 
-	if (!user) {
+	if (!user || !tokenValid) {
 		return <Navigate to="/masuk" state={{ from: location }} replace />;
 	}
-
-	// if (requiredRole && user.role !== requiredRole) {
-	//   return <Navigate to="/unauthorized" replace />;
-	// }
 
 	return <>{children}</>;
 }

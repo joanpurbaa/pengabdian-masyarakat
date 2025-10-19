@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../service/authService";
 import type { LoginData, RegisterData } from "../service/authService";
@@ -23,7 +24,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
-	const [user, setUser] = useState<User | null>(null);
+	const [user, setUser] = useState<User | null>(() => {
+		const token = localStorage.getItem("authToken");
+		const userData = localStorage.getItem("userData");
+
+		if (token && userData) {
+			try {
+				return JSON.parse(userData);
+			} catch (err) {
+				console.error("Error parsing initial user data:", err);
+				localStorage.removeItem("authToken");
+				localStorage.removeItem("userData");
+			}
+		}
+		return null;
+	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -35,6 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			try {
 				const parsedUser: User = JSON.parse(userData);
 				setUser(parsedUser);
+				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 			} catch (err) {
 				console.error("Error parsing user data:", err);
 				localStorage.removeItem("authToken");
@@ -61,6 +77,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				setUser(userData);
 				localStorage.setItem("authToken", userData.accessToken);
 				localStorage.setItem("userData", JSON.stringify(userData));
+
+				axios.defaults.headers.common[
+					"Authorization"
+				] = `Bearer ${userData.accessToken}`;
 			} else {
 				throw new Error(response.message || "Login failed");
 			}
@@ -112,6 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	);
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
 	const context = useContext(AuthContext);
 	if (context === undefined) {

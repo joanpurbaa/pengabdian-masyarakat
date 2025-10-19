@@ -14,17 +14,14 @@ const Admin = lazy(() => import("./pages/Admin"));
 const Result = lazy(() => import("./pages/Result"));
 const MedisResult = lazy(() => import("./pages/MedisResult"));
 const HistorySection = lazy(() => import("./pages/HistorySection"));
+const Quiz = lazy(() => import("./pages/Quiz"));
 
 axios.defaults.withCredentials = true;
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: (
-			<ProtectedRoute>
-				<Home />
-			</ProtectedRoute>
-		),
+		element: <Home />,
 	},
 	{
 		path: "/masuk",
@@ -33,6 +30,14 @@ const router = createBrowserRouter([
 	{
 		path: "/daftar",
 		element: <Register />,
+	},
+	{
+		path: "/quiz/:id",
+		element: (
+			<ProtectedRoute>
+				<Quiz />
+			</ProtectedRoute>
+		),
 	},
 	{
 		path: "/result",
