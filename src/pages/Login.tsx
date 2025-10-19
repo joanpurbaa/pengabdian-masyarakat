@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
+import { Loader2 } from "lucide-react";
 
 export default function Login() {
 	const [activeTab, setActiveTab] = useState("warga");
@@ -8,6 +10,7 @@ export default function Login() {
 		password: "",
 	});
 
+	const { login, isLoading, error } = useAuth();
 	const navigate = useNavigate();
 
 	const handleInputChange = (e: { target: { name: string; value: string } }) => {
@@ -18,9 +21,19 @@ export default function Login() {
 		}));
 	};
 
-	const handleSubmit = () => {
-		if (activeTab == "warga") {
-			navigate("/");
+	const handleSubmit = async () => {
+		try {
+			await login(formData);
+
+			if (activeTab === "warga") {
+				navigate("/");
+			} else if (activeTab === "admin") {
+				navigate("/admin/responden");
+			} else if (activeTab === "medis") {
+				navigate("/admin-medis/responden");
+			}
+		} catch (err) {
+			console.error("Login error:", err);
 		}
 	};
 
@@ -60,6 +73,12 @@ export default function Login() {
 					</button>
 				</div>
 				<div className="space-y-4">
+					{error && (
+						<div className="bg-red-50 border border-red-200 rounded-lg p-4">
+							<p className="text-red-700 text-sm">{error}</p>
+						</div>
+					)}
+
 					<div>
 						<label
 							htmlFor="email"
@@ -94,23 +113,14 @@ export default function Login() {
 							required
 						/>
 					</div>
-					<Link
-						to={
-							activeTab === "warga"
-								? "/"
-								: activeTab === "admin"
-								? "/admin/responden"
-								: activeTab === "medis"
-								? "/admin-medis/responden"
-								: "/"
-						}>
-						<button
-							type="button"
-							onClick={handleSubmit}
-							className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium">
-							Masuk
-						</button>
-					</Link>
+					<button
+						type="button"
+						onClick={handleSubmit}
+						disabled={isLoading}
+						className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+						{isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+						{isLoading ? "Memproses..." : "Masuk"}
+					</button>
 				</div>
 				<p className="text-center text-xs sm:text-base text-gray-600 mt-4">
 					Belum punya akun?{" "}

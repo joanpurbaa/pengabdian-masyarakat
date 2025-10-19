@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
-import { lazy, StrictMode } from "react";
+import { lazy } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import axios from "axios";
@@ -124,9 +124,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
 	<QueryClientProvider client={queryClient}>
 		<AuthProvider>
-			<StrictMode>
-				<RouterProvider router={router} />
-			</StrictMode>
+			<RouterProvider router={router} />
 		</AuthProvider>
 	</QueryClientProvider>
 );

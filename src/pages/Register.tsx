@@ -1,6 +1,8 @@
-import { AlertCircle, ChevronDown } from "lucide-react";
-import { useState } from "react";
-// import { getAllRw } from "../service/rw";
+import { AlertCircle, ChevronDown, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useMasterData } from "../hooks/useMasterData";
+import type { RegisterData } from "../service/authService";
 
 export default function Register() {
 	const [activeTab, setActiveTab] = useState("warga");
@@ -11,17 +13,99 @@ export default function Register() {
 		alamat: "",
 		rw: "",
 		rt: "",
+		nik: "",
 	});
 
 	const [profileData, setProfileData] = useState({
 		namaLengkap: "",
 		tanggalLahir: "",
-		statusPernikahan: "tidak_menikah",
+		statusPernikahan: "",
 		jumlahAnak: "",
-		pendidikan: "sd",
+		pendidikan: "",
 		pekerjaan: "",
 		gaji: "",
+		gender: "m" as "m" | "f",
 	});
+
+	const { register, isLoading, error } = useAuth();
+	const masterData = useMasterData();
+
+	const [statusPernikahanMap, setStatusPernikahanMap] = useState<
+		Record<string, string>
+	>({});
+	const [pendidikanMap, setPendidikanMap] = useState<Record<string, string>>({});
+	const [gajiMap, setGajiMap] = useState<Record<string, string>>({});
+	const [rwMap, setRwMap] = useState<Record<string, string>>({});
+	const [rtMap, setRtMap] = useState<Record<string, string>>({});
+
+	useEffect(() => {
+		if (masterData.marriageStatuses.data) {
+			const map: Record<string, string> = {};
+			masterData.marriageStatuses.data.forEach((item) => {
+				if (item.name.toLowerCase() === "tidak menikah")
+					map["tidak_menikah"] = item.id;
+				if (item.name.toLowerCase() === "menikah") map["menikah"] = item.id;
+				if (item.name.toLowerCase() === "bercerai") map["bercerai"] = item.id;
+			});
+			setStatusPernikahanMap(map);
+		}
+
+		if (masterData.educations.data) {
+			const map: Record<string, string> = {};
+			masterData.educations.data.forEach((item) => {
+				if (item.name.toLowerCase() === "s1") map["s1"] = item.id;
+				if (item.name.toLowerCase() === "s2") map["s2"] = item.id;
+				if (item.name.toLowerCase() === "s3") map["s3"] = item.id;
+				if (item.name.toLowerCase() === "sma") map["sma"] = item.id;
+				if (item.name.toLowerCase() === "smp") map["smp"] = item.id;
+				if (item.name.toLowerCase() === "sd") map["sd"] = item.id;
+			});
+			setPendidikanMap(map);
+		}
+
+		if (masterData.salaryRanges.data) {
+			const map: Record<string, string> = {};
+			masterData.salaryRanges.data.forEach((item) => {
+				const min = parseFloat(item.minRange);
+				const max = parseFloat(item.maxRange);
+
+				if (min === 500000 && max === 1000000) map["<1jt"] = item.id;
+				else if (min === 1000000 && max === 1500000) map["1-3jt"] = item.id;
+				else if (min === 1500000 && max === 2000000) map["1-3jt"] = item.id;
+				else if (min === 2000000 && max === 2500000) map["3-5jt"] = item.id;
+			});
+			setGajiMap(map);
+		}
+
+		if (masterData.rukunWarga.data) {
+			const map: Record<string, string> = {};
+			masterData.rukunWarga.data.forEach((item) => {
+				map[item.name.toString()] = item.id;
+			});
+			setRwMap(map);
+		}
+
+		if (masterData.rukunTetangga.data) {
+			const map: Record<string, string> = {};
+			masterData.rukunTetangga.data.forEach((item) => {
+				map[item.name.toString()] = item.id;
+			});
+			setRtMap(map);
+		}
+	}, [
+		masterData.marriageStatuses.data,
+		masterData.educations.data,
+		masterData.salaryRanges.data,
+		masterData.rukunWarga.data,
+		masterData.rukunTetangga.data,
+	]);
+
+	const isMasterDataLoading =
+		masterData.educations.isLoading ||
+		masterData.marriageStatuses.isLoading ||
+		masterData.salaryRanges.isLoading ||
+		masterData.rukunWarga.isLoading ||
+		masterData.rukunTetangga.isLoading;
 
 	const handleInputChange = (e: { target: { name: string; value: string } }) => {
 		const { name, value } = e.target;
@@ -48,54 +132,109 @@ export default function Register() {
 				!formData.password ||
 				!formData.alamat ||
 				!formData.rw ||
-				!formData.rt
+				!formData.rt ||
+				!formData.nik
 			) {
 				alert("Mohon lengkapi semua field yang diperlukan");
 				return;
 			}
 
-			console.log("Register form submitted:", {
-				...formData,
-				userType: activeTab,
-			});
+			const nikRegex = /^\d{16}$/;
+			if (!nikRegex.test(formData.nik)) {
+				alert("NIK harus berupa 16 digit angka");
+				return;
+			}
 
 			setShowModal(true);
 		}
 	};
 
-	const handleCompleteProfile = () => {
+	const handleCompleteProfile = async (e: React.FormEvent) => {
+		e.preventDefault();
+
 		if (
 			!profileData.namaLengkap ||
 			!profileData.tanggalLahir ||
-			!profileData.pekerjaan
+			!profileData.pekerjaan ||
+			!profileData.statusPernikahan ||
+			!profileData.pendidikan ||
+			!profileData.gaji
 		) {
-			alert("Mohon lengkapi data yang diperlukan");
+			alert("Mohon lengkapi semua data yang diperlukan");
 			return;
 		}
 
-		console.log("Complete profile submitted:", {
-			registerData: formData,
-			profileData: profileData,
-		});
+		const marriageStatusId = statusPernikahanMap[profileData.statusPernikahan];
+		const educationId = pendidikanMap[profileData.pendidikan];
+		const salaryRangeId = gajiMap[profileData.gaji];
+		const rwId = rwMap[formData.rw];
+		const rtId = rtMap[formData.rt];
 
-		setFormData({
-			email: "",
-			password: "",
-			alamat: "",
-			rw: "",
-			rt: "",
-		});
-		setProfileData({
-			namaLengkap: "",
-			tanggalLahir: "",
-			statusPernikahan: "tidak_menikah",
-			jumlahAnak: "",
-			pendidikan: "sd",
-			pekerjaan: "",
-			gaji: "",
-		});
+		if (!marriageStatusId) {
+			alert(`Status pernikahan tidak valid: ${profileData.statusPernikahan}`);
+			return;
+		}
+		if (!educationId) {
+			alert(`Pendidikan tidak valid: ${profileData.pendidikan}`);
+			return;
+		}
+		if (!salaryRangeId) {
+			alert(`Gaji tidak valid: ${profileData.gaji}`);
+			return;
+		}
+		if (!rwId) {
+			alert(`RW tidak valid: ${formData.rw}`);
+			return;
+		}
+		if (!rtId) {
+			alert(`RT tidak valid: ${formData.rt}`);
+			return;
+		}
 
-		window.location.href = "/masuk";
+		try {
+			const birthDateISO = new Date(profileData.tanggalLahir)
+				.toISOString()
+				.split("T")[0];
+
+			const registerData: RegisterData = {
+				fullname: profileData.namaLengkap,
+				email: formData.email,
+				password: formData.password,
+				gender: profileData.gender,
+				profession: profileData.pekerjaan,
+				birthDate: birthDateISO,
+				MarriageStatusId: marriageStatusId,
+				RukunWargaId: rwId,
+				RukunTetanggaId: rtId,
+				EducationId: educationId,
+				SalaryRangeId: salaryRangeId,
+				nik: formData.nik,
+			};
+
+			await register(registerData);
+
+			setFormData({
+				email: "",
+				password: "",
+				alamat: "",
+				rw: "",
+				rt: "",
+				nik: "",
+			});
+			setProfileData({
+				namaLengkap: "",
+				tanggalLahir: "",
+				statusPernikahan: "",
+				jumlahAnak: "",
+				pendidikan: "",
+				pekerjaan: "",
+				gaji: "",
+				gender: "m",
+			});
+			setShowModal(false);
+		} catch (err) {
+			console.error("Registration error:", err);
+		}
 	};
 
 	const handleBackToRegister = () => {
@@ -125,6 +264,11 @@ export default function Register() {
 
 		return (
 			<>
+				{error && (
+					<div className="bg-red-50 border border-red-200 rounded-lg p-4">
+						<p className="text-red-700 text-sm">{error}</p>
+					</div>
+				)}
 				<div>
 					<label
 						htmlFor="email"
@@ -183,16 +327,20 @@ export default function Register() {
 							className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
 							RW
 						</label>
-						<input
-							type="text"
+						<select
 							id="rw"
 							name="rw"
 							value={formData.rw}
 							onChange={handleInputChange}
-							placeholder="Masukkan RW"
-							className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748] placeholder-gray-400"
-							required
-						/>
+							className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748]"
+							required>
+							<option value="">Pilih RW</option>
+							{masterData.rukunWarga.data?.map((rw) => (
+								<option key={rw.id} value={rw.name}>
+									{rw.name}
+								</option>
+							))}
+						</select>
 					</div>
 					<div>
 						<label
@@ -200,27 +348,62 @@ export default function Register() {
 							className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
 							RT
 						</label>
-						<input
-							type="text"
+						<select
 							id="rt"
 							name="rt"
 							value={formData.rt}
 							onChange={handleInputChange}
-							placeholder="Masukkan RT"
-							className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748] placeholder-gray-400"
-							required
-						/>
+							className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748]"
+							required>
+							<option value="">Pilih RT</option>
+							{masterData.rukunTetangga.data?.map((rt) => (
+								<option key={rt.id} value={rt.name}>
+									{rt.name}
+								</option>
+							))}
+						</select>
 					</div>
+				</div>
+				<div>
+					<label
+						htmlFor="nik"
+						className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
+						NIK (Nomor Induk Kependudukan)
+					</label>
+					<input
+						type="text"
+						id="nik"
+						name="nik"
+						value={formData.nik}
+						onChange={handleInputChange}
+						placeholder="Masukkan NIK 16 digit"
+						className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748] placeholder-gray-400"
+						required
+						maxLength={16}
+						minLength={16}
+					/>
+					<p className="text-xs text-gray-500 mt-1">NIK harus 16 digit angka</p>
 				</div>
 				<button
 					type="button"
 					onClick={handleSubmit}
-					className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium">
-					Daftar
+					disabled={isLoading}
+					className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+					{isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+					{isLoading ? "Memproses..." : "Daftar"}
 				</button>
 			</>
 		);
 	};
+
+	if (isMasterDataLoading) {
+		return (
+			<div className="flex justify-center items-center py-8">
+				<Loader2 className="animate-spin text-[#70B748]" size={32} />
+				<span className="ml-2 text-gray-600">Memuat data...</span>
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -271,11 +454,20 @@ export default function Register() {
 			</div>
 
 			{showModal && (
-				<div className="fixed inset-0 flex items-center justify-center min-h-screen bg-gray-100 p-2 sm:p-4 z-50">
-					<div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 w-[600px] space-y-4">
+				<form
+					onSubmit={handleCompleteProfile}
+					className="fixed inset-0 flex items-center justify-center min-h-screen bg-gray-100 p-2 sm:p-4 z-50">
+					<div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 w-full max-w-2xl space-y-4 max-h-[90vh] overflow-y-auto">
 						<h1 className="text-lg sm:text-2xl font-bold text-center text-[#70B748] mb-8">
 							Lengkapi data diri
 						</h1>
+
+						{error && (
+							<div className="bg-red-50 border border-red-200 rounded-lg p-4">
+								<p className="text-red-700 text-sm">{error}</p>
+							</div>
+						)}
+
 						<div>
 							<label className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
 								Nama Lengkap
@@ -309,44 +501,59 @@ export default function Register() {
 
 						<div>
 							<label className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
-								Status pernikahan
+								Jenis Kelamin
 							</label>
 							<div className="flex gap-3">
 								<label className="flex items-center">
 									<input
 										type="radio"
-										name="statusPernikahan"
-										value="tidak_menikah"
-										checked={profileData.statusPernikahan === "tidak_menikah"}
+										name="gender"
+										value="M"
+										checked={profileData.gender === "m"}
 										onChange={handleProfileInputChange}
 										className="mr-2 text-[#70B748] focus:ring-[#70B748]"
 									/>
-									<span className="text-xs sm:text-base text-gray-700">
-										Tidak menikah
-									</span>
+									<span className="text-xs sm:text-base text-gray-700">Laki-laki</span>
 								</label>
 								<label className="flex items-center">
 									<input
 										type="radio"
-										name="statusPernikahan"
-										value="menikah"
-										checked={profileData.statusPernikahan === "menikah"}
+										name="gender"
+										value="F"
+										checked={profileData.gender === "f"}
 										onChange={handleProfileInputChange}
 										className="mr-2 text-[#70B748] focus:ring-[#70B748]"
 									/>
-									<span className="text-xs sm:text-base text-gray-700">Menikah</span>
+									<span className="text-xs sm:text-base text-gray-700">Perempuan</span>
 								</label>
-								<label className="flex items-center">
-									<input
-										type="radio"
-										name="statusPernikahan"
-										value="bercerai"
-										checked={profileData.statusPernikahan === "bercerai"}
-										onChange={handleProfileInputChange}
-										className="mr-2 text-[#70B748] focus:ring-[#70B748]"
-									/>
-									<span className="text-xs sm:text-base text-gray-700">Bercerai</span>
-								</label>
+							</div>
+						</div>
+
+						<div>
+							<label className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
+								Status pernikahan
+							</label>
+							<div className="flex gap-3">
+								{masterData.marriageStatuses.data?.map((status) => (
+									<label key={status.id} className="flex items-center">
+										<input
+											type="radio"
+											name="statusPernikahan"
+											value={
+												status.name === "tidak menikah" ? "tidak_menikah" : status.name
+											}
+											checked={
+												profileData.statusPernikahan ===
+												(status.name === "tidak menikah" ? "tidak_menikah" : status.name)
+											}
+											onChange={handleProfileInputChange}
+											className="mr-2 text-[#70B748] focus:ring-[#70B748]"
+										/>
+										<span className="text-xs sm:text-base text-gray-700 capitalize">
+											{status.name}
+										</span>
+									</label>
+								))}
 							</div>
 						</div>
 
@@ -372,24 +579,18 @@ export default function Register() {
 								Pendidikan
 							</label>
 							<div className="flex flex-wrap gap-3 text-sm">
-								{[
-									{ value: "sd", label: "SD/MI" },
-									{ value: "smp", label: "SMP/MTS" },
-									{ value: "sma", label: "SMA/MA" },
-									{ value: "univ", label: "Univ" },
-									{ value: "tidak_sekolah", label: "Tidak sekolah" },
-								].map((option) => (
-									<label key={option.value} className="flex items-center">
+								{masterData.educations.data?.map((edu) => (
+									<label key={edu.id} className="flex items-center">
 										<input
 											type="radio"
 											name="pendidikan"
-											value={option.value}
-											checked={profileData.pendidikan === option.value}
+											value={edu.name}
+											checked={profileData.pendidikan === edu.name}
 											onChange={handleProfileInputChange}
 											className="mr-2 text-[#70B748] focus:ring-[#70B748]"
 										/>
-										<span className="text-xs sm:text-base text-gray-700">
-											{option.label}
+										<span className="text-xs sm:text-base text-gray-700 uppercase">
+											{edu.name}
 										</span>
 									</label>
 								))}
@@ -435,18 +636,21 @@ export default function Register() {
 						</div>
 						<div className="flex gap-3">
 							<button
+								type="button"
 								onClick={handleBackToRegister}
 								className="w-full px-4 py-2 text-sm border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors">
 								Kembali
 							</button>
 							<button
-								onClick={handleCompleteProfile}
-								className="w-full px-4 py-2 text-sm bg-[#70B748] text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] transition-colors">
-								Selanjutnya
+								type="submit"
+								disabled={isLoading}
+								className="w-full px-4 py-2 text-sm bg-[#70B748] text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
+								{isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
+								{isLoading ? "Memproses..." : "Selanjutnya"}
 							</button>
 						</div>
 					</div>
-				</div>
+				</form>
 			)}
 		</>
 	);
