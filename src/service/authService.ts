@@ -2,6 +2,7 @@ import { api } from "./api";
 
 export interface LoginData {
 	email: string;
+	role?: string
 	password: string;
 }
 

@@ -1,12 +1,24 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Loader2 } from "lucide-react";
+import type { LoginData } from "../service/authService";
+import { getErrorMessage } from "../utils/getErrorMessage";
 
 export default function Login() {
-	const [activeTab, setActiveTab] = useState("warga");
-	const [formData, setFormData] = useState({
+	const [searchParams, setSearchParams] = useSearchParams()
+
+	const activeTab = searchParams.get('tab') || 'warga'
+
+	const handleTabChange = (tab: string) => {
+		setSearchParams({ tab })
+
+		setFormData(prev => ({...prev, email: "", password: ""}))
+	}
+
+	const [formData, setFormData] = useState<LoginData>({
 		email: "",
+		role: "",
 		password: "",
 	});
 
@@ -21,9 +33,11 @@ export default function Login() {
 		}));
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e?: React.FormEvent) => {
+		if (e) e.preventDefault() // Handle browser refresh
+
 		try {
-			await login(formData);
+			await login(formData)
 
 			if (activeTab === "warga") {
 				navigate("/");
@@ -50,8 +64,8 @@ export default function Login() {
 								? "bg-[#70B748] text-white"
 								: "text-gray-600 hover:text-gray-800"
 						}`}
-						onClick={() => setActiveTab("warga")}>
-						warga
+						onClick={() => handleTabChange("warga")}>
+						Warga
 					</button>
 					<button
 						className={`cursor-pointer flex-1 py-2 px-4 rounded-md text-xs sm:text-base font-medium transition-colors ${
@@ -59,7 +73,7 @@ export default function Login() {
 								? "bg-[#70B748] text-white"
 								: "text-gray-600 hover:text-gray-800"
 						}`}
-						onClick={() => setActiveTab("admin")}>
+						onClick={() => handleTabChange("admin")}>
 						Admin desa
 					</button>
 					<button
@@ -68,14 +82,14 @@ export default function Login() {
 								? "bg-[#70B748] text-white"
 								: "text-gray-600 hover:text-gray-800"
 						}`}
-						onClick={() => setActiveTab("medis")}>
+						onClick={() => handleTabChange("medis")}>
 						Medis
 					</button>
 				</div>
 				<div className="space-y-4">
 					{error && (
 						<div className="bg-red-50 border border-red-200 rounded-lg p-4">
-							<p className="text-red-700 text-sm">{error}</p>
+							<p className="text-red-700 text-sm">{getErrorMessage(error)}</p>
 						</div>
 					)}
 
