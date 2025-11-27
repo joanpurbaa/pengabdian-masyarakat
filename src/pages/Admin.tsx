@@ -9,6 +9,7 @@ import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/WargaSection";
 import Kuisioner from "../components/admin/adminComponent/Kuisioner";
 import KelolaRwSection from "../components/admin/adminComponent/KelolaRwSection";
+import KelolaRtSection from "../components/admin/adminComponent/KelolaRtSection";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router";
 import AdminHome from "../components/admin/adminComponent/AdminHome";

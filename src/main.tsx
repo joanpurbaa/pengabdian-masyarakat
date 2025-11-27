@@ -1,11 +1,14 @@
-import { createBrowserRouter, RouterProvider } from "react-router";
-import { lazy } from "react";
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from "react-router";
+import { lazy, Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import axios from "axios";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { Loader2 } from "lucide-react";
+import AdminDesaLayout from "./layouts/Admin/AdminDesa/AdminDesaLayout";
+import Loading from "./pages/Loading";
+import AdminDesa from "./pages/Admin/AdminDesa/AdminDesa";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -18,14 +21,241 @@ const Quiz = lazy(() => import("./pages/Quiz"));
 
 axios.defaults.withCredentials = true;
 
+function ProtectedLayout() {
+	const token = localStorage.getItem("authToken");
+	const { user, isLoading, logout } = useAuth();
+
+	const location = useLocation();
+	const navigate = useNavigate()
+
+	// Add new logic for multi-tab sync
+	useEffect(() => {
+		const handleStorageChange = (event: StorageEvent) => {
+			if (event.key === 'authToken' && !event.newValue) {
+				logout()
+				navigate("/masuk")
+			}
+		}
+
+		window.addEventListener("storage", handleStorageChange)
+		return () => window.removeEventListener("storage", handleStorageChange)
+	}, [logout, navigate])
+
+	// Check if token exists in localStorage
+	useEffect(() => {
+		const token = localStorage.getItem("authToken");
+		if (user && !token) {
+			logout()
+		}
+	}, [user, logout, location]);
+
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center min-h-screen">
+				<Loader2 className="animate-spin text-[#70B748]" size={32} />
+				<span className="ml-2 text-gray-600">Memuat...</span>
+			</div>
+		);
+	}
+
+	if (!user || !token) {
+		return <Navigate to="/masuk" state={{ from: location }} replace />;
+	}
+
+	return <Outlet />;
+}
+
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: (
-			<ProtectedRoute>
-				<Home />
-			</ProtectedRoute>
-		),
+		element: <ProtectedLayout />,
+		children: [
+			{
+				path: "/",
+				element: (
+					<Home />
+				),
+			},
+			{
+				path: "/quiz/:id",
+				element: (
+					<Quiz />
+				),
+			},
+			{
+				path: "/result/:id",
+				element: (
+					<Result />
+				),
+			},
+			// Admin routes - Home page
+			{
+				path: "admin",
+				element: <AdminDesaLayout />,
+				children: [
+					{
+						index: true,
+						element: <Navigate to="responden" replace />
+					},
+					// Responden Routes
+					{
+						path: "responden",
+						children: [
+							{
+								index: true,
+								element: (
+									<Suspense fallback={<Loading />}>
+										<AdminDesa />
+									</Suspense>
+								)
+							},
+							{
+								path: "/admin/responden/:rwId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin/responden/:rwId/:rtId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin/responden/:rwId/:rtId/:keluargaId/history",
+								element: (
+									<HistorySection />
+								),
+							},
+							{
+								path: "/admin/responden/:rwId/:rtId/:keluargaId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+								element: (
+									<Admin />
+								),
+							},
+						]
+					},
+					// Kelola RW Routes
+					{
+						path: "kelola-rw",
+						children: [
+							{
+								path: "/admin/kelola-rw/:rwId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin/kelola-rw/:rwId/:rtId",
+								element: (
+									<Admin />
+								),
+							}
+						],
+					},
+				]
+			},
+			// Admin Medis routes - Home page
+			{
+				path: "/admin-medis",
+				children: [
+					{
+						index: true,
+						element: <Navigate to="kelola-rw" replace />
+					},
+					// Kelola RW Routes
+					{
+						path: "kelola-rw",
+						children: [
+							{
+								path: "/admin-medis/kelola-rw/:rwId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin-medis/kelola-rw/:rwId/:rtId",
+								element: (
+									<Admin />
+								),
+							},
+						]
+					},
+					// Responden Routes
+					{
+						path: "responden",
+						children: [
+							{
+								path: "/admin-medis/responden",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
+								element: (
+									<HistorySection />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
+								element: (
+									<Result />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
+								element: (
+									<Admin />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+								element: (
+									<Admin />
+								),
+							},
+						]
+					},
+					{
+						path: "/admin-medis/kuisioner",
+						element: (
+							<Admin />
+						),
+					},
+					{
+						path: "/admin-medis/result",
+						element: (
+							<MedisResult />
+						),
+					},
+				]
+			},
+			{
+				path: "/history",
+				element: (
+					<HistorySection />
+				),
+			},
+		]
 	},
 	{
 		path: "/masuk",
@@ -35,209 +265,227 @@ const router = createBrowserRouter([
 		path: "/daftar",
 		element: <Register />,
 	},
-	{
-		path: "/quiz/:id",
-		element: (
-			<ProtectedRoute>
-				<Quiz />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/result/:id",
-		element: (
-			<ProtectedRoute>
-				<Result />
-			</ProtectedRoute>
-		),
-	},
-	// Admin routes - Home page
-	{
-		path: "/admin",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/responden",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/responden/:rwId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/responden/:rwId/:rtId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/responden/:rwId/:rtId/:keluargaId/history",
-		element: (
-			<ProtectedRoute>
-				<HistorySection />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/responden/:rwId/:rtId/:keluargaId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/kelola-rw",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/kelola-rw/:rwId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin/kelola-rw/:rwId/:rtId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	// Admin Medis routes - Home page
-	{
-		path: "/admin-medis",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/kelola-rw/:rwId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/kelola-rw/:rwId/:rtId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden/:rwId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden/:rwId/:rtId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
-		element: (
-			<ProtectedRoute>
-				<HistorySection />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
-		element: (
-			<ProtectedRoute>
-				<Result />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/kuisioner",
-		element: (
-			<ProtectedRoute>
-				<Admin />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/admin-medis/result",
-		element: (
-			<ProtectedRoute>
-				<MedisResult />
-			</ProtectedRoute>
-		),
-	},
-	{
-		path: "/history",
-		element: (
-			<ProtectedRoute>
-				<HistorySection />
-			</ProtectedRoute>
-		),
-	},
-]);
+])
+
+// const router = createBrowserRouter([
+// 	{
+// 		path: "/",
+// 		element: (
+
+// 			<Home />
+// 		),
+// 	},
+// 	{
+// 		path: "/masuk",
+// 		element: <Login />,
+// 	},
+// 	{
+// 		path: "/daftar",
+// 		element: <Register />,
+// 	},
+// 	{
+// 		path: "/quiz/:id",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Quiz />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/result/:id",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Result />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	// Admin routes - Home page
+// 	{
+// 		path: "/admin",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden/:rwId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden/:rwId/:rtId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden/:rwId/:rtId/:keluargaId/history",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<HistorySection />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden/:rwId/:rtId/:keluargaId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/kelola-rw",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/kelola-rw/:rwId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/kelola-rw/:rwId/:rtId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	// Admin Medis routes - Home page
+// 	{
+// 		path: "/admin-medis",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/kelola-rw/:rwId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/kelola-rw/:rwId/:rtId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:rwId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:rwId/:rtId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<HistorySection />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Result />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/kuisioner",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/result",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<MedisResult />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/history",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<HistorySection />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// ]);
 
 // const router = createBrowserRouter([
 // 	{
