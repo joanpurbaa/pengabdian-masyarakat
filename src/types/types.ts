@@ -25,3 +25,32 @@ export interface RTStatsType {
 	tingkatDepresi: number;
 	tidakStabilCount: number;
 }
+
+export interface Question {
+	id: number;
+	pertanyaan: string;
+	description?: string;
+	jawaban: string;
+	statusToggle: boolean;
+}
+
+export interface QuestionFormData {
+	title: string;
+	description: string;
+	status: "draft" | "published";
+}
+
+export interface ApiQuestion {
+	id?: number;
+	title: string;
+	description: string;
+	status: "draft" | "published";
+	createdAt?: string;
+	updatedAt?: string;
+}
+
+export interface QuestionnaireResponse {
+	success: boolean;
+	data?: any;
+	error?: string;
+}

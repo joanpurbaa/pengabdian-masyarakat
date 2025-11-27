@@ -7,25 +7,51 @@ import RWSection from "../components/admin/adminComponent/RWSection";
 import { Heart, UserIcon } from "lucide-react";
 import RTSection from "../components/admin/adminComponent/RTSection";
 import KeluargaSection from "../components/admin/adminComponent/WargaSection";
-import DetailAnggotaKeluargaSection from "../components/admin/adminComponent/DetailAnggotaKeluargaSection";
 import Kuisioner from "../components/admin/adminComponent/Kuisioner";
 import KelolaRwSection from "../components/admin/adminComponent/KelolaRwSection";
 import KelolaRtSection from "../components/admin/adminComponent/KelolaRtSection";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router";
+import AdminHome from "../components/admin/adminComponent/AdminHome";
+import WargaSection from "../components/admin/adminComponent/WargaSection";
 
 export default function Admin() {
 	const location = useLocation().pathname;
 	const pathSegments = location.split("/").filter(Boolean);
+	const { user, logout, isAdminDesa, isAdminMedis } = useAuth();
+	const navigate = useNavigate();
 
 	const [responsiveSidebar, setResponsiveSidebar] = useState(false);
 	const [showLogoutText, setShowLogoutText] = useState(!responsiveSidebar);
 	const [showMinimizeText, setShowMinimizeText] = useState(!responsiveSidebar);
+
+	useEffect(() => {
+		const isAdminRoute = pathSegments[0] === "admin";
+		const isAdminMedisRoute = pathSegments[0] === "admin-medis";
+
+		if (
+			isAdminRoute &&
+			!isAdminDesa &&
+			user?.email !== "admin.desa@example.com"
+		) {
+			navigate("/masuk");
+		}
+
+		if (
+			isAdminMedisRoute &&
+			!isAdminMedis &&
+			user?.email !== "admin.medis@example.com"
+		) {
+			navigate("/masuk");
+		}
+	}, [pathSegments, isAdminDesa, isAdminMedis, user, navigate]);
 
 	function handleMobileResponsive() {
 		setResponsiveSidebar(!responsiveSidebar);
 	}
 
 	useEffect(() => {
-		let delay: number;
+		let delay: ReturnType<typeof setTimeout> | undefined;
 
 		if (responsiveSidebar) {
 			setShowLogoutText(false);
@@ -39,6 +65,11 @@ export default function Admin() {
 
 		return () => clearTimeout(delay);
 	}, [responsiveSidebar]);
+
+	const handleLogout = () => {
+		logout();
+		navigate("/masuk");
+	};
 
 	const renderMainContent = () => {
 		const currentSection = pathSegments[1];
@@ -58,40 +89,56 @@ export default function Admin() {
 			if (pathSegments.length === 4) {
 				const rwId = pathSegments[2];
 				const rtId = pathSegments[3];
-				return <KeluargaSection rwId={rwId} rtId={rtId} />;
+				return <WargaSection rwId={rwId} rtId={rtId} questionnaireId={""} />;
 			}
 		}
 
 		if (currentSection === "responden") {
+			// Tampilkan RespondenHome ketika di /admin-medis/responden
 			if (pathSegments.length === 2) {
-				return <RWSection />;
+				return <AdminHome />;
 			}
 			if (pathSegments.length === 3) {
-				const rwId = pathSegments[2];
-				return <RTSection rwId={rwId} />;
+				const questionnaireId = pathSegments[2];
+				return <RWSection questionnaireId={questionnaireId} />;
 			}
 			if (pathSegments.length === 4) {
-				const rwId = pathSegments[2];
-				const rtId = pathSegments[3];
-				return <KeluargaSection rwId={rwId} rtId={rtId} />;
+				const questionnaireId = pathSegments[2];
+				const rwId = pathSegments[3];
+				return <RTSection questionnaireId={questionnaireId} rwId={rwId} />;
 			}
 			if (pathSegments.length === 5) {
-				const rwId = pathSegments[2];
-				const rtId = pathSegments[3];
-				const keluargaId = pathSegments[4];
-				const anggotaName = pathSegments[5];
+				const questionnaireId = pathSegments[2];
+				const rwId = pathSegments[3];
+				const rtId = pathSegments[4];
 				return (
-					<DetailAnggotaKeluargaSection
+					<KeluargaSection
+						questionnaireId={questionnaireId}
 						rwId={rwId}
 						rtId={rtId}
-						keluargaId={keluargaId}
-						anggotaName={anggotaName}
 					/>
 				);
 			}
 		}
 
-		return <RWSection />;
+		// Default fallback
+		return <div>Halaman tidak ditemukan</div>;
+	};
+
+	const getHeaderTitle = () => {
+		if (pathSegments[0] === "admin-medis") {
+			return "Tes Kesehatan Mental - Medis";
+		}
+		return "Tes Kesehatan Mental";
+	};
+
+	const getUserDisplayName = () => {
+		if (user?.email === "admin.desa@example.com") {
+			return "Admin Desa";
+		} else if (user?.email === "admin.medis@example.com") {
+			return "Admin Medis";
+		}
+		return user?.fullname || "User";
 	};
 
 	return (
@@ -101,14 +148,14 @@ export default function Admin() {
 					<a className="flex items-center space-x-4 cursor-pointer" href="/">
 						<Heart className="fill-[#70B748] text-[#70B748] w-10 h-10" />
 						<div className="text-[#70B748] text-base lg:text-[24px] font-bold">
-							Tes Kesehatan Mental
+							{getHeaderTitle()}
 						</div>
 					</a>
 				</section>
 				<section className="flex justify-end items-center gap-[15px] md:gap-[30px]">
 					<div className="flex items-center gap-3">
 						<h3 className="text-zinc-800 text-base lg:text-xl font-medium">
-							Sodikin
+							{getUserDisplayName()}
 						</h3>
 						<UserIcon className="w-7 h-7 text-zinc-800" />
 					</div>
@@ -134,12 +181,15 @@ export default function Admin() {
 									</div>
 								)}
 							</li>
-							<AdminSidebar responsiveSidebar={responsiveSidebar} />
+							<AdminSidebar
+								responsiveSidebar={responsiveSidebar}
+								// isAdminMedis={pathSegments[0] === "admin-medis"}
+							/>
 						</ul>
 					</div>
 					<div className="flex justify-center">
-						<a
-							href="/masuk"
+						<button
+							onClick={handleLogout}
 							className={`flex items-center text-base lg:text-xl text-white font-normal ${
 								!responsiveSidebar ? "bg-[#70B748]" : "bg-transparent"
 							} rounded-full px-[30px] lg:px-[60px] py-[8px] lg:py-[12px] gap-[10px]`}>
@@ -154,7 +204,7 @@ export default function Admin() {
 									<RightArrowIcon className="w-3 lg:w-5" fill="#70B748" />
 								)}
 							</div>
-						</a>
+						</button>
 					</div>
 				</aside>
 				<main

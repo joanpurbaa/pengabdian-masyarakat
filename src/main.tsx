@@ -21,7 +21,11 @@ axios.defaults.withCredentials = true;
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <Home />,
+		element: (
+			<ProtectedRoute>
+				<Home />
+			</ProtectedRoute>
+		),
 	},
 	{
 		path: "/masuk",
@@ -40,10 +44,19 @@ const router = createBrowserRouter([
 		),
 	},
 	{
-		path: "/result",
+		path: "/result/:id",
 		element: (
 			<ProtectedRoute>
 				<Result />
+			</ProtectedRoute>
+		),
+	},
+	// Admin routes - Home page
+	{
+		path: "/admin",
+		element: (
+			<ProtectedRoute>
+				<Admin />
 			</ProtectedRoute>
 		),
 	},
@@ -113,6 +126,15 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "/admin/kelola-rw/:rwId/:rtId",
+		element: (
+			<ProtectedRoute>
+				<Admin />
+			</ProtectedRoute>
+		),
+	},
+	// Admin Medis routes - Home page
+	{
+		path: "/admin-medis",
 		element: (
 			<ProtectedRoute>
 				<Admin />
@@ -216,6 +238,164 @@ const router = createBrowserRouter([
 		),
 	},
 ]);
+
+// const router = createBrowserRouter([
+// 	{
+// 		path: "/",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Home />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/masuk",
+// 		element: <Login />,
+// 	},
+// 	{
+// 		path: "/daftar",
+// 		element: <Register />,
+// 	},
+// 	{
+// 		path: "/quiz/:id",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Quiz />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/result",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Result />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/responden",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/kelola-rw",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/kelola-rw/:rwId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin/kelola-rw/:rwId/:rtId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	// Admin Medis routes
+// 	{
+// 		path: "/admin-medis",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:questionnaireId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:questionnaireId/:rwId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:questionnaireId/:rwId/:rtId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/responden/:questionnaireId/:rwId/:rtId/:keluargaId",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path:
+// 			"/admin-medis/responden/:questionnaireId/:rwId/:rtId/:keluargaId/:anggotaName",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path:
+// 			"/admin-medis/responden/:questionnaireId/:rwId/:rtId/:keluargaId/history",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<HistorySection />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/kuisioner",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<Admin />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/admin-medis/result",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<MedisResult />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// 	{
+// 		path: "/history",
+// 		element: (
+// 			<ProtectedRoute>
+// 				<HistorySection />
+// 			</ProtectedRoute>
+// 		),
+// 	},
+// ]);
 
 const queryClient = new QueryClient();
 

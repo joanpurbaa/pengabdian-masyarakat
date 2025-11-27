@@ -1,0 +1,263 @@
+import axios from "axios";
+import type { ApiResponse, Questionnaire } from "./questionnaireService";
+import type {
+	BulkUpdateQuestionPayload,
+	CreateQuestionnairePayload,
+	CreateQuestionPayload,
+	GetAllRWResponse,
+	QueryParams,
+	QuestionnaireQuestion,
+	QuestionnaireSummary,
+	RTData,
+	RTDetail,
+	RTSummary,
+	RWSummary,
+	SummarizeAllResponse,
+	UpdateQuestionnairePayload,
+	WargaHistory,
+} from "../types/adminMedisService";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE;
+
+const getAuthToken = (): string | null => {
+	return localStorage.getItem("authToken");
+};
+
+const api = axios.create({
+	baseURL: API_BASE_URL,
+});
+
+api.interceptors.request.use(
+	(config) => {
+		const token = getAuthToken();
+		if (token) {
+			config.headers.Authorization = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+export const adminMedisService = {
+	async getAllQuestionnaires(): Promise<Questionnaire[]> {
+		const response = await api.get<ApiResponse<Questionnaire[]>>(
+			"/v1/questionnaire"
+		);
+		return response.data.data;
+	},
+
+	async getQuestionnaireStats(questionnaireId: string) {
+		const response = await api.get(`/v1/questionnaire/${questionnaireId}/stats`);
+		return response.data;
+	},
+
+	async getQuestionnaireSummary(
+		questionnaireId: string
+	): Promise<QuestionnaireSummary> {
+		const response = await api.get<ApiResponse<QuestionnaireSummary>>(
+			`/v1/questionnaire-submission/summary/${questionnaireId}`
+		);
+		return response.data.data;
+	},
+
+	async getRTDetail(
+		questionnaireId: string,
+		rwId: string,
+		rtId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RTDetail> {
+		const params: QueryParams = {
+			RukunWargaId: rwId,
+			RukunTetanggaId: rtId,
+		};
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<ApiResponse<RTDetail>>(
+			`/v1/questionnaire-submission/detail-rt/${questionnaireId}`,
+			{ params }
+		);
+		return response.data.data;
+	},
+
+	async getWargaHistory(
+		questionnaireId: string,
+		wargaId: string
+	): Promise<WargaHistory[]> {
+		const response = await api.get<ApiResponse<WargaHistory[]>>(
+			`/v1/questionnaire-submission/history/${questionnaireId}/${wargaId}`
+		);
+		return response.data.data;
+	},
+
+	async getAllRW(): Promise<GetAllRWResponse> {
+		const response = await api.get<GetAllRWResponse>("/v1/rukun-warga");
+		return response.data;
+	},
+
+	async getRTByRW(rwId: string): Promise<RTData[]> {
+		const response = await api.get<ApiResponse<RTData[]>>(
+			`/v1/admin-medis/rw/${rwId}/rt`
+		);
+		return response.data.data;
+	},
+
+	async getQuestionnaireQuestions(
+		questionnaireId: string
+	): Promise<QuestionnaireQuestion[]> {
+		const response = await api.get<ApiResponse<QuestionnaireQuestion[]>>(
+			`/v1/questionnaire-question`,
+			{
+				params: {
+					QuestionnaireId: questionnaireId,
+				},
+			}
+		);
+
+		const data = response.data.data;
+
+		const sortedData = [...data].sort((a, b) => {
+			const orderA = a.order ?? 999;
+			const orderB = b.order ?? 999;
+			return orderA - orderB;
+		});
+
+		return sortedData;
+	},
+
+	async createQuestionnaireQuestion(
+		payload: CreateQuestionPayload
+	): Promise<QuestionnaireQuestion> {
+		const response = await api.post<ApiResponse<QuestionnaireQuestion>>(
+			"/v1/questionnaire-question",
+			payload
+		);
+		return response.data.data;
+	},
+
+	async bulkUpdateQuestions(
+		payload: BulkUpdateQuestionPayload[]
+	): Promise<QuestionnaireQuestion[]> {
+		console.log("📤 Bulk update payload:", payload);
+
+		const response = await api.put<ApiResponse<QuestionnaireQuestion[]>>(
+			"/v1/questionnaire-question/bulk-update",
+			payload
+		);
+
+		console.log("📥 Bulk update response:", response.data);
+		return response.data.data;
+	},
+
+	async deleteQuestionnaireQuestion(questionId: string): Promise<void> {
+		await api.delete(`/v1/questionnaire-question/${questionId}`);
+	},
+
+	async toggleQuestionStatus(
+		questionId: string,
+		status: "publish" | "draft",
+		allQuestions: QuestionnaireQuestion[]
+	): Promise<QuestionnaireQuestion[]> {
+		const payload: BulkUpdateQuestionPayload[] = allQuestions.map((q, index) => ({
+			id: q.id,
+			questionText: q.questionText,
+			questionType: q.questionType,
+			status: (q.id === questionId ? status : q.status) as "publish" | "draft",
+			order: q.order ?? index + 1,
+		}));
+
+		console.log("📤 Toggle status payload:", payload);
+
+		const response = await api.put<ApiResponse<QuestionnaireQuestion[]>>(
+			"/v1/questionnaire-question/bulk-update",
+			payload
+		);
+
+		console.log("📥 Toggle status response:", response.data);
+
+		return response.data.data;
+	},
+
+	async createQuestionnaire(
+		payload: CreateQuestionnairePayload
+	): Promise<Questionnaire> {
+		const response = await api.post<ApiResponse<Questionnaire>>(
+			"/v1/questionnaire",
+			payload
+		);
+		return response.data.data;
+	},
+
+	async updateQuestionnaire(
+		id: string,
+		payload: UpdateQuestionnairePayload
+	): Promise<Questionnaire> {
+		const response = await api.put<ApiResponse<Questionnaire>>(
+			`/v1/questionnaire/${id}`,
+			payload
+		);
+		return response.data.data;
+	},
+
+	async deleteQuestionnaire(id: string): Promise<void> {
+		await api.delete(`/v1/questionnaire/${id}`);
+	},
+
+	async summarizeAll(
+		questionnaireId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<SummarizeAllResponse> {
+		const params: Partial<{ startDate: string; endDate: string }> = {};
+
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<SummarizeAllResponse>(
+			`/v1/questionnaire-submission/summary/${questionnaireId}`,
+			{ params }
+		);
+
+		return response.data;
+	},
+
+	async summaryRw(
+		questionnaireId: string,
+		rwId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RWSummary> {
+		const params: QueryParams = { RukunWargaId: rwId };
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<ApiResponse<RWSummary>>(
+			`/v1/questionnaire-submission/summary-rw/${questionnaireId}`,
+			{ params }
+		);
+
+		return response.data.data;
+	},
+
+	async summaryRt(
+		questionnaireId: string,
+		rwId: string,
+		rtId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RTSummary> {
+		const params: QueryParams = { RukunWargaId: rwId, RukunTetanggaId: rtId };
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<ApiResponse<RTSummary>>(
+			`/v1/questionnaire-submission/summary-rt/${questionnaireId}`,
+			{ params }
+		);
+
+		return response.data.data;
+	},
+};

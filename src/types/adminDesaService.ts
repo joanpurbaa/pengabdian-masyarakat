@@ -1,0 +1,125 @@
+export interface ApiResponse<T> {
+	statusCode: number;
+	message: string;
+	data: T;
+}
+
+export interface Questionnaire {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	title: string;
+	description: string;
+	status: "publish" | "draft" | "archived";
+}
+
+export interface RtResponse {
+	statusCode: number;
+	message: string;
+	data: RukunWarga;
+	metadata: Metadata;
+}
+
+export interface RukunWarga {
+	id: string;
+	name: number;
+	createdAt: string;
+	updatedAt: string;
+	rukunTetangga: RukunTetangga[];
+}
+
+export interface RukunTetangga {
+	totalWarga: number;
+	id: string;
+	name: number;
+	createdAt: string;
+	updatedAt: string;
+	RukunWargaId: string;
+}
+
+export interface Metadata {
+	rtCount: number;
+	userCount: number;
+}
+
+export interface WargaResponse {
+	statusCode: number;
+	message: string;
+	data: WargaData;
+	metadata: WargaMetadata;
+}
+
+export interface WargaData {
+	id: string;
+	name: number;
+	createdAt: string;
+	updatedAt: string;
+	RukunWargaId: string;
+	userDetails: UserDetail[];
+}
+
+export interface UserDetail {
+	id: string;
+	nik: string;
+	profession: string;
+	createdAt: string;
+	updatedAt: string;
+	UserId: string;
+	RukunTetanggaId: string;
+	RukunWargaId: string;
+	EducationId: string;
+	MarriageStatusId: string;
+	SalaryRangeId: string;
+	user: User;
+}
+
+export interface User {
+	id: string;
+	fullname: string;
+	email: string;
+	createdAt: string;
+	updatedAt: string;
+	phoneNumber?: string;
+	role?: string;
+}
+
+export interface WargaMetadata {
+	userCount: number;
+}
+
+export interface QuestionnaireByIdResponse {
+	statusCode: number;
+	message: string;
+	data: {
+		id: string;
+		title: string;
+		description: string;
+		status: "publish" | "draft" | "archived";
+		createdAt: string;
+		updatedAt: string;
+	};
+}
+
+export interface SummarizeAllResponse {
+	statusCode: number;
+	message: string;
+	data: {
+		summarize: {
+			userCount: number;
+			submitCount: number;
+			stableMentalCount: number;
+			unStableMentalCount: number;
+			unStableMentalPercentage: number;
+		};
+		perRw: Array<{
+			rwId: string;
+			rwName: number;
+			rtCount: number;
+			userCount: number;
+			submitCount: number;
+			stableMentalCount: number;
+			unStableMentalCount: number;
+			unStableMentalPercentage: number;
+		}>;
+	};
+}

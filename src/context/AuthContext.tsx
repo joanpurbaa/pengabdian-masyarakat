@@ -8,6 +8,7 @@ interface User {
 	fullname: string;
 	email: string;
 	accessToken: string;
+	role?: string;
 }
 
 interface AuthContextType {
@@ -17,9 +18,24 @@ interface AuthContextType {
 	logout: () => void;
 	isLoading: boolean;
 	error: string | null;
+	isAdminDesa: boolean;
+	isAdminMedis: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const ADMIN_CREDENTIALS = {
+	desa: {
+		email: "admin.desa@example.com",
+		password: "bluestar648",
+		role: "admin_desa",
+	},
+	medis: {
+		email: "admin.medis@example.com",
+		password: "bluestar648",
+		role: "admin_medis",
+	},
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
@@ -41,6 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	});
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+
+	const isAdminDesa =
+		user?.email === ADMIN_CREDENTIALS.desa.email || user?.role === "admin_desa";
+	const isAdminMedis =
+		user?.email === ADMIN_CREDENTIALS.medis.email || user?.role === "admin_medis";
 
 	useEffect(() => {
 		const token = localStorage.getItem("authToken");
@@ -64,7 +85,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		setError(null);
 
 		try {
-			const response = await authService.login(loginData);
+			let userWithRole = { ...loginData };
+
+			if (
+				loginData.email === ADMIN_CREDENTIALS.desa.email &&
+				loginData.password === ADMIN_CREDENTIALS.desa.password
+			) {
+				userWithRole = { ...loginData, role: ADMIN_CREDENTIALS.desa.role };
+			} else if (
+				loginData.email === ADMIN_CREDENTIALS.medis.email &&
+				loginData.password === ADMIN_CREDENTIALS.medis.password
+			) {
+				userWithRole = { ...loginData, role: ADMIN_CREDENTIALS.medis.role };
+			}
+
+			const response = await authService.login(userWithRole);
 
 			if (response.statusCode === 200 && response.data) {
 				const userData: User = {
@@ -72,6 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 					fullname: response.data.fullname,
 					email: response.data.email,
 					accessToken: response.data.accessToken,
+					role: userWithRole.role,
 				};
 
 				setUser(userData);
@@ -126,13 +162,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	return (
 		<AuthContext.Provider
-			value={{ user, login, register, logout, isLoading, error }}>
+			value={{
+				user,
+				login,
+				register,
+				logout,
+				isLoading,
+				error,
+				isAdminDesa,
+				isAdminMedis,
+			}}>
 			{children}
 		</AuthContext.Provider>
 	);
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = (): AuthContextType => {
 	const context = useContext(AuthContext);
 	if (context === undefined) {

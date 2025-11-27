@@ -16,6 +16,9 @@ export default function MentalHealthChart({
 	title: string;
 	subtitle: string;
 }) {
+	// Untuk chart, selalu hitung persentase sehat mental
+	const healthyMentalPercentage = 100 - overallDepressionRate;
+
 	const data = [
 		{
 			name: "Warga Tidak Sehat Mental",
@@ -24,7 +27,7 @@ export default function MentalHealthChart({
 		},
 		{
 			name: "Warga Sehat Mental",
-			value: 100 - overallDepressionRate,
+			value: healthyMentalPercentage,
 			color: "#70B748",
 		},
 	];
@@ -33,8 +36,8 @@ export default function MentalHealthChart({
 		active,
 		payload,
 	}: {
-		active: string;
-		payload: { name: string; value: string }[];
+		active: boolean;
+		payload: any[];
 	}) => {
 		if (active && payload && payload.length) {
 			return (
@@ -69,7 +72,7 @@ export default function MentalHealthChart({
 								<Cell key={`cell-${index}`} fill={entry.color} />
 							))}
 						</Pie>
-						<Tooltip content={<CustomTooltip active={""} payload={[]} />} />
+						<Tooltip content={<CustomTooltip active={false} payload={[]} />} />
 						<Legend
 							verticalAlign="bottom"
 							height={30}
@@ -84,17 +87,17 @@ export default function MentalHealthChart({
 			</div>
 
 			<div className="mt-4 grid grid-cols-2 gap-4">
+				<div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
+					<div className="text-2xl font-bold text-green-700">
+						{healthyMentalPercentage}%
+					</div>
+					<div className="text-sm text-green-600">Sehat Mental</div>
+				</div>
 				<div className="text-center p-3 bg-red-50 rounded-lg border border-red-200">
 					<div className="text-2xl font-bold text-red-700">
 						{overallDepressionRate}%
 					</div>
 					<div className="text-sm text-red-600">Tidak Sehat Mental</div>
-				</div>
-				<div className="text-center p-3 bg-green-50 rounded-lg border border-green-200">
-					<div className="text-2xl font-bold text-green-700">
-						{100 - overallDepressionRate}%
-					</div>
-					<div className="text-sm text-green-600">Sehat Mental</div>
 				</div>
 			</div>
 		</div>

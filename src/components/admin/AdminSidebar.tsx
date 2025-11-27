@@ -13,7 +13,7 @@ export default function AdminSideBar({
 	const pathSegments = useLocation().pathname.split("/").filter(Boolean);
 
 	useEffect(() => {
-		let delay: number;
+		let delay: ReturnType<typeof setTimeout> | undefined;
 
 		if (responsiveSidebar) {
 			setSectionLabel(false);
@@ -23,7 +23,9 @@ export default function AdminSideBar({
 			}, 100);
 		}
 
-		return () => clearTimeout(delay);
+		return () => {
+			if (delay) clearTimeout(delay);
+		};
 	}, [responsiveSidebar]);
 
 	return (

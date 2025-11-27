@@ -15,9 +15,9 @@ export const useQuestionnaire = () => {
 			setError(null);
 			const data = await questionnaireService.getAllQuestionnaires();
 			setQuestionnaires(data);
-		} catch (err) {
-			setError("Gagal memuat kuisioner");
+		} catch (err: any) {
 			console.error("Error fetching questionnaires:", err);
+			setError(err.response?.data?.message || "Gagal memuat kuisioner");
 		} finally {
 			setLoading(false);
 		}
@@ -27,10 +27,14 @@ export const useQuestionnaire = () => {
 		fetchQuestionnaires();
 	}, []);
 
+	const refetch = () => {
+		fetchQuestionnaires();
+	};
+
 	return {
 		questionnaires,
 		loading,
 		error,
-		refetch: fetchQuestionnaires,
+		refetch,
 	};
 };
