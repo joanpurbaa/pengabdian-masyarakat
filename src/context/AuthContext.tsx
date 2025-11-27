@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../service/authService";
 import type { LoginData, RegisterData } from "../service/authService";
+import type { APIError } from "../types/ErrorFallbackType";
 
 interface User {
 	uid: string;
@@ -17,7 +18,7 @@ interface AuthContextType {
 	register: (data: RegisterData) => Promise<void>;
 	logout: () => void;
 	isLoading: boolean;
-	error: string | null;
+	error: APIError | null
 	isAdminDesa: boolean;
 	isAdminMedis: boolean;
 }
@@ -56,7 +57,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		return null;
 	});
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const [error, setError] = useState<APIError | null>(null);
 
 	const isAdminDesa =
 		user?.email === ADMIN_CREDENTIALS.desa.email || user?.role === "admin_desa";
@@ -120,10 +121,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			} else {
 				throw new Error(response.message || "Login failed");
 			}
-		} catch (err: unknown) {
-			const errorMessage = err instanceof Error ? err.message : "Login failed";
-			setError(errorMessage);
-			throw new Error(errorMessage);
+		} catch (err: any) {
+			console.log("Catch Error:", err)
+			setError(err as APIError);
+
+			throw err;
 		} finally {
 			setIsLoading(false);
 		}
@@ -144,11 +146,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			} else {
 				throw new Error(response.message || "Registration failed");
 			}
-		} catch (err: unknown) {
-			const errorMessage =
-				err instanceof Error ? err.message : "Registration failed";
-			setError(errorMessage);
-			throw new Error(errorMessage);
+		} catch (err: any) {
+			console.log("Catch Error:", err)
+			setError(err as APIError);
+
+			throw err;
 		} finally {
 			setIsLoading(false);
 		}
