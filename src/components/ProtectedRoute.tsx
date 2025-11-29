@@ -1,27 +1,35 @@
-import { Navigate, useLocation }   from "react-router";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-interface ProtectedRouteProps {
-	children: React.ReactNode;
-	requiredRole?: "admin" | "medis" | "warga";
-}
+export default function ProtectedRoute() {
+	const token = localStorage.getItem("authToken");
+	const { user, isLoading, logout } = useAuth();
 
-export default function ProtectedRoute({
-	children,
-}: ProtectedRouteProps) {
-	const { user, isLoading } = useAuth();
 	const location = useLocation();
-	const [tokenValid, setTokenValid] = useState(true);
+	const navigate = useNavigate()
+
+	// Add new logic for multi-tab sync
+	useEffect(() => {
+		const handleStorageChange = (event: StorageEvent) => {
+			if (event.key === 'authToken' && !event.newValue) {
+				logout()
+				navigate("/masuk")
+			}
+		}
+
+		window.addEventListener("storage", handleStorageChange)
+		return () => window.removeEventListener("storage", handleStorageChange)
+	}, [logout, navigate])
 
 	// Check if token exists in localStorage
 	useEffect(() => {
 		const token = localStorage.getItem("authToken");
-		if (!token) {
-			setTokenValid(false);
+		if (user && !token) {
+			logout()
 		}
-	}, []);
+	}, [user, logout, location]);
 
 	if (isLoading) {
 		return (
@@ -32,9 +40,9 @@ export default function ProtectedRoute({
 		);
 	}
 
-	if (!user || !tokenValid) {
+	if (!user || !token) {
 		return <Navigate to="/masuk" state={{ from: location }} replace />;
 	}
 
-	return <>{children}</>;
+	return <Outlet />;
 }

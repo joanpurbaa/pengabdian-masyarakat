@@ -1,3 +1,28 @@
+export interface Questionnaire {
+	id: string;
+	title: string;
+	description: string;
+	status: "publish" | "draft" | "archived";
+    riskThreshold?: number;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface GetQuestionnaireParams {
+	page: number;
+    pageSize: number;
+    title?: string;
+    description?: string;
+    status?: string;
+    order?: string;
+}
+
+export interface PaginatedResponse<T> {
+	statusCode: number;
+	message: string;
+	data: T[]
+}
+
 export interface RTData {
 	rtId: string;
 	rtName: number;
@@ -30,6 +55,43 @@ export interface QuestionnaireSummary {
 	perRw: RWSectionData[];
 }
 
+export interface UserSummaryResponse {
+    UserId: string;
+    fullname: string;
+    summarize: {
+        submitCount: number;
+        stableMentalCount: number;
+        unStableMentalCount: number;
+        unStableMentalPercentage: number;
+    };
+    submissions: Array<{
+        submissionId: string;
+        submissionDate: string;
+        trueCount: string;
+        isMentalUnStable: number;
+    }>;
+}
+
+export interface SubmissionDetailResponse {
+    id: string;
+    trueCount: number;
+    falseCount: number;
+    answeredCount: number;
+    isMentalUnstable: boolean;
+    UserId: string;
+    QuestionnaireId: string;
+    createdAt: string;
+    questionnaireAnswer: Array<{
+        id: string;
+        answerValue: string;
+        questionnaireQuestion: {
+            id: string;
+            questionText: string;
+            order: number;
+        };
+    }>;
+}
+
 export interface RWSectionData {
 	name: string;
 	id: string;
@@ -41,15 +103,6 @@ export interface RWSectionData {
 	stableMentalCount: number;
 	unStableMentalCount: number;
 	unStableMentalPercentage: number;
-}
-
-export interface Questionnaire {
-	id: string;
-	createdAt: string;
-	updatedAt: string;
-	title: string;
-	description: string;
-	status: "publish" | "draft" | "archived";
 }
 
 export interface QuestionnaireQuestion {
@@ -132,7 +185,7 @@ export interface RTSummary {
 		unStableMentalPercentage: number;
 	};
 	users: Array<{
-		userId: string;
+		UserId: string;
 		fullname: string;
 		nik?: string;
 		lastSubmissionDate: string;

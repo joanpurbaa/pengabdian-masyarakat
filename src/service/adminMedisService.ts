@@ -5,6 +5,8 @@ import type {
 	CreateQuestionnairePayload,
 	CreateQuestionPayload,
 	GetAllRWResponse,
+	GetQuestionnaireParams,
+	PaginatedResponse,
 	QueryParams,
 	QuestionnaireQuestion,
 	QuestionnaireSummary,
@@ -12,8 +14,10 @@ import type {
 	RTDetail,
 	RTSummary,
 	RWSummary,
+	SubmissionDetailResponse,
 	SummarizeAllResponse,
 	UpdateQuestionnairePayload,
+	UserSummaryResponse,
 	WargaHistory,
 } from "../types/adminMedisService";
 
@@ -41,11 +45,13 @@ api.interceptors.request.use(
 );
 
 export const adminMedisService = {
-	async getAllQuestionnaires(): Promise<Questionnaire[]> {
-		const response = await api.get<ApiResponse<Questionnaire[]>>(
-			"/v1/questionnaire"
+	async getAllQuestionnaires(params: GetQuestionnaireParams): Promise<PaginatedResponse<Questionnaire>> {
+		const response = await api.get<PaginatedResponse<Questionnaire>>(
+			"/v1/questionnaire",
+			{ params }
 		);
-		return response.data.data;
+
+		return response.data;
 	},
 
 	async getQuestionnaireStats(questionnaireId: string) {
@@ -58,6 +64,28 @@ export const adminMedisService = {
 	): Promise<QuestionnaireSummary> {
 		const response = await api.get<ApiResponse<QuestionnaireSummary>>(
 			`/v1/questionnaire-submission/summary/${questionnaireId}`
+		);
+		return response.data.data;
+	},
+
+	async getSummaryUser(
+		questionnaireId: string,
+		RukunWargaId: string,
+		RukunTetanggaId: string,
+		userId: string,
+	): Promise<UserSummaryResponse> {
+		const response = await api.get<ApiResponse<UserSummaryResponse>>(
+			`/v1/questionnaire-submission/summary-user/${questionnaireId}`,
+			{
+				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId}
+			}
+		);
+		return response.data.data;
+	},
+
+	async getSubmissionDetail(submissionId: string): Promise<SubmissionDetailResponse> {
+		const response = await api.get<ApiResponse<SubmissionDetailResponse>>(
+			`/v1/questionnaire-submission/${submissionId}/detail`
 		);
 		return response.data.data;
 	},

@@ -51,7 +51,7 @@ export default function MentalHealthChart({
 	};
 
 	return (
-		<div className="bg-white rounded-xl p-6 shadow-sm">
+		<div className="bg-white p-6 shadow-sm">
 			<div className="text-center mb-4">
 				<h3 className="text-xl font-bold text-gray-800">{title}</h3>
 				<p className="text-gray-600">{subtitle}</p>
