@@ -121,6 +121,7 @@ export interface CreateQuestionPayload {
 	questionType: "radio" | "checkbox" | "text";
 	status: "publish" | "draft";
 	QuestionnaireId: string;
+	order: number
 }
 
 export interface BulkUpdateQuestionPayload {

@@ -15,6 +15,7 @@ import RWDashboard from "./pages/Admin/AdminMedis/Responden/RwDashboard/RwDashbo
 import RTDashboard from "./pages/Admin/AdminMedis/Responden/RtDashboard/RTDashboard";
 import WargaDashboard from "./pages/Admin/AdminMedis/Responden/WargaDashboard/WargaDashboard";
 import MedisResult from "./pages/Admin/AdminMedis/Responden/MedisResult/MedisResult";
+import KuisionerDashboard from "./pages/Admin/AdminMedis/Kuisioner/KuisionerDashborad";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -251,7 +252,7 @@ const router = createBrowserRouter([
 					{
 						path: "/admin-medis/kuisioner",
 						element: (
-							<Admin />
+							<KuisionerDashboard />
 						),
 					},
 
