@@ -9,13 +9,19 @@ import { Loader2 } from "lucide-react";
 import AdminDesaLayout from "./layouts/Admin/AdminDesa/AdminDesaLayout";
 import Loading from "./pages/Loading";
 import AdminDesa from "./pages/Admin/AdminDesa/AdminDesa";
+import AdminMedis from "./pages/Admin/AdminMedis/Responden/AdminMedisReponden";
+import AdminMediLayout from "./layouts/Admin/AdminMedis/AdminMedisLayout";
+import RWDashboard from "./pages/Admin/AdminMedis/Responden/RwDashboard/RwDashboard";
+import RTDashboard from "./pages/Admin/AdminMedis/Responden/RtDashboard/RTDashboard";
+import WargaDashboard from "./pages/Admin/AdminMedis/Responden/WargaDashboard/WargaDashboard";
+import MedisResult from "./pages/Admin/AdminMedis/Responden/MedisResult/MedisResult";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Result = lazy(() => import("./pages/Result"));
-const MedisResult = lazy(() => import("./pages/MedisResult"));
+// const MedisResult = lazy(() => import("./pages/MedisResult"));
 const HistorySection = lazy(() => import("./pages/HistorySection"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 
@@ -164,10 +170,65 @@ const router = createBrowserRouter([
 			// Admin Medis routes - Home page
 			{
 				path: "/admin-medis",
+				element: <AdminMediLayout />,
 				children: [
 					{
 						index: true,
-						element: <Navigate to="kelola-rw" replace />
+						element: <Navigate to="responden" replace />
+					},
+					// Responden Routes
+					{
+						path: "responden",
+						children: [
+							{
+								index: true,
+								element: (
+									<AdminMedis />
+								),
+							},
+							{
+								path: ":questionnaireId",
+								element: (
+									<RWDashboard />
+								),
+							},
+							{
+								path: ":questionnaireId/:rwId",
+								element: (
+									<RTDashboard />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
+								element: (
+									<HistorySection />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
+								element: (
+									<Result />
+								),
+							},
+							{
+								path: ":questionnaireId/:rwId/:rtId",
+								element: (
+									<WargaDashboard />
+								),
+							},
+							{
+								path: "result/:questionnaireId/:rwId/:rtId/:userId",
+								element: (
+									<MedisResult />
+								),
+							},
+							{
+								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
+								element: (
+									<Admin />
+								),
+							},
+						]
 					},
 					// Kelola RW Routes
 					{
@@ -187,66 +248,13 @@ const router = createBrowserRouter([
 							},
 						]
 					},
-					// Responden Routes
-					{
-						path: "responden",
-						children: [
-							{
-								path: "/admin-medis/responden",
-								element: (
-									<Admin />
-								),
-							},
-							{
-								path: "/admin-medis/responden/:rwId",
-								element: (
-									<Admin />
-								),
-							},
-							{
-								path: "/admin-medis/responden/:rwId/:rtId",
-								element: (
-									<Admin />
-								),
-							},
-							{
-								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
-								element: (
-									<HistorySection />
-								),
-							},
-							{
-								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
-								element: (
-									<Result />
-								),
-							},
-							{
-								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
-								element: (
-									<Admin />
-								),
-							},
-							{
-								path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-								element: (
-									<Admin />
-								),
-							},
-						]
-					},
 					{
 						path: "/admin-medis/kuisioner",
 						element: (
 							<Admin />
 						),
 					},
-					{
-						path: "/admin-medis/result",
-						element: (
-							<MedisResult />
-						),
-					},
+
 				]
 			},
 			{

@@ -41,7 +41,7 @@ function AdminDesaLayout() {
     };
 
     return (
-        <MainLayout>
+        <MainLayout title="Tes Kesehatan Mental">
             <aside
                 className={`transition-all ease-in-out duration-300 ${responsiveSidebar ? "w-[100px]" : "w-[400px]"
                     } py-[40px] h-full bg-gray-100 shadow-2xl flex flex-col justify-between p-[20px]`}>

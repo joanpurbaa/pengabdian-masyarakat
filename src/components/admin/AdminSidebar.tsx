@@ -30,7 +30,6 @@ export default function AdminSideBar({
 
 	return (
 		<>
-			<hr className="border-zinc-300" />
 			<Link
 				className="block"
 				to={
@@ -50,7 +49,6 @@ export default function AdminSideBar({
 					)}
 				</li>
 			</Link>
-			<hr className="border-zinc-300" />
 			<Link
 				className="block"
 				to={
