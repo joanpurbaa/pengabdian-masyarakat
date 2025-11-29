@@ -134,27 +134,30 @@ export const adminMedisService = {
 	},
 
 	async getQuestionnaireQuestions(
-		questionnaireId: string
-	): Promise<QuestionnaireQuestion[]> {
-		const response = await api.get<ApiResponse<QuestionnaireQuestion[]>>(
-			`/v1/questionnaire-question`,
-			{
-				params: {
-					QuestionnaireId: questionnaireId,
-				},
-			}
-		);
+        questionnaireId: string,
+        params?: any
+    ): Promise<QuestionnaireQuestion[]> {
+        const response = await api.get<ApiResponse<QuestionnaireQuestion[]>>(
+            `/v1/questionnaire-question`,
+            {
+                params: {
+                    QuestionnaireId: questionnaireId,
+                    ...params,
+                },
+            }
+        );
 
-		const data = response.data.data;
+        const data = response.data.data;
 
-		const sortedData = [...data].sort((a, b) => {
-			const orderA = a.order ?? 999;
-			const orderB = b.order ?? 999;
-			return orderA - orderB;
-		});
+        // Sorting di client side tetap oke sebagai fallback
+        const sortedData = [...data].sort((a, b) => {
+            const orderA = a.order ?? 999;
+            const orderB = b.order ?? 999;
+            return orderA - orderB;
+        });
 
-		return sortedData;
-	},
+        return sortedData;
+    },
 
 	async createQuestionnaireQuestion(
 		payload: CreateQuestionPayload
@@ -169,14 +172,10 @@ export const adminMedisService = {
 	async bulkUpdateQuestions(
 		payload: BulkUpdateQuestionPayload[]
 	): Promise<QuestionnaireQuestion[]> {
-		console.log("📤 Bulk update payload:", payload);
-
 		const response = await api.put<ApiResponse<QuestionnaireQuestion[]>>(
 			"/v1/questionnaire-question/bulk-update",
 			payload
 		);
-
-		console.log("📥 Bulk update response:", response.data);
 		return response.data.data;
 	},
 
@@ -197,14 +196,10 @@ export const adminMedisService = {
 			order: q.order ?? index + 1,
 		}));
 
-		console.log("📤 Toggle status payload:", payload);
-
 		const response = await api.put<ApiResponse<QuestionnaireQuestion[]>>(
 			"/v1/questionnaire-question/bulk-update",
 			payload
 		);
-
-		console.log("📥 Toggle status response:", response.data);
 
 		return response.data.data;
 	},
