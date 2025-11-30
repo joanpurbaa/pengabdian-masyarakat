@@ -11,6 +11,7 @@ export interface Questionnaire {
 	title: string;
 	description: string;
 	status: "publish" | "draft" | "archived";
+	riskThreshold: number
 }
 
 export interface RtResponse {
@@ -122,4 +123,57 @@ export interface SummarizeAllResponse {
 			unStableMentalPercentage: number;
 		}>;
 	};
+}
+
+export interface GetPublicQuestionnaireParams {
+	page: number;
+	pageSize: number;
+	title?: string;
+	description?: string;
+	status?: string;
+	order?: string;
+}
+
+export interface QueryParams {
+	RukunWargaId?: string;
+	RukunTetanggaId?: string;
+	startDate?: string;
+	endDate?: string;
+}
+
+export interface RTData {
+	rtId: string;
+	rtName: number;
+	userCount: number;
+	submitCount: number;
+	stableMentalCount: number;
+	unStableMentalCount: number;
+	unStableMentalPercentage: number;
+}
+
+export interface RWSummary {
+	summarize: {
+		userCount: number;
+		submitCount: number;
+		stableMentalCount: number;
+		unStableMentalCount: number;
+		unStableMentalPercentage: number;
+	};
+	perRt: RTData[];
+}
+
+export interface RTSummary {
+	summarize: {
+		userCount: number;
+		submitCount: number;
+		stableMentalCount: number;
+		unStableMentalCount: number;
+		unStableMentalPercentage: number;
+	};
+	users: Array<{
+		UserId: string;
+		fullname: string;
+		nik?: string;
+		lastSubmissionDate: string;
+	}>;
 }

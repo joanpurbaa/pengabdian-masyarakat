@@ -74,7 +74,7 @@ function AdminMediLayout() {
                                 {headerTitle}
                             </div>
                         </div>
-                        <Button type="text" icon={<PanelLeftClose size={20} />} onClick={() => setMobileDrawerOpen(false)} />
+                        <Button type="text" icon={<PanelLeftClose size={20} className="!text-gray-700" />} onClick={() => setMobileDrawerOpen(false)} />
                     </div>
 
                     <AdminSideBar

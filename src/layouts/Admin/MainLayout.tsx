@@ -54,7 +54,7 @@ const ProfileComponent = () => {
 interface MainLayoutProps {
     children: ReactNode;
     title: string;
-    startAction?: ReactNode;
+    startAction: ReactNode;
 }
 
 function MainLayout(props: MainLayoutProps) {
@@ -65,7 +65,7 @@ function MainLayout(props: MainLayoutProps) {
             <Header className="w-full !bg-white text-white flex justify-between items-center !px-4 !py-3 !md:p-[20px] !shadow-sm z-20 relative h-auto min-h-[64px]">
                 <section className="flex items-center gap-3">
                     {startAction && (
-                        <div className="mr-1">
+                        <div>
                             {startAction}
                         </div>
                     )}
