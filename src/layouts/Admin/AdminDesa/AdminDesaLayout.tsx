@@ -1,91 +1,95 @@
-import { useState, useEffect } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { useState } from "react";
+import { Outlet } from "react-router";
 import MainLayout from '../MainLayout'
-import { DoubleArrowIcon } from "../../../icon/doubleArrowIcon";
 import AdminSideBar from "../../../components/admin/AdminSidebar";
-import { RightArrowIcon } from "../../../icon/rightArrowIcon";
-import { useAuth } from "../../../context/AuthContext";
+import { Button, Drawer, Grid, Layout } from "antd";
+import { Heart, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+
+const { Sider, Content } = Layout;
+const { useBreakpoint } = Grid;
 
 function AdminDesaLayout() {
-    const { logout } = useAuth();
+    const screens = useBreakpoint();
+    const isMobile = screens.md === false;
+
+    const headerTitle = "Tes Kesehatan Mental"
 
     const [responsiveSidebar, setResponsiveSidebar] = useState(false);
-    const [showLogoutText, setShowLogoutText] = useState(!responsiveSidebar);
-    const [showMinimizeText, setShowMinimizeText] = useState(!responsiveSidebar);
-
-    const navigate = useNavigate();
-
-    function handleMobileResponsive() {
-        setResponsiveSidebar(!responsiveSidebar);
-    }
-
-    useEffect(() => {
-        let delay: ReturnType<typeof setTimeout> | undefined;
-
-        if (responsiveSidebar) {
-            setShowLogoutText(false);
-            setShowMinimizeText(false);
-        } else {
-            delay = setTimeout(() => {
-                setShowLogoutText(true);
-                setShowMinimizeText(true);
-            }, 100);
-        }
-
-        return () => clearTimeout(delay);
-    }, [responsiveSidebar]);
-
-    const handleLogout = () => {
-        logout();
-        navigate("/masuk");
-    };
+    const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
 
     return (
-        <MainLayout title="Tes Kesehatan Mental">
-            <aside
-                className={`transition-all ease-in-out duration-300 ${responsiveSidebar ? "w-[100px]" : "w-[400px]"
-                    } py-[40px] h-full bg-gray-100 shadow-2xl flex flex-col justify-between p-[20px]`}>
-                <div className="flex flex-col justify-between gap-20">
-                    <div></div>
-                    <ul className="space-y-[20px]">
-                        <li
-                            onClick={handleMobileResponsive}
-                            className="flex justify-center items-center text-zinc-600 text-sm md:text-base gap-[10px] md:gap-[20px] py-[10px] cursor-pointer">
-                            {showMinimizeText && "Minimize Sidebar"}
-                            {!responsiveSidebar ? (
-                                <DoubleArrowIcon className="w-6 lg:w-7" />
-                            ) : (
-                                <div className="rotate-180">
-                                    <DoubleArrowIcon className="w-6 lg:w-7" />
-                                </div>
-                            )}
-                        </li>
-                        <AdminSideBar
-                            responsiveSidebar={responsiveSidebar}
-                        // isAdminMedis={pathSegments[0] === "admin-medis"}
-                        />
-                    </ul>
-                </div>
-                <div className="flex justify-center">
-                    <button
-                        onClick={handleLogout}
-                        className={`flex items-center text-base lg:text-xl text-white font-normal ${!responsiveSidebar ? "bg-[#70B748]" : "bg-transparent"
-                            } rounded-full px-[30px] lg:px-[60px] py-[8px] lg:py-[12px] gap-[10px]`}>
-                        {showLogoutText && "Logout"}
-                        <div
-                            className={`flex justify-center items-center border ${!responsiveSidebar ? "border-white" : "border-[#70B748]"
-                                } border-full rounded-full w-[36px] h-[36px]`}>
-                            {!responsiveSidebar ? (
-                                <RightArrowIcon className="w-3 lg:w-5" fill="white" />
-                            ) : (
-                                <RightArrowIcon className="w-3 lg:w-5" fill="#70B748" />
-                            )}
+        <MainLayout
+            title={headerTitle}
+            startAction={isMobile ? (
+                <Button
+                    icon={
+                        <Menu className="text-zinc-600" />
+                    }
+                    type="text"
+                    className="flex items-center"
+                    onClick={() => setMobileDrawerOpen(true)}
+                />
+            ) : null}
+        >
+            {!isMobile && (
+                <Sider
+                    trigger={null}
+                    width={260}
+                    className="!bg-white !shadow-lg z-10 hidden md:block"
+                    collapsible
+                    collapsed={responsiveSidebar}
+                    onCollapse={(val) => setResponsiveSidebar(val)}
+                >
+                    <div className="flex flex-col justify-between h-full pb-5">
+                        <div className="flex flex-col gap-5 px-4 flex-1 overflow-y-auto py-4">
+                            <AdminSideBar
+                                responsiveSidebar={responsiveSidebar}
+                            />
                         </div>
-                    </button>
+                        <div className={`flex items-center p-4 ${responsiveSidebar ? 'justify-center' : 'justify-end'} border-t border-gray-100`}>
+                            <button
+                                onClick={() => setResponsiveSidebar(!responsiveSidebar)}
+                                className="flex items-center justify-center w-full rounded-lg py-2 text-gray-400 hover:text-[#70B748] hover:bg-green-50 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#70B748]/20"
+                            >
+                                {responsiveSidebar ? <PanelLeftOpen size={20} strokeWidth={2} /> : <div className="flex gap-x-2 items-center">
+                                    <p>Hide Sidebar</p>
+                                    <PanelLeftClose size={20} strokeWidth={2} />
+                                </div>}
+                            </button>
+                        </div>
+                    </div>
+                </Sider>
+            )}
+
+            <Drawer
+                placement="left"
+                onClose={() => setMobileDrawerOpen(false)}
+                open={mobileDrawerOpen}
+                width={260}
+                styles={{ body: { padding: 0 } }}
+                closeIcon={null}
+            >
+                <div className="flex flex-col h-full py-4 px-4">
+                    <div className="flex items-center justify-between mb-6 px-2">
+                        <div className="flex items-center gap-x-2">
+                            <Heart className="fill-[#70B748] text-[#70B748] w-5 h-5 md:w-10 md:h-10 shrink-0" />
+                            <div className="text-[#70B748] text-base md:text-lg lg:text-[24px] font-bold leading-tight">
+                                {headerTitle}
+                            </div>
+                        </div>
+                        <Button type="text" icon={<PanelLeftClose size={20} />} onClick={() => setMobileDrawerOpen(false)} />
+                    </div>
+
+                    <AdminSideBar
+                        responsiveSidebar={false}
+                    />
                 </div>
-            </aside>
-            <Outlet />
-        </MainLayout>
+            </Drawer>
+
+            <Content className="h-full overflow-y-auto bg-gray-50 p-4 md:p-0">
+                <Outlet />
+            </Content>
+        </MainLayout >
     )
 }
 

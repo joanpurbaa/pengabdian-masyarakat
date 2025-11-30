@@ -1,8 +1,12 @@
 import axios from "axios";
 import type {
 	ApiResponse,
+	GetPublicQuestionnaireParams,
+	QueryParams,
 	Questionnaire,
 	QuestionnaireByIdResponse,
+	RTSummary,
+	RWSummary,
 	SummarizeAllResponse,
 	WargaResponse,
 } from "../types/adminDesaService";
@@ -31,9 +35,10 @@ api.interceptors.request.use(
 );
 
 export const adminDesaService = {
-	async getAllQuestionnaires(): Promise<Questionnaire[]> {
+	async getAllQuestionnaires(params?: GetPublicQuestionnaireParams): Promise<Questionnaire[]> {
 		const response = await api.get<ApiResponse<Questionnaire[]>>(
-			"/v1/questionnaire/public"
+			"/v1/questionnaire/public",
+			{ params }
 		);
 		return response.data.data;
 	},
@@ -79,11 +84,57 @@ export const adminDesaService = {
 		return response.data;
 	},
 
-	async summarizeAll(questionnaireId: string): Promise<SummarizeAllResponse> {
+	async summarizeAll(
+		questionnaireId: string,
+		startDate?: string,
+		endDate?: string): Promise<SummarizeAllResponse> {
+		const params: Partial<{ startDate: string; endDate: string }> = {};
+
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
 		const response = await api.get<SummarizeAllResponse>(
-			`/v1/questionnaire-submission/summary/${questionnaireId}`
+			`/v1/questionnaire-submission/summary/${questionnaireId}`,
+			{ params }
 		);
 		return response.data;
+	},
+
+	async summaryRw(
+		questionnaireId: string,
+		rwId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RWSummary> {
+		const params: QueryParams = { RukunWargaId: rwId };
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<ApiResponse<RWSummary>>(
+			`/v1/questionnaire-submission/summary-rw/${questionnaireId}`,
+			{ params }
+		);
+
+		return response.data.data;
+	},
+
+	async summaryRt(
+		questionnaireId: string,
+		rwId: string,
+		rtId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RTSummary> {
+		const params: QueryParams = { RukunWargaId: rwId, RukunTetanggaId: rtId };
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<ApiResponse<RTSummary>>(
+			`/v1/questionnaire-submission/summary-rt/${questionnaireId}`,
+			{ params }
+		);
+
+		return response.data.data;
 	},
 
 	async getQuestionnaireById(

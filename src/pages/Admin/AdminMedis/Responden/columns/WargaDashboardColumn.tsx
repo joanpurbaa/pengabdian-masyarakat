@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 interface WargaDesa {
@@ -65,6 +65,29 @@ export const getWargaMedisColumns = ({ onSeeDetail }: MedisColumnProps): Columns
         render: (text) => <span className="font-medium text-gray-700">{text}</span>,
     },
     {
+        title: 'Kondisi Mental',
+        dataIndex: 'isMentalUnStable',
+        key: 'isMentalUnStable',
+        render: (condition) => {
+            let color = "success"
+            let label = "Beresiko"
+
+            if (condition) {
+                color = "error"
+                label = "Beresiko"
+            } else {
+                color = "success"
+                label = "Sehat"
+            }
+
+            return (
+                <Tag color={color} className="m-0 text-center">
+                    {label}
+                </Tag>
+            )
+        },
+    },
+    {
         title: 'Terakhir Submit',
         dataIndex: 'lastSubmissionDate',
         key: 'lastSubmissionDate',
@@ -85,8 +108,8 @@ export const getWargaMedisColumns = ({ onSeeDetail }: MedisColumnProps): Columns
         align: 'center',
         width: 100,
         render: (_, record) => (
-            <Button 
-                type="primary" 
+            <Button
+                type="primary"
                 size="small"
                 className="!bg-[#70B748] !hover:bg-[#5a9639] border-none"
                 onClick={() => onSeeDetail(record.UserId)}

@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import AdminDesaLayout from "./layouts/Admin/AdminDesa/AdminDesaLayout";
 import Loading from "./pages/Loading";
-import AdminDesa from "./pages/Admin/AdminDesa/AdminDesa";
+import AdminDesa from "./pages/Admin/AdminDesa/Responden/AdminDesaResponden";
 import AdminMedis from "./pages/Admin/AdminMedis/Responden/AdminMedisReponden";
 import AdminMediLayout from "./layouts/Admin/AdminMedis/AdminMedisLayout";
 import RWDashboard from "./pages/Admin/AdminMedis/Responden/RwDashboard/RwDashboard";
@@ -16,6 +16,9 @@ import RTDashboard from "./pages/Admin/AdminMedis/Responden/RtDashboard/RTDashbo
 import WargaDashboard from "./pages/Admin/AdminMedis/Responden/WargaDashboard/WargaDashboard";
 import MedisResult from "./pages/Admin/AdminMedis/Responden/MedisResult/MedisResult";
 import KuisionerDashboard from "./pages/Admin/AdminMedis/Kuisioner/KuisionerDashborad";
+import DesaRwDashboard from "./pages/Admin/AdminDesa/Responden/DesaRwDashboard/DesaRwDashboard";
+import DesaRtDashboard from "./pages/Admin/AdminDesa/Responden/DesaRtDashboard/DesaRtDashboard";
+import DesaWargaDashboard from "./pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -117,9 +120,21 @@ const router = createBrowserRouter([
 								)
 							},
 							{
-								path: "/admin/responden/:rwId",
+								path: ":questionnaireId",
 								element: (
-									<Admin />
+									<DesaRwDashboard />
+								),
+							},
+							{
+								path: ":questionnaireId/:rwId",
+								element: (
+									<DesaRtDashboard />
+								),
+							},
+							{
+								path: ":questionnaireId/:rwId/:rtId",
+								element: (
+									<DesaWargaDashboard />
 								),
 							},
 							{
