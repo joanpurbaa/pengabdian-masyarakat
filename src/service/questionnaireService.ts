@@ -149,8 +149,8 @@ export const validateQuestionnaireData = (data: any): QuestionnaireDetail => {
 };
 
 export const questionnaireService = {
-	async getAllQuestionnaires(): Promise<DataResponse<Questionnaire[]>> {
-		const response = await api.get<ApiResponse<DataResponse<Questionnaire[]>>>(
+	async getAllQuestionnaires(): Promise<Questionnaire[]> {
+		const response = await api.get<ApiResponse<Questionnaire[]>>(
 			"/v1/questionnaire/public"
 		);
 		return response.data.data;

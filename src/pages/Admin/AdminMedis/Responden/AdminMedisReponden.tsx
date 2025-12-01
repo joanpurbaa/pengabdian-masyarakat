@@ -32,6 +32,9 @@ function AdminMedis() {
         queryFn: useGetAllQuestionnaire,
     });
 
+    console.log(data);
+    
+
     const adminDesaMedisColumn = getQuestionnaireColumns({
         pagination,
         onSee: (id) => {
