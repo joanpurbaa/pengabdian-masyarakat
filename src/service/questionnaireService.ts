@@ -11,6 +11,23 @@ export interface Questionnaire {
 	status: string;
 }
 
+export interface DataResponse<T> {
+	data: T;
+	metadata: {
+		totalData: number
+		paginatedDataCount: number
+	}
+}
+
+export interface QuestionnaireUser {
+	id: string;
+	createdAt: string;
+	updatedAt: string;
+	title: string;
+	description: string;
+	status: string;
+}
+
 export interface Question {
 	id: string;
 	questionText: string;
@@ -127,13 +144,13 @@ export const validateQuestionnaireData = (data: any): QuestionnaireDetail => {
 		title: data.title || "No Title",
 		description: data.description || "No Description",
 		status: data.status || "draft",
-		questions: questions.sort((a, b) => a.order - b.order),
+		questions: questions.sort((a: any, b: any) => a.order - b.order),
 	};
 };
 
 export const questionnaireService = {
-	async getAllQuestionnaires(): Promise<Questionnaire[]> {
-		const response = await api.get<ApiResponse<Questionnaire[]>>(
+	async getAllQuestionnaires(): Promise<DataResponse<Questionnaire[]>> {
+		const response = await api.get<ApiResponse<DataResponse<Questionnaire[]>>>(
 			"/v1/questionnaire/public"
 		);
 		return response.data.data;

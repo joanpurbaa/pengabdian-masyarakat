@@ -46,7 +46,7 @@ export default function Home() {
 		setModalLoading(true);
 		try {
 			const response = await questionnaireService.summarizeMe(
-				selectedQuestionnaire.id
+				selectedQuestionnaire?.id
 			);
 			setModalHistory(response.data.submissions || []);
 		} catch (error) {

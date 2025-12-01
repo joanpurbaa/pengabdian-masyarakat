@@ -21,8 +21,9 @@ import DesaRtDashboard from "./pages/Admin/AdminDesa/Responden/DesaRtDashboard/D
 import DesaWargaDashboard from "./pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard";
 import KelolaWilayah from "./pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah";
 import Submissions from "./pages/Admin/AdminMedis/Responden/Submissions/Submissions";
+import Home from "./pages/Home/Home";
 
-const Home = lazy(() => import("./pages/Home"));
+// const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Admin = lazy(() => import("./pages/Admin"));
