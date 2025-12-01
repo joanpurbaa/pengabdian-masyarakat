@@ -19,6 +19,8 @@ import KuisionerDashboard from "./pages/Admin/AdminMedis/Kuisioner/KuisionerDash
 import DesaRwDashboard from "./pages/Admin/AdminDesa/Responden/DesaRwDashboard/DesaRwDashboard";
 import DesaRtDashboard from "./pages/Admin/AdminDesa/Responden/DesaRtDashboard/DesaRtDashboard";
 import DesaWargaDashboard from "./pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard";
+import KelolaWilayah from "./pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah";
+import Submissions from "./pages/Admin/AdminMedis/Responden/Submissions/Submissions";
 
 const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
@@ -163,22 +165,26 @@ const router = createBrowserRouter([
 							},
 						]
 					},
-					// Kelola RW Routes
+					// Kelola Wilayah Routes
 					{
-						path: "kelola-rw",
+						path: "kelola-wilayah",
 						children: [
 							{
-								path: "/admin/kelola-rw/:rwId",
+								index: true,
 								element: (
-									<Admin />
-								),
+									<Suspense fallback={<Loading />}>
+										<KelolaWilayah />
+									</Suspense>
+								)
 							},
 							{
-								path: "/admin/kelola-rw/:rwId/:rtId",
+								path: "kelola-wilayah",
 								element: (
-									<Admin />
-								),
-							}
+									<Suspense fallback={<Loading />}>
+										<KelolaWilayah />
+									</Suspense>
+								)
+							},
 						],
 					},
 				]
@@ -230,6 +236,12 @@ const router = createBrowserRouter([
 								path: ":questionnaireId/:rwId/:rtId",
 								element: (
 									<WargaDashboard />
+								),
+							},
+							{
+								path: "submissions/:questionnaireId/:rwId/:rtId/:userId",
+								element: (
+									<Submissions />
 								),
 							},
 							{

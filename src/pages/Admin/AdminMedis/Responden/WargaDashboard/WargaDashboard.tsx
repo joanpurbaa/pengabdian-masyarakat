@@ -157,7 +157,7 @@ export default function WargaDashboard() {
 
     const columns = getWargaMedisColumns({
         onSeeDetail: (UserId) => {
-            navigate(`/admin-medis/responden/result/questionnaireId=${questionnaireId}/rwId=${rwId}/rtId=${rtId}/userId=${UserId}`)
+            navigate(`/admin-medis/responden/submissions/questionnaireId=${questionnaireId}/rwId=${rwId}/rtId=${rtId}/userId=${UserId}`)
         }
     });
 

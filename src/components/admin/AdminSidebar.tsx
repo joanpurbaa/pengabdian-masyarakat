@@ -52,7 +52,7 @@ export default function AdminSideBar({
 			<Link
 				className="block"
 				to={
-					pathSegments[0] == "admin" ? "/admin/kelola-rw" : "/admin-medis/kuisioner"
+					pathSegments[0] == "admin" ? "/admin/kelola-wilayah" : "/admin-medis/kuisioner"
 				}>
 				<li
 					className={`flex ${responsiveSidebar && "justify-center"} items-center ${
@@ -67,7 +67,7 @@ export default function AdminSideBar({
 					)}
 					{sectionLabel && (
 						<span className="text-sm lg:text-base whitespace-nowrap transition-opacity duration-200">
-							{pathSegments[0] === "admin" ? "Kelola RW dan RT" : "Kuisioner"}
+							{pathSegments[0] === "admin" ? "Kelola Wilayah" : "Kuisioner"}
 						</span>
 					)}
 				</li>
