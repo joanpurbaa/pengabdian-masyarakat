@@ -48,8 +48,6 @@ export default function Home() {
   } = useQuestionnaire();
   const { user, logout } = useAuth();
 
-  console.log(questionnaires);
-
   const [history, setHistory] = useState<HistoryData[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
 
