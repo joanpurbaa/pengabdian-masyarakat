@@ -48,17 +48,12 @@ export default function Home() {
   } = useQuestionnaire();
   const { user, logout } = useAuth();
 
-  console.log(questionnaires);
-
   const [history, setHistory] = useState<HistoryData[]>([]);
   const [historyLoading, setHistoryLoading] = useState(true);
 
   const [selectedQuizFilter, setSelectedQuizFilter] = useState<string>("all");
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
 
-  // 1. Auth Check & Fetch Data
-  // Tambahkan 'questionnaires' ke dependency agar saat data kuisioner masuk,
-  // kita bisa mapping judulnya ke history.
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token && user) {
@@ -67,7 +62,7 @@ export default function Home() {
     }
 
     fetchHistory();
-  }, [questionnaires]); // Trigger ulang saat questionnaires siap
+  }, [questionnaires]);
 
   useEffect(() => {
     if (quizError && quizError.includes("Gagal memuat kuisioner")) {
@@ -77,23 +72,17 @@ export default function Home() {
   }, [quizError]);
 
   const fetchHistory = async () => {
-    // Jangan set loading true jika ini adalah re-fetch karena questionnaires update
     if (history.length === 0) setHistoryLoading(true);
 
     try {
       const result = await questionnaireService.getHistory();
 
-      // --- PERBAIKAN DISINI ---
-      // Handle struktur data: API Anda mengembalikan { data: { data: [...] } }
-      // Kita gunakan 'any' sementara untuk akses properti dinamis, atau sesuaikan interface service
       const responseData: any = result.data;
       const rawList = Array.isArray(responseData)
         ? responseData
         : responseData.data || responseData.submissions || [];
 
-      // Mapping ke format HistoryData (menggabungkan ID dengan Title)
       const mappedData: HistoryData[] = rawList.map((item: any) => {
-        // Cari judul berdasarkan ID yang ada di history
         const qId = item.QuestionnaireId || item.questionnaireId;
         const relatedQuiz = questionnaires.find((q) => q.id === qId);
 
@@ -103,7 +92,6 @@ export default function Home() {
           score: item.score,
           questionnaire: {
             id: qId,
-            // Jika questionnaire belum load, tampilkan placeholder atau ID-nya
             title: relatedQuiz ? relatedQuiz.title : "Memuat Judul...",
           },
         };

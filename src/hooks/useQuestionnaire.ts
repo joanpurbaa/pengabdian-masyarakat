@@ -14,7 +14,7 @@ export const useQuestionnaire = () => {
 			setLoading(true);
 			setError(null);
 			const data = await questionnaireService.getAllQuestionnaires();
-			setQuestionnaires(data.data);
+			setQuestionnaires(data);
 		} catch (err: any) {
 			console.error("Error fetching questionnaires:", err);
 			setError(err.response?.data?.message || "Gagal memuat kuisioner");
