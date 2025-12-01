@@ -177,3 +177,48 @@ export interface RTSummary {
 		lastSubmissionDate: string;
 	}>;
 }
+
+export interface Education {
+    id: string;
+    name: string;
+}
+
+export interface MarriageStatus {
+    id: string;
+    name: string;
+}
+
+export interface SalaryRange {
+    id: string;
+    minRange: string;
+    maxRange: string;
+}
+
+export interface CreateResidentPayload {
+    fullname: string;
+    email: string;
+    gender: "m" | "f";
+    profession: string;
+    birthDate: string;
+    MarriageStatusId: string;
+    RukunWargaId: string;
+    RukunTetanggaId: string;
+    EducationId: string;
+    SalaryRangeId: string;
+    nik: string;
+}
+
+export interface CreateRWPayload {
+    count: number;
+}
+
+export interface CreateRTPayload {
+    count: number;
+    RukunWargaId: string;
+}
+
+export interface MasterDataResponse<T> {
+    statusCode: number;
+    message: string;
+    data: T[];
+}

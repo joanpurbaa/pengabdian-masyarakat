@@ -73,11 +73,13 @@ export const adminMedisService = {
 		RukunWargaId: string,
 		RukunTetanggaId: string,
 		userId: string,
+		startDate?: string,
+		endDate?: string
 	): Promise<UserSummaryResponse> {
 		const response = await api.get<ApiResponse<UserSummaryResponse>>(
 			`/v1/questionnaire-submission/summary-user/${questionnaireId}`,
 			{
-				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId}
+				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId, startDate, endDate}
 			}
 		);
 		return response.data.data;

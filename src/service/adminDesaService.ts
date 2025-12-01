@@ -1,6 +1,7 @@
 import axios from "axios";
 import type {
 	ApiResponse,
+	CreateResidentPayload,
 	GetPublicQuestionnaireParams,
 	QueryParams,
 	Questionnaire,
@@ -10,6 +11,7 @@ import type {
 	SummarizeAllResponse,
 	WargaResponse,
 } from "../types/adminDesaService";
+import type { GetAllRWResponse } from "../types/adminMedisService";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE;
 
@@ -151,4 +153,26 @@ export const adminDesaService = {
 
 		return response.data;
 	},
+
+	async getAllRW(): Promise<GetAllRWResponse> {
+        const response = await api.get<GetAllRWResponse>("/v1/rukun-warga"); 
+        return response.data;
+    },
+
+    async createRW(count: number) {
+        return await api.post("/v1/rukun-warga", { count });
+    },
+
+    async createRT(count: number, rwId: string) {
+        return await api.post("/v1/rukun-tetangga", { count, RukunWargaId: rwId });
+    },
+
+    async createResident(payload: CreateResidentPayload) {
+        return await api.post("/v1/resident", payload);
+    },
+
+	async getAllResidents(params?: any) {
+        const response = await api.get("/v1/resident", { params });
+        return response.data; 
+    },
 };
