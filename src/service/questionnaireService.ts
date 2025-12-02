@@ -8,7 +8,8 @@ export interface Questionnaire {
 	updatedAt: string;
 	title: string;
 	description: string;
-	status: string;
+	status: "draft" | "publish";
+    riskThreshold?: number;
 }
 
 export interface DataResponse<T> {
