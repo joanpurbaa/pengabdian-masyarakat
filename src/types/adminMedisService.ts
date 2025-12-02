@@ -2,10 +2,11 @@ export interface Questionnaire {
 	id: string;
 	title: string;
 	description: string;
-	status: "publish" | "draft" | "archived";
+	status: "publish" | "draft";
     riskThreshold?: number;
 	createdAt: string;
 	updatedAt: string;
+	questions?: QuestionnaireQuestion[]; 
 }
 
 export interface GetQuestionnaireParams {
@@ -175,6 +176,7 @@ export interface UpdateQuestionnairePayload {
 	title: string;
 	description: string;
 	status: "draft" | "publish";
+	riskThreshold: number | 0;
 }
 
 export interface RTSummary {

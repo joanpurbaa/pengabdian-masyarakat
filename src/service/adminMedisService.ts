@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { ApiResponse, Questionnaire } from "./questionnaireService";
+import type { ApiResponse } from "./questionnaireService";
 import type {
 	BulkUpdateQuestionPayload,
 	CreateQuestionnairePayload,
@@ -19,6 +19,7 @@ import type {
 	UpdateQuestionnairePayload,
 	UserSummaryResponse,
 	WargaHistory,
+	Questionnaire
 } from "../types/adminMedisService";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE;
@@ -205,6 +206,13 @@ export const adminMedisService = {
 
 		return response.data.data;
 	},
+
+	async getQuestionnaireById(id: string): Promise<Questionnaire> {
+        const response = await api.get<ApiResponse<Questionnaire>>(
+            `/v1/questionnaire/${id}`
+        );
+        return response.data.data;
+    },
 
 	async createQuestionnaire(
 		payload: CreateQuestionnairePayload
