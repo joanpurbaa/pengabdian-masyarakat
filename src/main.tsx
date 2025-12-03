@@ -35,10 +35,10 @@ import KuisionerPreview from "./pages/Admin/AdminMedis/Kuisioner/KuisionerPrevie
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Admin = lazy(() => import("./pages/Admin"));
-const Result = lazy(() => import("./pages/Result"));
+const Result = lazy(() => import("./pages/Result/Result"));
 // const MedisResult = lazy(() => import("./pages/MedisResult"));
 const HistorySection = lazy(() => import("./pages/HistorySection"));
-const Quiz = lazy(() => import("./pages/Quiz"));
+const Quiz = lazy(() => import("./pages/Quiz/Quiz"));
 
 axios.defaults.withCredentials = true;
 
