@@ -148,6 +148,15 @@ export const adminDesaService = {
 		return response.data;
 	},
 
+	async getMedisQuestionnaireById(
+		questionnaireId: string
+	): Promise<QuestionnaireByIdResponse> {
+		const response = await api.get<QuestionnaireByIdResponse>(
+			`/v1/questionnaire/${questionnaireId}`
+		);
+		return response.data;
+	},
+
 	async getWargaByRt(rtId: string) {
 		const response = await api.get(`/v1/rukun-tetangga/${rtId}`);
 

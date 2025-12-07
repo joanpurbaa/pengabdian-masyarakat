@@ -18,9 +18,6 @@ import Loading from "./pages/Loading";
 import AdminDesa from "./pages/Admin/AdminDesa/Responden/AdminDesaResponden";
 import AdminMediLayout from "./layouts/Admin/AdminMedis/AdminMedisLayout";
 import KuisionerDashboard from "./pages/Admin/AdminMedis/Kuisioner/KuisionerDashborad";
-import DesaRwDashboard from "./pages/Admin/AdminDesa/Responden/DesaRwDashboard/DesaRwDashboard";
-import DesaRtDashboard from "./pages/Admin/AdminDesa/Responden/DesaRtDashboard/DesaRtDashboard";
-import DesaWargaDashboard from "./pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard";
 import KelolaWilayah from "./pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah";
 import Home from "./pages/Home/Home";
 import KuisionerPreview from "./pages/Admin/AdminMedis/Kuisioner/KuisionerPreviews";
@@ -35,6 +32,10 @@ const RTDashboard = lazy(() => import("./pages/Admin/AdminMedis/Responden/RtDash
 const WargaDashboard = lazy(() => import("./pages/Admin/AdminMedis/Responden/WargaDashboard/WargaDashboard"));
 const MedisResult = lazy(() => import("./pages/Admin/AdminMedis/Responden/MedisResult/MedisResult"));
 const Submissions = lazy(() => import("./pages/Admin/AdminMedis/Responden/Submissions/Submissions"));
+
+const DesaRwDashboard = lazy(() => import("./pages/Admin/AdminDesa/Responden/DesaRwDashboard/DesaRwDashboard"));
+const DesaRtDashboard = lazy(() => import("./pages/Admin/AdminDesa/Responden/DesaRtDashboard/DesaRtDashboard"));
+const DesaWargaDashboard = lazy(() => import("./pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard"));
 
 const HistorySection = lazy(() => import("./pages/HistorySection"));
 const Result = lazy(() => import("./pages/Result/Result"));
@@ -145,31 +146,32 @@ const router = createBrowserRouter([
               },
               {
                 path: ":questionnaireId",
-                element: <DesaRwDashboard />,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <DesaRwDashboard />
+                  </Suspense>
+                ),
               },
               {
                 path: ":questionnaireId/:rwId",
-                element: <DesaRtDashboard />,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <DesaRtDashboard />
+                  </Suspense>),
               },
               {
                 path: ":questionnaireId/:rwId/:rtId",
-                element: <DesaWargaDashboard />,
-              },
-              {
-                path: "/admin/responden/:rwId/:rtId",
-                element: <Admin />,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <DesaWargaDashboard />
+                  </Suspense>),
               },
               {
                 path: "/admin/responden/:rwId/:rtId/:keluargaId/history",
-                element: <HistorySection />,
-              },
-              {
-                path: "/admin/responden/:rwId/:rtId/:keluargaId",
-                element: <Admin />,
-              },
-              {
-                path: "/admin/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-                element: <Admin />,
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <HistorySection />
+                  </Suspense>),
               },
             ],
           },
@@ -200,7 +202,10 @@ const router = createBrowserRouter([
       // Admin Medis routes - Home page
       {
         path: "/admin-medis",
-        element: <AdminMediLayout />,
+        element: (
+          <Suspense fallback={<Loading />}>
+            <AdminMediLayout />
+          </Suspense>),
         children: [
           {
             index: true,

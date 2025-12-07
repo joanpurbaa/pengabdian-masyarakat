@@ -222,13 +222,13 @@ export default function MedisResult() {
     return (
         <div className="relative min-h-full bg-gray-50 pb-20 overflow-hidden px-5">
             <img
-                className="absolute z-0 -bottom-10 -right-20 w-[250px] lg:w-[500px] opacity-80 pointer-events-none"
-                src="/berat.png"
+                className="absolute z-2 -bottom-10 -right-20 w-[250px] lg:w-[500px] opacity-40 pointer-events-none"
+                src={isUnstable ? "/berat.png" : "/ringan.png"}
                 alt=""
             />
             <img
-                className="absolute z-0 -bottom-5 -left-10 w-[150px] lg:w-[300px] scale-x-[-1] opacity-80 pointer-events-none"
-                src="/berat.png"
+                className="absolute z-2 -bottom-5 -left-10 w-[150px] lg:w-[300px] scale-x-[-1] opacity-40 pointer-events-none"
+                src={isUnstable ? "/berat.png" : "/ringan.png"}
                 alt=""
             />
 

@@ -72,7 +72,7 @@ export default function Submissions() {
     const fetchContextName = async () => {
         if (!questionnaireId) return;
         try {
-            const res = await adminDesaService.getQuestionnaireById(questionnaireId);
+            const res = await adminDesaService.getMedisQuestionnaireById(questionnaireId);
             setQuestionnaireName(res.data.title);
         } catch {
             // Silent fail

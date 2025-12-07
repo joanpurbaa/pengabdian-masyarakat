@@ -64,7 +64,7 @@ export default function RwDashboard() {
     const fetchQuestionnaireName = async () => {
         if (!questionnaireId) return;
         try {
-            const result = await adminDesaService.getQuestionnaireById(questionnaireId);
+            const result = await adminDesaService.getMedisQuestionnaireById(questionnaireId);
             setQuestionnaireName(result.data.title);
         } catch (error) {
             console.error("Gagal ambil nama");

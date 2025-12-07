@@ -95,7 +95,7 @@ export interface QuestionnaireByIdResponse {
 		id: string;
 		title: string;
 		description: string;
-		status: "publish" | "draft" | "archived";
+		status: "publish" | "draft";
 		createdAt: string;
 		updatedAt: string;
 	};

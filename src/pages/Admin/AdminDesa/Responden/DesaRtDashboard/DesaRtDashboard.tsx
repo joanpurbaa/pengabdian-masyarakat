@@ -6,6 +6,7 @@ import {
     DatePicker,
     Empty,
     Popover,
+    Spin,
     Table,
     Tag,
     message
@@ -168,11 +169,20 @@ export default function DesaRtDashboard() {
     return (
         <div className="flex flex-col w-full h-full">
 
-            <MentalHealthChart
-                overallDepressionRate={summaryData.summarize.unStableMentalPercentage || 0}
-                title={`Statistik Kesehatan Mental RT - ${rwName}`}
-                subtitle={`Persentase Kondisi Mental Warga di Semua RT - ${rwName}`}
-            />
+            {summaryData && (
+                <Spin spinning={loading.init}>
+                    <MentalHealthChart
+                        overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
+                        totalSubmit={summaryData?.summarize?.submitCount || 0}
+                        totalUser={summaryData?.summarize?.userCount || 0}
+
+                        perRtData={summaryData?.perRt as any[]}
+
+                        title={`Statistik Kesehatan Mental RT - ${rwName}`}
+                        subtitle={`Persentase Kondisi Mental Warga di Semua RT - ${rwName}`}
+                    />
+                </Spin>)
+            }
 
             <div className="bg-gray-100 p-6 flex flex-col gap-y-5 h-full">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
