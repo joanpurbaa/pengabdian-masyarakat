@@ -16,18 +16,12 @@ import { Loader2 } from "lucide-react";
 import AdminDesaLayout from "./layouts/Admin/AdminDesa/AdminDesaLayout";
 import Loading from "./pages/Loading";
 import AdminDesa from "./pages/Admin/AdminDesa/Responden/AdminDesaResponden";
-import AdminMedis from "./pages/Admin/AdminMedis/Responden/AdminMedisReponden";
 import AdminMediLayout from "./layouts/Admin/AdminMedis/AdminMedisLayout";
-import RWDashboard from "./pages/Admin/AdminMedis/Responden/RwDashboard/RwDashboard";
-import RTDashboard from "./pages/Admin/AdminMedis/Responden/RtDashboard/RTDashboard";
-import WargaDashboard from "./pages/Admin/AdminMedis/Responden/WargaDashboard/WargaDashboard";
-import MedisResult from "./pages/Admin/AdminMedis/Responden/MedisResult/MedisResult";
 import KuisionerDashboard from "./pages/Admin/AdminMedis/Kuisioner/KuisionerDashborad";
 import DesaRwDashboard from "./pages/Admin/AdminDesa/Responden/DesaRwDashboard/DesaRwDashboard";
 import DesaRtDashboard from "./pages/Admin/AdminDesa/Responden/DesaRtDashboard/DesaRtDashboard";
 import DesaWargaDashboard from "./pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard";
 import KelolaWilayah from "./pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah";
-import Submissions from "./pages/Admin/AdminMedis/Responden/Submissions/Submissions";
 import Home from "./pages/Home/Home";
 import KuisionerPreview from "./pages/Admin/AdminMedis/Kuisioner/KuisionerPreviews";
 import { ConfigProvider } from "antd";
@@ -35,9 +29,17 @@ import idID from "antd/locale/id_ID";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
-const Admin = lazy(() => import("./pages/Admin"));
-const Result = lazy(() => import("./pages/Result/Result"));
+const AdminMedis = lazy(() => import("./pages/Admin/AdminMedis/Responden/AdminMedisReponden"));
+const RWDashboard = lazy(() => import("./pages/Admin/AdminMedis/Responden/RwDashboard/RwDashboard"));
+const RTDashboard = lazy(() => import("./pages/Admin/AdminMedis/Responden/RtDashboard/RTDashboard"));
+const WargaDashboard = lazy(() => import("./pages/Admin/AdminMedis/Responden/WargaDashboard/WargaDashboard"));
+const MedisResult = lazy(() => import("./pages/Admin/AdminMedis/Responden/MedisResult/MedisResult"));
+const Submissions = lazy(() => import("./pages/Admin/AdminMedis/Responden/Submissions/Submissions"));
+
 const HistorySection = lazy(() => import("./pages/HistorySection"));
+const Result = lazy(() => import("./pages/Result/Result"));
+
+const Admin = lazy(() => import("./pages/Admin"));
 const Quiz = lazy(() => import("./pages/Quiz/Quiz"));
 
 axios.defaults.withCredentials = true;
@@ -210,23 +212,24 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <AdminMedis />,
+                element:
+                  <Suspense fallback={<Loading />}>
+                    <AdminMedis />
+                  </Suspense>,
               },
               {
                 path: ":questionnaireId",
-                element: <RWDashboard />,
+                element:
+                  <Suspense fallback={<Loading />}>
+                    <RWDashboard />
+                  </Suspense>,
               },
               {
                 path: ":questionnaireId/:rwId",
-                element: <RTDashboard />,
-              },
-              {
-                path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
-                element: <HistorySection />,
-              },
-              {
-                path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
-                element: <Result />,
+                element:
+                  <Suspense fallback={<Loading />}>
+                    <RTDashboard />
+                  </Suspense>,
               },
               {
                 path: ":questionnaireId/:rwId/:rtId",
@@ -239,6 +242,14 @@ const router = createBrowserRouter([
               {
                 path: "result/:questionnaireId/:rwId/:rtId/:userId",
                 element: <MedisResult />,
+              },
+              {
+                path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
+                element: <HistorySection />,
+              },
+              {
+                path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
+                element: <Result />,
               },
               {
                 path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
