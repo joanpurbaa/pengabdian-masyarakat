@@ -19,7 +19,9 @@ import type {
 	UpdateQuestionnairePayload,
 	UserSummaryResponse,
 	WargaHistory,
-	Questionnaire
+	Questionnaire,
+	AdminProfile,
+	UpdateAdminProfilePayload
 } from "../types/adminMedisService";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE;
@@ -46,6 +48,16 @@ api.interceptors.request.use(
 );
 
 export const adminMedisService = {
+	getMe: async () => {
+		const response = await api.get<ApiResponse<AdminProfile>>("/v1/user/me");
+		return response.data;
+	},
+
+	updateProfile: async (payload: UpdateAdminProfilePayload) => {
+		const response = await api.put("/v1/user/me", payload);
+		return response.data;
+	},
+
 	async getAllQuestionnaires(params: GetQuestionnaireParams): Promise<PaginatedResponse<Questionnaire>> {
 		const response = await api.get<PaginatedResponse<Questionnaire>>(
 			"/v1/questionnaire",
@@ -80,7 +92,7 @@ export const adminMedisService = {
 		const response = await api.get<ApiResponse<UserSummaryResponse>>(
 			`/v1/questionnaire-submission/summary-user/${questionnaireId}`,
 			{
-				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId, startDate, endDate}
+				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId, startDate, endDate }
 			}
 		);
 		return response.data.data;
@@ -137,30 +149,30 @@ export const adminMedisService = {
 	},
 
 	async getQuestionnaireQuestions(
-        questionnaireId: string,
-        params?: any
-    ): Promise<QuestionnaireQuestion[]> {
-        const response = await api.get<ApiResponse<QuestionnaireQuestion[]>>(
-            `/v1/questionnaire-question`,
-            {
-                params: {
-                    QuestionnaireId: questionnaireId,
-                    ...params,
-                },
-            }
-        );
+		questionnaireId: string,
+		params?: any
+	): Promise<QuestionnaireQuestion[]> {
+		const response = await api.get<ApiResponse<QuestionnaireQuestion[]>>(
+			`/v1/questionnaire-question`,
+			{
+				params: {
+					QuestionnaireId: questionnaireId,
+					...params,
+				},
+			}
+		);
 
-        const data = response.data.data;
+		const data = response.data.data;
 
-        // Sorting di client side tetap oke sebagai fallback
-        const sortedData = [...data].sort((a, b) => {
-            const orderA = a.order ?? 999;
-            const orderB = b.order ?? 999;
-            return orderA - orderB;
-        });
+		// Sorting di client side tetap oke sebagai fallback
+		const sortedData = [...data].sort((a, b) => {
+			const orderA = a.order ?? 999;
+			const orderB = b.order ?? 999;
+			return orderA - orderB;
+		});
 
-        return sortedData;
-    },
+		return sortedData;
+	},
 
 	async createQuestionnaireQuestion(
 		payload: CreateQuestionPayload
@@ -208,11 +220,11 @@ export const adminMedisService = {
 	},
 
 	async getQuestionnaireById(id: string): Promise<Questionnaire> {
-        const response = await api.get<ApiResponse<Questionnaire>>(
-            `/v1/questionnaire/${id}`
-        );
-        return response.data.data;
-    },
+		const response = await api.get<ApiResponse<Questionnaire>>(
+			`/v1/questionnaire/${id}`
+		);
+		return response.data.data;
+	},
 
 	async createQuestionnaire(
 		payload: CreateQuestionnairePayload

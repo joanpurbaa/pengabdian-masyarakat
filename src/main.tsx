@@ -24,6 +24,8 @@ import KuisionerPreview from "./pages/Admin/AdminMedis/Kuisioner/KuisionerPrevie
 import { ConfigProvider } from "antd";
 import idID from "antd/locale/id_ID";
 import Profile from "./pages/Profile/Profile";
+import AdminMedisProfile from "./pages/Admin/AdminMedis/ProfileAdmin/ProfileAdmin";
+import AdminDesaProfile from "./pages/Admin/AdminDesa/ProfileAdmin/ProfileAdmin";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -141,6 +143,13 @@ const router = createBrowserRouter([
             index: true,
             element: <Navigate to="responden" replace />,
           },
+          {
+            path: "profile",
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AdminDesaProfile />
+              </Suspense>),
+          },
           // Responden Routes
           {
             path: "responden",
@@ -219,6 +228,13 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <Navigate to="responden" replace />,
+          },
+          {
+            path: "profile",
+            element: (
+              <Suspense fallback={<Loading />}>
+                <AdminMedisProfile />
+              </Suspense>),
           },
           // Responden Routes
           {

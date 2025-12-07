@@ -159,7 +159,7 @@ export default function Profile() {
                     <div className="lg:col-span-2 space-y-6 flex flex-col gap-y-5">
                         <Card
                             title={<span className="text-lg font-bold text-gray-800">Informasi Pribadi</span>}
-                            className="shadow-sm border-gray-200 rounded-2xl"
+                            className="shadow-sm border-gray-200 rounded-2xl h-full"
                         >
                             <Descriptions column={{ xs: 1, sm: 2 }} layout="vertical" labelStyle={{ color: '#9ca3af', fontSize: '12px' }}>
                                 <Descriptions.Item label="Jenis Kelamin">

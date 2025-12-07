@@ -24,6 +24,8 @@ const items: MenuProps['items'] = [
 
 const ProfileComponent = () => {
     const { user, logout } = useAuth()
+    const role = user?.role
+
     const navigate = useNavigate()
 
     const handleLogout = () => {
@@ -34,6 +36,9 @@ const ProfileComponent = () => {
     const onMenuClick: MenuProps['onClick'] = (e) => {
         if (e.key === 'logout-btn') {
             handleLogout();
+        } 
+        else if (e.key === 'profile-key') {
+            navigate(`/${role === "admin_desa" ? "admin" : "admin-medis" }/profile`);
         }
     };
 
