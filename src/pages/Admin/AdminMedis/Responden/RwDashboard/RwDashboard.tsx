@@ -5,7 +5,7 @@ import type { QuestionnaireSummary, SummarizeAllResponse } from "../../../../../
 import { adminDesaService } from "../../../../../service/adminDesaService";
 import MentalHealthChart from "../../../../../components/MentalHealthChart";
 import { adminMedisService } from "../../../../../service/adminMedisService";
-import { Breadcrumb, Button, DatePicker, Empty, message, Popover, Table, Tag } from "antd";
+import { Breadcrumb, Button, DatePicker, Empty, message, Popover, Spin, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { getRwDashboardColumn } from "../columns/RwDashboardColumn";
 
@@ -170,11 +170,20 @@ export default function RwDashboard() {
 
     return (
         <div className="flex flex-col w-full h-full">
-            <MentalHealthChart
-                overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
-                title={`Ringkasan - ${summaryData?.summarize?.unStableMentalPercentage || 0}% Gangguan Mental`}
-                subtitle={`Total ${summaryData?.summarize?.submitCount || 0} submit dari ${summaryData?.summarize?.userCount || 0} pengguna`}
-            />
+            {summaryData && (
+                <Spin spinning={loading.loading}>
+                    <MentalHealthChart
+                        overallDepressionRate={summaryData.summarize.unStableMentalPercentage || 0}
+                        totalSubmit={summaryData.summarize.submitCount || 0}
+                        totalUser={summaryData.summarize.userCount || 0}
+
+                        perRwData={summaryData.perRw as any[]}
+
+                        title="Dashboard Kesehatan Mental RW"
+                        subtitle={`Laporan Wilayah ${questionnaireName}`}
+                    />
+                </Spin>
+            )}
 
             <div className="bg-gray-100 p-6 flex flex-col gap-y-5 h-full">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">

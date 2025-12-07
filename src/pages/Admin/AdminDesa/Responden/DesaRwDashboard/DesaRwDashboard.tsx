@@ -33,6 +33,8 @@ export default function DesaRwDashboard() {
   const [dateRange, setDateRange] = useState<[string, string] | null>(null);
   const [openFilter, setOpenFilter] = useState(false);
 
+
+
   useEffect(() => {
     if (questionnaireId) {
       fetchInitialData();
@@ -153,12 +155,16 @@ export default function DesaRwDashboard() {
 
   return (
     <div className="flex flex-col w-full h-full">
-
-      <MentalHealthChart
-        overallDepressionRate={summaryData.summarize.unStableMentalPercentage || 0}
-        title={`Ringkasan - ${summaryData.summarize.unStableMentalPercentage}% Gangguan Mental`}
-        subtitle={`Total ${summaryData.summarize.submitCount} submit dari ${summaryData.summarize.userCount} pengguna`}
-      />
+      {summaryData && (
+        <MentalHealthChart
+          overallDepressionRate={summaryData.summarize.unStableMentalPercentage || 0}
+          totalSubmit={summaryData.summarize.submitCount || 0}
+          totalUser={summaryData.summarize.userCount || 0}
+          perRwData={summaryData.perRw as any[]}
+          title="Dashboard Kesehatan Mental RW"
+          subtitle={`Laporan Wilayah ${questionnaireName}`}
+        />
+      )}
 
       <div className="bg-gray-100 p-6 flex flex-col gap-y-5 h-full">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">

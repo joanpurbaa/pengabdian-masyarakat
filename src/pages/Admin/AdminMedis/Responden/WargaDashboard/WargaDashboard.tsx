@@ -6,6 +6,7 @@ import {
     DatePicker,
     Empty,
     Popover,
+    Spin,
     Table,
     Tag
 } from "antd";
@@ -174,11 +175,20 @@ export default function WargaDashboard() {
     return (
         <div className="flex flex-col w-full h-full">
 
-            <MentalHealthChart
-                overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
-                title={`Statistik Kesehatan Mental Warga - ${names.rt}`}
-                subtitle={`Persentase Kondisi Mental Warga di ${names.rw} ${names.rt}`}
-            />
+            {summaryData && (
+                <Spin spinning={loading.loading}>
+                    <MentalHealthChart
+                        overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
+                        totalSubmit={summaryData?.summarize?.submitCount || 0}
+                        totalUser={summaryData?.summarize?.userCount || 0}
+
+                        usersData={summaryData?.users as any[]}
+
+                        title={`Statistik Kesehatan Mental Warga - ${names.rt}`}
+                        subtitle={`Persentase Kondisi Mental Warga di ${names.rw} ${names.rt}`}
+                    />
+                </Spin>
+            )}
 
             <div className="bg-gray-100 p-6 flex flex-col gap-y-5 h-full">
 
