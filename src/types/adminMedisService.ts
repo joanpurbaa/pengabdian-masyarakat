@@ -3,19 +3,19 @@ export interface Questionnaire {
 	title: string;
 	description: string;
 	status: "publish" | "draft";
-    riskThreshold?: number;
+	riskThreshold?: number;
 	createdAt: string;
 	updatedAt: string;
-	questions?: QuestionnaireQuestion[]; 
+	questions?: QuestionnaireQuestion[];
 }
 
 export interface GetQuestionnaireParams {
 	page: number;
-    pageSize: number;
-    title?: string;
-    description?: string;
-    status?: string;
-    order?: string;
+	pageSize: number;
+	title?: string;
+	description?: string;
+	status?: string;
+	order?: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -57,40 +57,40 @@ export interface QuestionnaireSummary {
 }
 
 export interface UserSummaryResponse {
-    UserId: string;
-    fullname: string;
-    summarize: {
-        submitCount: number;
-        stableMentalCount: number;
-        unStableMentalCount: number;
-        unStableMentalPercentage: number;
-    };
-    submissions: Array<{
-        submissionId: string;
-        submissionDate: string;
-        trueCount: string;
-        isMentalUnStable: number;
-    }>;
+	UserId: string;
+	fullname: string;
+	summarize: {
+		submitCount: number;
+		stableMentalCount: number;
+		unStableMentalCount: number;
+		unStableMentalPercentage: number;
+	};
+	submissions: Array<{
+		submissionId: string;
+		submissionDate: string;
+		trueCount: string;
+		isMentalUnStable: number;
+	}>;
 }
 
 export interface SubmissionDetailResponse {
-    id: string;
-    trueCount: number;
-    falseCount: number;
-    answeredCount: number;
-    isMentalUnstable: boolean;
-    UserId: string;
-    QuestionnaireId: string;
-    createdAt: string;
-    questionnaireAnswer: Array<{
-        id: string;
-        answerValue: string;
-        questionnaireQuestion: {
-            id: string;
-            questionText: string;
-            order: number;
-        };
-    }>;
+	id: string;
+	trueCount: number;
+	falseCount: number;
+	answeredCount: number;
+	isMentalUnstable: boolean;
+	UserId: string;
+	QuestionnaireId: string;
+	createdAt: string;
+	questionnaireAnswer: Array<{
+		id: string;
+		answerValue: string;
+		questionnaireQuestion: {
+			id: string;
+			questionText: string;
+			order: number;
+		};
+	}>;
 }
 
 export interface RWSectionData {
@@ -225,4 +225,25 @@ export interface GetAllRWResponse {
 		rtCount: number;
 		userCount: number;
 	};
+}
+
+export interface AdminProfile {
+	id: string;
+	fullname: string;
+	email: string;
+	gender: "m" | "f";
+	birthDate: string;
+	role: {
+		id: string;
+		name: string;
+	};
+	createdAt: string;
+}
+
+export interface UpdateAdminProfilePayload {
+	fullname: string;
+	gender: "m" | "f";
+	birthDate: string;
+	newPassword?: string;
+	confirmNewPassword?: string;
 }

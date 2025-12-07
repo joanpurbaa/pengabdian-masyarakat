@@ -1,5 +1,6 @@
 import axios from "axios";
 import type {
+	AdminProfile,
 	ApiResponse,
 	CreateResidentPayload,
 	GetPublicQuestionnaireParams,
@@ -9,6 +10,7 @@ import type {
 	RTSummary,
 	RWSummary,
 	SummarizeAllResponse,
+	UpdateAdminProfilePayload,
 	WargaResponse,
 } from "../types/adminDesaService";
 import type { GetAllRWResponse } from "../types/adminMedisService";
@@ -37,6 +39,16 @@ api.interceptors.request.use(
 );
 
 export const adminDesaService = {
+	getMe: async () => {
+		const response = await api.get<ApiResponse<AdminProfile>>("/v1/user/me");
+		return response.data;
+	},
+
+	updateProfile: async (payload: UpdateAdminProfilePayload) => {
+		const response = await api.put("/v1/user/me", payload);
+		return response.data;
+	},
+
 	async getAllQuestionnaires(params?: GetPublicQuestionnaireParams): Promise<Questionnaire[]> {
 		const response = await api.get<ApiResponse<Questionnaire[]>>(
 			"/v1/questionnaire/public",
@@ -164,24 +176,24 @@ export const adminDesaService = {
 	},
 
 	async getAllRW(): Promise<GetAllRWResponse> {
-        const response = await api.get<GetAllRWResponse>("/v1/rukun-warga"); 
-        return response.data;
-    },
+		const response = await api.get<GetAllRWResponse>("/v1/rukun-warga");
+		return response.data;
+	},
 
-    async createRW(count: number) {
-        return await api.post("/v1/rukun-warga", { count });
-    },
+	async createRW(count: number) {
+		return await api.post("/v1/rukun-warga", { count });
+	},
 
-    async createRT(count: number, rwId: string) {
-        return await api.post("/v1/rukun-tetangga", { count, RukunWargaId: rwId });
-    },
+	async createRT(count: number, rwId: string) {
+		return await api.post("/v1/rukun-tetangga", { count, RukunWargaId: rwId });
+	},
 
-    async createResident(payload: CreateResidentPayload) {
-        return await api.post("/v1/resident", payload);
-    },
+	async createResident(payload: CreateResidentPayload) {
+		return await api.post("/v1/resident", payload);
+	},
 
 	async getAllResidents(params?: any) {
-        const response = await api.get("/v1/resident", { params });
-        return response.data; 
-    },
+		const response = await api.get("/v1/resident", { params });
+		return response.data;
+	},
 };

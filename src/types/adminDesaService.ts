@@ -222,3 +222,24 @@ export interface MasterDataResponse<T> {
     message: string;
     data: T[];
 }
+
+export interface AdminProfile {
+	id: string;
+	fullname: string;
+	email: string;
+	gender: "m" | "f";
+	birthDate: string;
+	role: {
+		id: string;
+		name: string;
+	};
+	createdAt: string;
+}
+
+export interface UpdateAdminProfilePayload {
+	fullname: string;
+	gender: "m" | "f";
+	birthDate: string;
+	newPassword?: string;
+	confirmNewPassword?: string;
+}
