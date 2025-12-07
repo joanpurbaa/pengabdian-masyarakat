@@ -23,6 +23,7 @@ import Home from "./pages/Home/Home";
 import KuisionerPreview from "./pages/Admin/AdminMedis/Kuisioner/KuisionerPreviews";
 import { ConfigProvider } from "antd";
 import idID from "antd/locale/id_ID";
+import Profile from "./pages/Profile/Profile";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -114,6 +115,14 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/profile",
+        element: (
+          <Suspense fallback={<Loading />}>
+            <Profile />
+          </Suspense>
+        ),
       },
       {
         path: "/quiz/:id",
