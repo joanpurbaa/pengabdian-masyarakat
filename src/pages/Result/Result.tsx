@@ -256,12 +256,12 @@ export default function Result() {
     return (
         <div className="relative min-h-screen bg-gray-50 pb-20 overflow-hidden px-5">
             <img
-                className="fixed -z-0 -bottom-10 sm:-bottom-20 -right-20 w-[250px] lg:w-[500px] opacity-80 pointer-events-none"
+                className="absolute z-5 -bottom-10 sm:-bottom-20 -right-20 w-[250px] lg:w-[500px] opacity-40 pointer-events-none"
                 src={`${isUnstable ? "/berat.png" : "/ringan.png"}`}
                 alt=""
             />
             <img
-                className="fixed -z-0 -bottom-5 sm:-bottom-10 -left-10 w-[150px] lg:w-[300px] scale-x-[-1] opacity-80 pointer-events-none"
+                className="absolute z-5 -bottom-5 sm:-bottom-10 -left-10 w-[150px] lg:w-[300px] scale-x-[-1] opacity-40 pointer-events-none"
                 src={`${isUnstable ? "/berat.png" : "/ringan.png"}`}
                 alt=""
             />
@@ -305,7 +305,7 @@ export default function Result() {
                 </div>
             </section>
 
-            <section className="px-4 sm:px-8 relative z-10">
+            <section className="px-4 sm:px-8 relative z-4">
                 <div className="max-w-6xl mx-auto">
                     <Card className="shadow-lg border-gray-100 rounded-xl overflow-hidden" bodyStyle={{ padding: 0 }}>
                         <div className="!bg-[#70B748] px-6 py-4 flex justify-between items-center">

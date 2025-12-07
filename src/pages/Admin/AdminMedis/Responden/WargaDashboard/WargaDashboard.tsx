@@ -72,7 +72,7 @@ export default function WargaDashboard() {
     const fetchContextNames = async () => {
         if (!questionnaireId || !rwId || !rtId) return;
         try {
-            const qRes = await adminDesaService.getQuestionnaireById(questionnaireId);
+            const qRes = await adminDesaService.getMedisQuestionnaireById(questionnaireId);
             const qTitle = qRes.data.title;
 
             const [qSummary, rwSummary] = await Promise.all([

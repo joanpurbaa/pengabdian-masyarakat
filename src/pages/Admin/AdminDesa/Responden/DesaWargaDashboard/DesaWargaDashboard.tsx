@@ -6,6 +6,7 @@ import {
   DatePicker,
   Empty,
   Popover,
+  Spin,
   Table,
   Tag,
   message
@@ -182,11 +183,20 @@ export default function DesaWargaDashboard() {
   return (
     <div className="flex flex-col w-full h-full">
 
-      <MentalHealthChart
-        overallDepressionRate={summaryData.summarize.unStableMentalPercentage || 0}
-        title={`Statistik Kesehatan Mental Warga - ${names.rt}`}
-        subtitle={`Persentase Kondisi Mental Warga di ${names.rw} ${names.rt}`}
-      />
+      {summaryData && (
+        <Spin spinning={loading.init}>
+          <MentalHealthChart
+            overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
+            totalSubmit={summaryData?.summarize?.submitCount || 0}
+            totalUser={summaryData?.summarize?.userCount || 0}
+
+            usersData={summaryData?.users as any[]}
+
+            title={`Statistik Kesehatan Mental Warga - ${names.rt}`}
+            subtitle={`Persentase Kondisi Mental Warga di ${names.rw} ${names.rt}`}
+          />
+        </Spin>
+      )}
 
       <div className="bg-gray-100 p-6 flex flex-col gap-y-5 h-full">
 
@@ -197,10 +207,10 @@ export default function DesaWargaDashboard() {
                 title: <Link to="/admin/responden"> <Home size={14} className="inline mr-1" /> Daftar Kuisioner</Link>,
               },
               {
-                title: <Link to={`/admin/responden/${questionnaireId}`}>{names.questionnaire}</Link>,
+                title: <Link to={`/admin/responden/questionnaireId=${questionnaireId}`}>{names.questionnaire}</Link>,
               },
               {
-                title: <Link to={`/admin/responden/${questionnaireId}/${rwId}`}>{names.rw}</Link>,
+                title: <Link to={`/admin/responden/questionnaireId=${questionnaireId}/rwId=${rwId}`}>{names.rw}</Link>,
               },
               {
                 title: names.rt,
