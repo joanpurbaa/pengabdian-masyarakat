@@ -5,7 +5,7 @@ import type { RWSummary } from "../../../../../types/adminMedisService";
 import { adminDesaService } from "../../../../../service/adminDesaService";
 import { adminMedisService } from "../../../../../service/adminMedisService";
 import MentalHealthChart from "../../../../../components/MentalHealthChart";
-import { Breadcrumb, Button, DatePicker, Empty, message, Popover, Table, Tag } from "antd";
+import { Breadcrumb, Button, DatePicker, Empty, message, Popover, Spin, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { getRTDashboardColumns } from "../columns/RTDashboardColumn";
 
@@ -168,11 +168,22 @@ export default function RTDashboard() {
 
     return (
         <div className="flex flex-col w-full h-full">
-            <MentalHealthChart
-                overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
-                title={`Statistik Kesehatan Mental RT - ${rwName}`}
-                subtitle={`Persentase Kondisi Mental Warga di Semua RT - ${rwName}`}
-            />
+
+            {summaryData && (
+                <Spin spinning={loading.loading}>
+
+                    <MentalHealthChart
+                        overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
+                        totalSubmit={summaryData?.summarize?.submitCount || 0}
+                        totalUser={summaryData?.summarize?.userCount || 0}
+
+                        perRtData={summaryData?.perRt as any[]}
+
+                        title={`Statistik Kesehatan Mental RT - ${rwName}`}
+                        subtitle={`Persentase Kondisi Mental Warga di Semua RT - ${rwName}`}
+                    />
+                </Spin>)
+            }
 
             <div className="bg-gray-100 p-6 flex flex-col gap-y-5 h-full">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">

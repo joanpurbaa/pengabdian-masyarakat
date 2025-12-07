@@ -7,14 +7,14 @@ import {
     DatePicker,
     Empty,
     Popover,
+    Spin,
     Table,
     Tag,
     message
 } from "antd";
-import { Filter, Home, ArrowLeft } from "lucide-react";
+import { Filter, Home } from "lucide-react";
 import dayjs from "dayjs";
 
-// Services
 import { adminMedisService } from "../../../../../service/adminMedisService";
 import { adminDesaService } from "../../../../../service/adminDesaService";
 import type { UserSummaryResponse } from "../../../../../types/adminMedisService";
@@ -46,7 +46,6 @@ export default function Submissions() {
     const [userData, setUserData] = useState<UserSummaryResponse | null>(null);
     const [questionnaireName, setQuestionnaireName] = useState<string>("-");
 
-    // Filter State
     const [dateRange, setDateRange] = useState<[string, string] | null>(null);
     const [openFilter, setOpenFilter] = useState(false);
 
@@ -100,7 +99,6 @@ export default function Submissions() {
         }
     };
 
-    // --- Filter Handlers ---
     const handleDateChange = (dates: any, dateStrings: [string, string]) => {
         if (dates) setDateRange(dateStrings);
         else setDateRange(null);
@@ -172,17 +170,23 @@ export default function Submissions() {
     return (
         <div className="flex flex-col w-full gap-6">
 
-            {/* Chart Ringkasan User */}
-            <MentalHealthChart
-                // Logic warna chart: jika user punya > 0 unStable count, berarti overall dia terindikasi
-                overallDepressionRate={userData.summarize.unStableMentalPercentage}
-                title={`Riwayat Kesehatan - ${userData.fullname}`}
-                subtitle={`Total ${userData.summarize.submitCount} kali tes. ${userData.summarize.unStableMentalCount} kali terindikasi.`}
-            />
+            {userData && (
+                <Spin spinning={loading.init}>
+                    <MentalHealthChart
+                        overallDepressionRate={userData.summarize.unStableMentalPercentage}
+                        totalSubmit={userData.summarize.submitCount}
+
+                        submissionsData={userData.submissions as any[]}
+
+                        title={`Riwayat Kesehatan - ${userData.fullname}`}
+                        subtitle={`Total ${userData.summarize.submitCount} kali tes.`}
+                    />
+                </Spin>
+            )}
+
 
             <Card className="shadow-sm border-gray-200" bodyStyle={{ padding: '24px' }}>
 
-                {/* Header: Breadcrumb & Filter */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
                     <Breadcrumb
                         items={[
