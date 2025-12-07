@@ -10,6 +10,7 @@ export interface RegisterData {
 	fullname: string;
 	email: string;
 	password: string;
+	confirmPassword: string;
 	gender: "m" | "f";
 	profession: string;
 	birthDate: string;
