@@ -194,7 +194,7 @@ export default function Submissions() {
                                 title: <Link to="/admin-medis/responden"> <Home size={14} className="inline mr-1" /> Daftar Kuisioner</Link>,
                             },
                             {
-                                title: <Link to={`/admin-medis/responden/${questionnaireId}`}>{questionnaireName}</Link>,
+                                title: <Link to={`/admin-medis/responden/questionnaireId=${questionnaireId}`}>{questionnaireName}</Link>,
                             },
                             {
                                 title: "Riwayat Tes",
