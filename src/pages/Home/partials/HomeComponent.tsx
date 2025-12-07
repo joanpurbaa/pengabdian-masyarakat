@@ -29,10 +29,10 @@ export const HomeHeader = ({ fullname, onLogout }: HeaderProps) => {
                     <Button 
                         type="text" 
                         danger 
-                        icon={<LogOut size={18} />} 
                         onClick={onLogout}
                         className="flex items-center"
                     >
+                        <LogOut size={18} />
                         <span className="hidden sm:inline">Keluar</span>
                     </Button>
                 </div>

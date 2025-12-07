@@ -30,17 +30,34 @@ import KelolaWilayah from "./pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah";
 import Submissions from "./pages/Admin/AdminMedis/Responden/Submissions/Submissions";
 import Home from "./pages/Home/Home";
 import KuisionerPreview from "./pages/Admin/AdminMedis/Kuisioner/KuisionerPreviews";
+import { ConfigProvider } from "antd";
+import idID from "antd/locale/id_ID";
 
-// const Home = lazy(() => import("./pages/Home"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Admin = lazy(() => import("./pages/Admin"));
 const Result = lazy(() => import("./pages/Result/Result"));
-// const MedisResult = lazy(() => import("./pages/MedisResult"));
 const HistorySection = lazy(() => import("./pages/HistorySection"));
 const Quiz = lazy(() => import("./pages/Quiz/Quiz"));
 
 axios.defaults.withCredentials = true;
+
+const antdTheme = {
+  token: {
+    colorPrimary: "#70B748",
+    borderRadius: 6,
+  },
+  components: {
+    Input: {
+      activeBorderColor: "#70B748",
+      hoverBorderColor: "#70B748",
+    },
+    Button: {
+      colorPrimary: "#70B748",
+      colorPrimaryHover: "#5a9639",
+    }
+  }
+};
 
 function ProtectedLayout() {
   const token = localStorage.getItem("authToken");
@@ -269,390 +286,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-// const router = createBrowserRouter([
-// 	{
-// 		path: "/",
-// 		element: (
-
-// 			<Home />
-// 		),
-// 	},
-// 	{
-// 		path: "/masuk",
-// 		element: <Login />,
-// 	},
-// 	{
-// 		path: "/daftar",
-// 		element: <Register />,
-// 	},
-// 	{
-// 		path: "/quiz/:id",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Quiz />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/result/:id",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Result />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	// Admin routes - Home page
-// 	{
-// 		path: "/admin",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden/:rwId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden/:rwId/:rtId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden/:rwId/:rtId/:keluargaId/history",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<HistorySection />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden/:rwId/:rtId/:keluargaId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/kelola-rw",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/kelola-rw/:rwId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/kelola-rw/:rwId/:rtId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	// Admin Medis routes - Home page
-// 	{
-// 		path: "/admin-medis",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/kelola-rw/:rwId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/kelola-rw/:rwId/:rtId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:rwId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:rwId/:rtId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<HistorySection />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Result />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/kuisioner",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/result",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<MedisResult />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/history",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<HistorySection />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// ]);
-
-// const router = createBrowserRouter([
-// 	{
-// 		path: "/",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Home />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/masuk",
-// 		element: <Login />,
-// 	},
-// 	{
-// 		path: "/daftar",
-// 		element: <Register />,
-// 	},
-// 	{
-// 		path: "/quiz/:id",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Quiz />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/result",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Result />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/responden",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/kelola-rw",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/kelola-rw/:rwId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin/kelola-rw/:rwId/:rtId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	// Admin Medis routes
-// 	{
-// 		path: "/admin-medis",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:questionnaireId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:questionnaireId/:rwId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:questionnaireId/:rwId/:rtId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/responden/:questionnaireId/:rwId/:rtId/:keluargaId",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path:
-// 			"/admin-medis/responden/:questionnaireId/:rwId/:rtId/:keluargaId/:anggotaName",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path:
-// 			"/admin-medis/responden/:questionnaireId/:rwId/:rtId/:keluargaId/history",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<HistorySection />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/kuisioner",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<Admin />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/admin-medis/result",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<MedisResult />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// 	{
-// 		path: "/history",
-// 		element: (
-// 			<ProtectedRoute>
-// 				<HistorySection />
-// 			</ProtectedRoute>
-// 		),
-// 	},
-// ]);
-
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <ConfigProvider theme={antdTheme} locale={idID}>
+        <RouterProvider router={router} />
+      </ConfigProvider>
     </AuthProvider>
   </QueryClientProvider>
 );

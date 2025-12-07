@@ -32,9 +32,6 @@ function AdminMedis() {
         queryFn: useGetAllQuestionnaire,
     });
 
-    console.log(data);
-    
-
     const adminDesaMedisColumn = getQuestionnaireColumns({
         pagination,
         onSee: (id) => {
@@ -44,20 +41,6 @@ function AdminMedis() {
 
     return (
         <div className="p-6 space-y-6">
-
-            {/* <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    
-                    <Button
-                        type="primary"
-                        className="!bg-[#70B748] hover:bg-green-600 border-none h-10 px-6 !flex !items-center"
-                        onClick={() => console.log("Buka Modal Create")}
-                    >
-                        <BiPlus className="h-5 w-5" />
-                        <p>Buat Baru</p>
-                    </Button>
-                </div> */}
-
-
 
             <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-5 flex flex-col gap-y-5">
                 <div>
