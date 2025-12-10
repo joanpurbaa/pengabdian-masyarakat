@@ -1,163 +1,188 @@
 import { useEffect, useState } from "react";
-import { Modal, Form, Input, Button, Alert } from "antd";
+import { Modal, Form, Input, Button, Alert, Row, Col, Select } from "antd";
 import { Info } from "lucide-react"; // Import icon Info
 import type { ResidentProfile } from "../../../service/residentService";
 import { useUpdateProfile } from "../../../hooks/useResident";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
+import { useMasterData } from "../../../hooks/useMasterData";
 
 interface EditProfileModalProps {
-    open: boolean;
-    onClose: () => void;
-    initialData: ResidentProfile;
+  open: boolean;
+  onClose: () => void;
+  initialData: ResidentProfile;
 }
 
-export default function EditProfileModal({ open, onClose, initialData }: EditProfileModalProps) {
-    const [form] = Form.useForm();
-    const updateMutation = useUpdateProfile();
+export default function EditProfileModal({
+  open,
+  onClose,
+  initialData,
+}: EditProfileModalProps) {
+  const [form] = Form.useForm();
+  const updateMutation = useUpdateProfile();
 
-    const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
 
-    useEffect(() => {
-        if (open && initialData) {
-            form.setFieldsValue({
-                email: initialData.email,
-                phoneNumber: initialData.userDetail.phoneNumber,
-            });
-        }
-    }, [open, initialData, form]);
+  const { salaryRanges } = useMasterData();
 
-    const handleSubmit = async (values: any) => {
-        const payload = {
-            email: values.email,
-            phoneNumber: values.phoneNumber,
-            fullname: initialData.fullname,
-            gender: initialData.gender,
-            birthDate: initialData.birthDate,
-            profession: initialData.userDetail.profession,
-            MarriageStatusId: initialData.userDetail.marriageStatus.id,
-            RukunWargaId: initialData.userDetail.rukunWarga.id,
-            RukunTetanggaId: initialData.userDetail.rukunTetangga.id,
-            EducationId: initialData.userDetail.education.id,
-            SalaryRangeId: initialData.userDetail.salaryRange.id,
-            ...(values.newPassword ? {
-                password: values.newPassword,
-                confirmNewPassword: values.confirmNewPassword
-            } : {}),
-        };
+  useEffect(() => {
+    if (open && initialData) {
+      form.setFieldsValue({
+        phoneNumber: initialData.userDetail.phoneNumber,
+        profession: initialData.userDetail.profession,
+        EducationId: initialData.userDetail.education.id,
+        SalaryRangeId: initialData.userDetail.salaryRange.id,
+      });
+    }
+  }, [open, initialData, form]);
 
-        updateMutation.mutate(payload, {
-            onSuccess: () => {
-                onClose();
-                form.resetFields(["newPassword", "confirmNewPassword"]);
-            },
-            onError: (err) => {
-                const msg = getErrorMessage(err);
-                setErrorMsg(msg);
-            }
-        });
+  const handleSubmit = async (values: any) => {
+    const payload = {
+      phoneNumber: values.phoneNumber,
+      profession: initialData.userDetail.profession,
+      EducationId: initialData.userDetail.education.id,
+      SalaryRangeId: values.SalaryRangeId,
+      ...(values.newPassword
+        ? {
+            password: values.newPassword,
+            confirmNewPassword: values.confirmNewPassword,
+          }
+        : {}),
     };
 
-    return (
-        <Modal
-            title="Edit Profil"
-            open={open}
-            onCancel={onClose}
-            footer={null}
-            centered
-        >
-            <Alert
-                message="Informasi Perubahan Data"
-                description="Hanya Email, Nomor Telepon, dan Password yang dapat diubah secara mandiri. Untuk perubahan data kependudukan lainnya (Pekerjaan, Pendidikan, Status), silakan hubungi Admin Desa."
-                type="info"
-                showIcon
-                icon={<Info size={20} />}
-                className="mb-6 bg-blue-50 border-blue-200 text-blue-800"
-            />
+    updateMutation.mutate(payload, {
+      onSuccess: () => {
+        onClose();
+        form.resetFields(["newPassword", "confirmNewPassword"]);
+      },
+      onError: (err) => {
+        const msg = getErrorMessage(err);
+        setErrorMsg(msg);
+      },
+    });
+  };
 
-            <br />
+  return (
+    <Modal
+      title="Edit Profil"
+      open={open}
+      onCancel={onClose}
+      footer={null}
+      centered
+      width={600}
+    >
+      <Alert
+        message="Perbarui Data Diri"
+        description="Pastikan data pekerjaan dan pendidikan yang Anda masukkan adalah data terbaru."
+        type="info"
+        showIcon
+        icon={<Info size={20} />}
+        className="mb-6 bg-blue-50 border-blue-200 text-blue-800"
+      />
 
-            {errorMsg && (
-                <Alert
-                    message="Gagal Menyimpan"
-                    description={errorMsg}
-                    type="error"
-                    showIcon
-                />
-            )}
+      <br />
 
-            <br />
+      {errorMsg && (
+        <Alert
+          message="Gagal Menyimpan"
+          description={errorMsg}
+          type="error"
+          showIcon
+        />
+      )}
 
-            <Form
-                form={form}
-                layout="vertical"
-                onFinish={handleSubmit}
-                disabled={updateMutation.isPending}
+      <br />
+
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        disabled={updateMutation.isPending}
+      >
+        <Row gutter={16}>
+          <Col span={12}>
+            <Form.Item
+              label="Nomor Telepon"
+              name="phoneNumber"
+              rules={[{ required: true, message: "Nomor telepon wajib diisi" }]}
             >
-                <Form.Item
-                    label="Email"
-                    name="email"
-                    rules={[
-                        { required: true, message: "Email wajib diisi" },
-                        { type: "email", message: "Format email tidak valid" }
-                    ]}
-                >
-                    <Input placeholder="Contoh: nama@email.com" />
-                </Form.Item>
+              <Input placeholder="Contoh: 08123456789" />
+            </Form.Item>
+          </Col>
 
-                <Form.Item
-                    label="Nomor Telepon"
-                    name="phoneNumber"
-                    rules={[{ required: true, message: "Nomor telepon wajib diisi" }]}
-                >
-                    <Input placeholder="Contoh: 08123456789" />
-                </Form.Item>
+          <Col span={12}>
+            <Form.Item
+              label="Rentang Gaji"
+              name="SalaryRangeId"
+              rules={[{ required: true, message: "Pilih rentang gaji" }]}
+            >
+              <Select
+                placeholder="Pilih Rentang Gaji"
+                loading={salaryRanges.isLoading}
+              >
+                {salaryRanges.data?.map((salary) => (
+                  <Select.Option key={salary.id} value={salary.id}>
+                    Rp {parseInt(salary.minRange).toLocaleString()} - Rp{" "}
+                    {parseInt(salary.maxRange).toLocaleString()}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+        </Row>
 
-                <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200 mt-4">
-                    <p className="text-xs text-gray-500 font-bold mb-3 uppercase">Ubah Password (Opsional)</p>
-                    <Form.Item
-                        label="Password Baru"
-                        name="newPassword"
-                        rules={[{ min: 6, message: "Minimal 6 karakter" }]}
-                    >
-                        <Input.Password placeholder="Kosongkan jika tidak ingin mengubah" />
-                    </Form.Item>
+        <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200 mt-2">
+          <p className="text-xs text-gray-500 font-bold mb-3 uppercase">
+            Ubah Password (Opsional)
+          </p>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Form.Item
+                label="Password Baru"
+                name="newPassword"
+                rules={[{ min: 6, message: "Min 6 karakter" }]}
+              >
+                <Input.Password placeholder="Kosongkan jika tidak ubah" />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item
+                label="Konfirmasi Password"
+                name="confirmNewPassword"
+                dependencies={["newPassword"]}
+                rules={[
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("newPassword") === value) {
+                        return Promise.resolve();
+                      }
+                      if (!getFieldValue("newPassword") && !value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Password tidak cocok!"));
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="Ulangi password baru" />
+              </Form.Item>
+            </Col>
+          </Row>
+        </div>
 
-                    <Form.Item
-                        label="Konfirmasi Password Baru"
-                        name="confirmNewPassword"
-                        dependencies={['newPassword']}
-                        rules={[
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('newPassword') === value) {
-                                        return Promise.resolve();
-                                    }
-                                    if (!getFieldValue('newPassword') && !value) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(new Error('Password konfirmasi tidak cocok!'));
-                                },
-                            }),
-                        ]}
-                    >
-                        <Input.Password placeholder="Ulangi password baru" />
-                    </Form.Item>
-                </div>
-
-                <div className="flex justify-end gap-2">
-                    <Button onClick={onClose} disabled={updateMutation.isPending}>
-                        Batal
-                    </Button>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        loading={updateMutation.isPending}
-                        className="bg-[#70B748] hover:bg-[#5a9639]"
-                    >
-                        Simpan Perubahan
-                    </Button>
-                </div>
-            </Form>
-        </Modal>
-    );
+        <div className="flex justify-end gap-2">
+          <Button onClick={onClose} disabled={updateMutation.isPending}>
+            Batal
+          </Button>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={updateMutation.isPending}
+            className="bg-[#70B748] hover:bg-[#5a9639]"
+          >
+            Simpan Perubahan
+          </Button>
+        </div>
+      </Form>
+    </Modal>
+  );
 }

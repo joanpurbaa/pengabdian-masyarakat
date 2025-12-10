@@ -26,3 +26,19 @@ export const useUpdateProfile = () => {
     },
   });
 };
+
+export const useUpdateProfilePicture = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (file: File) => residentService.updateProfilePicture(file),
+    onSuccess: () => {
+      message.success("Foto profil berhasil diperbarui!");
+      queryClient.invalidateQueries({ queryKey: ["resident", "me"] });
+    },
+    onError: (error: any) => {
+      console.error(error);
+      message.error(error.response?.data?.message || "Gagal mengupload foto");
+    },
+  });
+};

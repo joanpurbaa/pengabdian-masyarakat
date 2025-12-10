@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   Empty,
-  Modal,
   Select,
   Table,
   Spin,
@@ -20,11 +19,7 @@ import { useAuth } from "../../context/AuthContext";
 import { questionnaireService } from "../../service/questionnaireService";
 
 import type { ColumnsType } from "antd/es/table";
-import {
-  HomeHeader,
-  QuestionnaireCard,
-  WelcomeBanner,
-} from "./partials/HomeComponent";
+import { QuestionnaireCard, WelcomeBanner } from "./partials/HomeComponent";
 
 const { RangePicker } = DatePicker;
 
@@ -103,20 +98,6 @@ export default function Home() {
     } finally {
       setHistoryLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    Modal.confirm({
-      title: "Konfirmasi Keluar",
-      content: "Apakah Anda yakin ingin keluar dari aplikasi?",
-      okText: "Ya, Keluar",
-      cancelText: "Batal",
-      okButtonProps: { danger: true },
-      onOk: () => {
-        logout();
-        navigate("/masuk");
-      },
-    });
   };
 
   const handleStartQuiz = (quizId: string) => {
@@ -216,8 +197,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <HomeHeader fullname={user?.fullname || "User"} onLogout={handleLogout} />
-
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <WelcomeBanner fullname={user?.fullname || "User"} />
 
