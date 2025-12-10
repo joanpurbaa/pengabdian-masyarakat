@@ -10,6 +10,7 @@ export interface Questionnaire {
 	description: string;
 	status: "draft" | "publish";
     riskThreshold?: number;
+	isAvailable: boolean
 }
 
 export interface DataResponse<T> {
@@ -152,7 +153,7 @@ export const validateQuestionnaireData = (data: any): QuestionnaireDetail => {
 export const questionnaireService = {
 	async getAllQuestionnaires(): Promise<Questionnaire[]> {
 		const response = await api.get<ApiResponse<Questionnaire[]>>(
-			"/v1/questionnaire/public"
+			"/v1/questionnaire/me"
 		);
 		return response.data.data;
 	},

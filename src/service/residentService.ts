@@ -37,6 +37,7 @@ export interface ResidentProfile {
   email: string;
   gender: "m" | "f";
   birthDate: string;
+  profilePicture: string;
   userDetail: UserDetail;
 }
 
@@ -83,7 +84,21 @@ export const residentService = {
   },
 
   updateProfile: async (payload: UpdateProfilePayload) => {
-    const response = await api.put("/v1/user/me", payload);
+    console.log(payload);
+    
+    const response = await api.put("/v1/resident/me", payload);
+    return response.data;
+  },
+
+  updateProfilePicture: async (file: File) => {
+    const formData = new FormData();
+    formData.append("profilePicture", file); 
+
+    const response = await api.put("/v1/user/update/profile-picture", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   },
 };
