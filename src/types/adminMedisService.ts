@@ -4,6 +4,7 @@ export interface Questionnaire {
 	description: string;
 	status: "publish" | "draft";
 	riskThreshold?: number;
+	cooldownInMinutes?: number;
 	createdAt: string;
 	updatedAt: string;
 	questions?: QuestionnaireQuestion[];
@@ -170,6 +171,7 @@ export interface CreateQuestionnairePayload {
 	description: string;
 	riskThreshold: number | 0;
 	status: "draft" | "publish";
+	cooldownInMinutes: number | 0;
 }
 
 export interface UpdateQuestionnairePayload {
@@ -177,6 +179,7 @@ export interface UpdateQuestionnairePayload {
 	description: string;
 	status: "draft" | "publish";
 	riskThreshold: number | 0;
+	cooldownInMinutes: number | 0;
 }
 
 export interface RTSummary {
@@ -233,6 +236,7 @@ export interface AdminProfile {
 	email: string;
 	gender: "m" | "f";
 	birthDate: string;
+	profilePicture?: string;
 	role: {
 		id: string;
 		name: string;

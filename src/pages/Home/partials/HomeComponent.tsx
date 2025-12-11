@@ -1,5 +1,10 @@
 import { Button, Card, Tag } from "antd";
-import { FileText, PlayCircle } from "lucide-react";
+import { Clock, FileText, PlayCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration"
+
+dayjs.extend(duration);
 
 interface WelcomeBannerProps {
     fullname: string;
@@ -29,25 +34,69 @@ interface QuestionnaireCardProps {
     title: string;
     description: string;
     disabled: boolean;
+    availableAt: string | null;
     onStart: (id: string) => void;
+    onRefresh: () => void;
 }
 
-export const QuestionnaireCard = ({ id, title, description, onStart, disabled }: QuestionnaireCardProps) => {
+export const QuestionnaireCard = ({ id, title, description, onStart, disabled, availableAt, onRefresh }: QuestionnaireCardProps) => {
+    const [timerString, setTimerString] = useState<string>("");
+
+    useEffect(() => {
+        if (disabled || !availableAt) return;
+
+        const updateTimer = () => {
+            const now = dayjs();
+            const target = dayjs(availableAt);
+            const diff = target.diff(now);
+
+            if (diff <= 0) {
+                onRefresh();
+                return;
+            }
+
+            const dur = dayjs.duration(diff);
+            const hours = Math.floor(dur.asHours());
+            const minutes = dur.minutes();
+            const seconds = dur.seconds();
+
+            const formatted = `${hours > 0 ? hours + 'j ' : ''}${minutes}m ${seconds}d`;
+            setTimerString(formatted);
+        };
+
+        updateTimer();
+
+        const intervalId = setInterval(updateTimer, 1000);
+
+        return () => clearInterval(intervalId);
+    }, [disabled, availableAt, onRefresh]);
+
     return (
         <Card
             hoverable
-            className="h-full flex flex-col border-gray-200 hover:border-[#70B748] transition-all duration-300 group"
+            className={`h-full flex flex-col border-gray-200 transition-all duration-300 group ${
+                disabled ? "hover:border-[#70B748]" : "opacity-80 bg-gray-50"
+            }`}
             bodyStyle={{ display: 'flex', flexDirection: 'column', height: '100%', padding: '24px' }}
         >
             <div className="flex items-start justify-between mb-4">
-                <div className="p-3 bg-green-50 rounded-lg group-hover:bg-[#70B748] transition-colors duration-300">
-                    <FileText className="w-6 h-6 text-[#70B748] group-hover:text-white transition-colors" />
+                <div className={`p-3 rounded-lg transition-colors duration-300 ${
+                    disabled ? "bg-green-50 group-hover:bg-[#70B748]" : "bg-gray-200"
+                }`}>
+                    <FileText className={`w-6 h-6 transition-colors ${
+                        disabled ? "text-[#70B748] group-hover:text-white" : "text-gray-500"
+                    }`} />
                 </div>
-                <Tag color="success">Aktif</Tag>
+                
+                {disabled ? (
+                    <Tag color="success" className="mr-0">Tersedia</Tag>
+                ) : (
+                    <Tag color="warning" className="mr-0">Cooldown</Tag>
+                )}
             </div>
 
             <div className="flex-1 mb-6">
-                <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2 group-hover:text-[#70B748] transition-colors">
+                <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
                     {title}
                 </h3>
                 <p className="text-gray-500 text-sm line-clamp-3 leading-relaxed">
@@ -57,14 +106,26 @@ export const QuestionnaireCard = ({ id, title, description, onStart, disabled }:
 
             <Button
                 type="primary"
-                block
                 size="large"
-                disabled={disabled}
-                className="!bg-[#70B748] !hover:bg-[#5a9639] border-none h-10 font-medium flex items-center justify-center gap-2"
+                disabled={!disabled} 
+                className={`border-none h-10 font-medium !flex items-center justify-center gap-2 ${
+                    disabled 
+                    ? "!bg-[#70B748] !hover:bg-[#5a9639]" 
+                    : "!bg-gray-300 !text-gray-600 cursor-not-allowed"
+                }`}
                 onClick={() => onStart(id)}
             >
-                <PlayCircle size={18} />
-                Mulai Mengerjakan
+                {disabled ? (
+                    <div className="flex items-center gap-x-2">
+                        <PlayCircle size={18} />
+                        Mulai Mengerjakan
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-x-2">
+                        <Clock size={18} />
+                        {timerString ? `Tersedia dlm ${timerString}` : "Sedang Cooldown"}
+                    </div>
+                )}
             </Button>
         </Card>
     );

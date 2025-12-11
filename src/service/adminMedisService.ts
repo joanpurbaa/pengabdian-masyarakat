@@ -305,4 +305,16 @@ export const adminMedisService = {
 
 		return response.data.data;
 	},
+
+	async updateProfilePicture(file: File) {
+		const formData = new FormData();
+		formData.append("profilePicture", file);
+
+		const response = await api.put("/v1/user/update/profile-picture", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
+	}
 };

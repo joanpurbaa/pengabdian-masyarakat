@@ -226,6 +226,9 @@ export default function Home() {
                   title={quiz.title}
                   description={quiz.description}
                   onStart={handleStartQuiz}
+                  disabled={quiz.isAvailable}
+                  availableAt={quiz.availableAt}
+                  onRefresh={refetch}
                 />
               ))}
             </div>
