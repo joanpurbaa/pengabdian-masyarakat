@@ -10,6 +10,7 @@ export interface Questionnaire {
 	description: string;
 	status: "draft" | "publish";
     riskThreshold?: number;
+	availableAt: string;
 	isAvailable: boolean
 }
 

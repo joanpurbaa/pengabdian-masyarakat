@@ -9,6 +9,7 @@ import {
   Select,
   message,
   InputNumber,
+  Space,
 } from "antd";
 import { Plus, Search, ArrowLeft } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -64,6 +65,7 @@ export default function Kuisioner() {
       title: record.title,
       description: record.description,
       riskThreshold: record.riskThreshold,
+      cooldownInMinutes: record.cooldownInMinutes,
       status: record.status,
     });
     setIsModalOpen(true);
@@ -78,6 +80,7 @@ export default function Kuisioner() {
           description: values.description,
           status: values.status,
           riskThreshold: Number(values.riskThreshold),
+          cooldownInMinutes: Number(values.cooldownInMinutes)
         });
         message.success("Kuisioner berhasil diperbarui!");
       } else {
@@ -85,6 +88,7 @@ export default function Kuisioner() {
           title: values.title,
           description: values.description,
           riskThreshold: Number(values.riskThreshold),
+          cooldownInMinutes: Number(values.cooldownInMinutes),
           status: values.status as "draft" | "publish",
         };
         await adminMedisService.createQuestionnaire(payload);
@@ -115,6 +119,7 @@ export default function Kuisioner() {
         description: currentData.description,
         status: newStatus as "draft" | "publish",
         riskThreshold: currentData.riskThreshold as number,
+        cooldownInMinutes: currentData.cooldownInMinutes as number
       });
 
       message.success(`Status berhasil diubah ke ${newStatus}`);
@@ -243,11 +248,16 @@ export default function Kuisioner() {
             <Input.TextArea rows={3} placeholder="Deskripsi singkat..." />
           </Form.Item>
 
-          <div className="grid grid-cols-2 gap-4">
+          <Space className="!w-full">
             <Form.Item label="Risk Threshold" name="riskThreshold">
-              <InputNumber min={0} className="w-full" disabled={isEditMode} />
+              <InputNumber min={0} className="!w-full" />
             </Form.Item>
+            <Form.Item label="Masa Tenggang (Menit)" name="cooldownInMinutes">
+              <InputNumber min={0} className="!w-full" placeholder="Masukkan Masa Tenggang" />
+            </Form.Item>
+          </Space>
 
+          <div className="grid grid-cols-2 gap-4">
             <Form.Item label="Status" name="status">
               <Select>
                 <Select.Option value="draft">Draft</Select.Option>

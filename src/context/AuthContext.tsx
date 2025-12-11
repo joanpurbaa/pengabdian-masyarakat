@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../service/authService";
 import type { LoginData, RegisterData } from "../service/authService";
 import type { APIError } from "../types/ErrorFallbackType";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface User {
 	uid: string;
@@ -41,6 +42,8 @@ const ADMIN_CREDENTIALS = {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
+	const queryClient = useQueryClient();
+
 	const [user, setUser] = useState<User | null>(() => {
 		const token = localStorage.getItem("authToken");
 		const userData = localStorage.getItem("userData");
@@ -158,6 +161,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	const logout = (): void => {
 		setUser(null);
+		queryClient.removeQueries();
 		localStorage.removeItem("authToken");
 		localStorage.removeItem("userData");
 	};
