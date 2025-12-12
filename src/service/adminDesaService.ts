@@ -11,6 +11,7 @@ import type {
 	RWSummary,
 	SummarizeAllResponse,
 	UpdateAdminProfilePayload,
+	UpdateResidentPayload,
 	WargaResponse,
 } from "../types/adminDesaService";
 import type { GetAllRWResponse } from "../types/adminMedisService";
@@ -196,4 +197,31 @@ export const adminDesaService = {
 		const response = await api.get("/v1/resident", { params });
 		return response.data;
 	},
+
+	async getResidentDetail(id: string) {
+        const response = await api.get(`/v1/resident/${id}`);
+        return response.data;
+    },
+
+    async updateResident(id: string, payload: UpdateResidentPayload) {
+        const response = await api.put(`/v1/resident/${id}`, payload);
+        return response.data;
+    },
+
+    async deleteResident(id: string) {
+        const response = await api.delete(`/v1/resident/${id}`);
+        return response.data;
+    },
+
+	async updateProfilePicture(file: File) {
+		const formData = new FormData();
+		formData.append("profilePicture", file);
+
+		const response = await api.put("/v1/user/update/profile-picture", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
+	}
 };

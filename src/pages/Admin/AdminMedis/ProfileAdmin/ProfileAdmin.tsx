@@ -63,7 +63,6 @@ export default function AdminProfile() {
 
     const data = response?.data;
     const profilePictureUrl = getImageUrl(data.profilePicture);
-    console.log(data);
     
 
     return (

@@ -229,6 +229,7 @@ export interface AdminProfile {
 	email: string;
 	gender: "m" | "f";
 	birthDate: string;
+	profilePicture: string;
 	role: {
 		id: string;
 		name: string;
@@ -242,4 +243,20 @@ export interface UpdateAdminProfilePayload {
 	birthDate: string;
 	newPassword?: string;
 	confirmNewPassword?: string;
+}
+
+export interface UpdateResidentPayload {
+    fullname: string;
+    email: string;
+    gender: "m" | "f";
+    birthDate: string;
+    nik: string;
+    profession: string;
+    MarriageStatusId: string;
+    RukunWargaId: string;
+    RukunTetanggaId: string;
+    EducationId: string;
+    SalaryRangeId: string;
+    password?: string;
+    confirmPassword?: string;
 }

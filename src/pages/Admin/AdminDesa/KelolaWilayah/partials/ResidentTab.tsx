@@ -1,49 +1,54 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { 
-    Table, 
-    Button, 
-    Input, 
-    Select, 
-    Card 
+import {
+    Table,
+    Button,
+    Input,
+    Select,
+    Card,
+    message
 } from "antd";
 import { Plus, Search } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDebounce } from "use-debounce";
 
 import { adminDesaService } from "../../../../../service/adminDesaService";
 import { getResidentColumns, type ResidentData } from "../columns/ResidentColumn";
 import CreateResidentModal from "./CreateResidentModal";
+import EditResidentModal from "./UpdateResidentModal";
 
 export default function ResidentTab() {
     const navigate = useNavigate();
-    
+    const queryClient = useQueryClient();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
-    
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedResidentId, setSelectedResidentId] = useState<string | null>(null);
+
     const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
     const [searchName, setSearchName] = useState("");
     const [debouncedSearch] = useDebounce(searchName, 500);
-    
+
     const [filterRW, setFilterRW] = useState<string | null>(null);
     const [filterRT, setFilterRT] = useState<string | null>(null);
 
-    const { data: rwList } = useQuery({ 
-        queryKey: ["rw-list"], 
+    const { data: rwList } = useQuery({
+        queryKey: ["rw-list"],
         queryFn: adminDesaService.getAllRW,
-        staleTime: 1000 * 60 * 5 
+        staleTime: 1000 * 60 * 5
     });
 
     const { data: rtListFilter } = useQuery({
         queryKey: ["rt-list-filter", filterRW],
         queryFn: () => filterRW ? adminDesaService.getRT(filterRW) : null,
         enabled: !!filterRW,
-        staleTime: 1000 * 60 * 5 
+        staleTime: 1000 * 60 * 5
     });
 
     useEffect(() => {
         if (rwList?.data && !filterRW) {
             const defaultRW = rwList.data.find((rw: any) => rw.name == 1 || rw.name === "1");
-            
+
             if (defaultRW) {
                 setFilterRW(defaultRW.id);
             }
@@ -52,11 +57,11 @@ export default function ResidentTab() {
 
     useEffect(() => {
         if (rtListFilter?.data?.rukunTetangga && !filterRT) {
-             const defaultRT = rtListFilter.data.rukunTetangga.find((rt: any) => rt.name == 1 || rt.name === "1");
-             
-             if (defaultRT) {
-                 setFilterRT(defaultRT.id);
-             }
+            const defaultRT = rtListFilter.data.rukunTetangga.find((rt: any) => rt.name == 1 || rt.name === "1");
+
+            if (defaultRT) {
+                setFilterRT(defaultRT.id);
+            }
         }
     }, [rtListFilter]);
 
@@ -66,20 +71,42 @@ export default function ResidentTab() {
         queryFn: () => adminDesaService.getAllResidents({
             page: pagination.current,
             pageSize: pagination.pageSize,
-            fullname: debouncedSearch, 
+            fullname: debouncedSearch,
             RukunWargaId: filterRW,
             RukunTetanggaId: filterRT,
             order: '[["createdAt", "desc"]]'
         }),
-        placeholderData: (previousData) => previousData, 
-        enabled: !!filterRW 
+        placeholderData: (previousData) => previousData,
+        enabled: !!filterRW
     });
+
+    const deleteMutation = useMutation({
+        mutationFn: adminDesaService.deleteResident,
+        onSuccess: () => {
+            message.success("Warga berhasil dihapus");
+            queryClient.invalidateQueries({ queryKey: ["residents"] });
+        },
+        onError: () => {
+            message.error("Gagal menghapus warga");
+        }
+    });
+
+    const handleEdit = (id: string) => {
+        setSelectedResidentId(id);
+        setIsEditModalOpen(true);
+    };
+
+    const handleDelete = (id: string) => {
+        deleteMutation.mutate(id);
+    };
 
     const columns = getResidentColumns({
         pagination,
         onViewDetail: (id) => {
             navigate(`/admin/master-data/warga/${id}`);
-        }
+        },
+        onEdit: handleEdit,
+        onDelete: handleDelete
     });
 
     return (
@@ -95,15 +122,15 @@ export default function ResidentTab() {
                             onChange={(e) => setSearchName(e.target.value)}
                             allowClear
                         />
-                        
+
                         <Select
                             placeholder="Filter RW"
                             className="w-full md:w-40"
                             allowClear
-                            value={filterRW} 
+                            value={filterRW}
                             onChange={(val) => {
                                 setFilterRW(val);
-                                setFilterRT(null); 
+                                setFilterRT(null);
                             }}
                             options={rwList?.data?.map((rw: any) => ({ label: `RW ${rw.name}`, value: rw.id }))}
                             loading={!rwList}
@@ -121,11 +148,11 @@ export default function ResidentTab() {
                         />
                     </div>
 
-                    <Button 
-                        type="primary" 
+                    <Button
+                        type="primary"
                         icon={<Plus size={16} />}
                         // disabled={rtListFilter?.data?.rukunTetangga?.length === 0}
-                        className="!bg-[#70B748] !hover:bg-[#5a9639]" 
+                        className="!bg-[#70B748] !hover:bg-[#5a9639]"
                         onClick={() => setIsModalOpen(true)}
                     >
                         Tambah Warga
@@ -134,23 +161,32 @@ export default function ResidentTab() {
             </Card>
 
             <Table<ResidentData>
-                columns={columns} 
-                dataSource={(residentsData?.data || []) as ResidentData[]} 
-                rowKey="id" 
+                columns={columns}
+                dataSource={(residentsData?.data || []) as ResidentData[]}
+                rowKey="id"
                 loading={isLoading}
                 pagination={{
                     current: pagination.current,
                     pageSize: pagination.pageSize,
-                    total: residentsData?.total || residentsData?.data?.length || 0, 
+                    total: residentsData?.total || residentsData?.data?.length || 0,
                     showTotal: (total, range) => `${range[0]}-${range[1]} dari ${total} Warga`,
                     onChange: (page, size) => setPagination({ current: page, pageSize: size })
                 }}
                 scroll={{ x: 1000 }}
             />
 
-            <CreateResidentModal 
-                open={isModalOpen} 
-                onCancel={() => setIsModalOpen(false)} 
+            <CreateResidentModal
+                open={isModalOpen}
+                onCancel={() => setIsModalOpen(false)}
+            />
+
+            <EditResidentModal
+                open={isEditModalOpen}
+                onClose={() => {
+                    setIsEditModalOpen(false);
+                    setSelectedResidentId(null);
+                }}
+                residentId={selectedResidentId}
             />
         </div>
     );
