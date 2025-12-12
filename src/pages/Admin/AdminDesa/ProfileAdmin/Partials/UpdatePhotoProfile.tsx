@@ -54,7 +54,7 @@ export default function UpdatePhotoModal({ open, onClose, currentPhotoUrl, fulln
 
         updatePictureMutation.mutate(fileToUpload, {
             onSuccess: () => {
-                queryClient.invalidateQueries({ queryKey: ["admin-medis", "me"] });
+                queryClient.invalidateQueries({ queryKey: ["admin-desa", "me"] });
                 onClose();
                 if (preview && preview !== currentPhotoUrl) {
                     URL.revokeObjectURL(preview);

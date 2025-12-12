@@ -15,27 +15,27 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
     const [form] = Form.useForm();
     const [selectedRW, setSelectedRW] = useState<string | null>(null);
 
-    const { data: educationList } = useQuery({ 
-        queryKey: ["edu"], 
+    const { data: educationList } = useQuery({
+        queryKey: ["edu"],
         queryFn: masterDataService.getEducationList,
         staleTime: Infinity
     });
-    const { data: marriageList } = useQuery({ 
-        queryKey: ["marriage"], 
+    const { data: marriageList } = useQuery({
+        queryKey: ["marriage"],
         queryFn: masterDataService.getMarriageStatusList,
-        staleTime: Infinity 
+        staleTime: Infinity
     });
-    const { data: salaryList } = useQuery({ 
-        queryKey: ["salary"], 
+    const { data: salaryList } = useQuery({
+        queryKey: ["salary"],
         queryFn: masterDataService.getSalaryRangeList,
-        staleTime: Infinity 
+        staleTime: Infinity
     });
-    const { data: rwList } = useQuery({ 
-        queryKey: ["rw-list"], 
+    const { data: rwList } = useQuery({
+        queryKey: ["rw-list"],
         queryFn: adminDesaService.getAllRW,
-        staleTime: 1000 * 60 * 5 
+        staleTime: 1000 * 60 * 5
     });
-    
+
     const { data: rtList, isLoading: loadingRT } = useQuery({
         queryKey: ["rt-list-form", selectedRW],
         queryFn: () => selectedRW ? adminDesaService.getRT(selectedRW) : null,
@@ -105,15 +105,21 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
                         </Form.Item>
                     </Col>
                     <Col span={12}>
-                        <Form.Item label="Tanggal Lahir" name="birthDate" rules={[{ required: true }]}>
-                            <DatePicker className="w-full" format="YYYY-MM-DD" placeholder="Pilih tanggal" />
+                        <Form.Item label="Nomor Telepon" name="phoneNumber" rules={[{ required: true }]}>
+                            <Input placeholder="089147823524" />
                         </Form.Item>
                     </Col>
+
                 </Row>
 
                 <Row gutter={16}>
                     <Col span={12}>
-                            <Form.Item label="Jenis Kelamin" name="gender" rules={[{ required: true }]}>
+                        <Form.Item label="Tanggal Lahir" name="birthDate" rules={[{ required: true }]}>
+                            <DatePicker className="w-full" format="YYYY-MM-DD" placeholder="Pilih tanggal" />
+                        </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                        <Form.Item label="Jenis Kelamin" name="gender" rules={[{ required: true }]}>
                             <Select options={[{ label: "Laki-laki", value: "m" }, { label: "Perempuan", value: "f" }]} placeholder="Pilih Gender" />
                         </Form.Item>
                     </Col>
@@ -127,7 +133,7 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item label="RW" name="RukunWargaId" rules={[{ required: true }]}>
-                            <Select 
+                            <Select
                                 placeholder="Pilih RW"
                                 onChange={(val) => {
                                     setSelectedRW(val);
@@ -139,7 +145,7 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
                     </Col>
                     <Col span={12}>
                         <Form.Item label="RT" name="RukunTetanggaId" rules={[{ required: true }]}>
-                            <Select 
+                            <Select
                                 placeholder={loadingRT ? "Memuat RT..." : "Pilih RT"}
                                 disabled={!selectedRW}
                                 loading={loadingRT}
@@ -152,7 +158,7 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
                 <Row gutter={16}>
                     <Col span={8}>
                         <Form.Item label="Pendidikan" name="EducationId" rules={[{ required: true }]}>
-                            <Select 
+                            <Select
                                 placeholder="Pilih"
                                 options={educationList?.map((e: any) => ({ label: e.name.toUpperCase(), value: e.id }))}
                             />
@@ -160,7 +166,7 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
                     </Col>
                     <Col span={8}>
                         <Form.Item label="Status Nikah" name="MarriageStatusId" rules={[{ required: true }]}>
-                            <Select 
+                            <Select
                                 placeholder="Pilih"
                                 options={marriageList?.map((m: any) => ({ label: m.name.toUpperCase(), value: m.id }))}
                             />
@@ -168,11 +174,11 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
                     </Col>
                     <Col span={8}>
                         <Form.Item label="Pendapatan" name="SalaryRangeId" rules={[{ required: true }]}>
-                            <Select 
+                            <Select
                                 placeholder="Pilih"
-                                options={salaryList?.map((s: any) => ({ 
-                                    label: `${parseInt(s.minRange).toLocaleString()} - ${parseInt(s.maxRange).toLocaleString()}`, 
-                                    value: s.id 
+                                options={salaryList?.map((s: any) => ({
+                                    label: `${parseInt(s.minRange).toLocaleString()} - ${parseInt(s.maxRange).toLocaleString()}`,
+                                    value: s.id
                                 }))}
                             />
                         </Form.Item>
