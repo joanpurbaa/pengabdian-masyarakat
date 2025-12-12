@@ -1,10 +1,10 @@
-import { Button, Popconfirm, Space } from "antd";
+import { Button, Tooltip } from "antd";
 import { Trash2 } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import type { RukunWarga } from "../../../../../types/adminDesaService";
 
 interface RWColumnProps {
-    onDelete: (id: string) => void;
+    onDelete: (record: RukunWarga) => void;
 }
 
 export const getRWColumns = ({ onDelete }: RWColumnProps): ColumnsType<RukunWarga> => [
@@ -33,16 +33,14 @@ export const getRWColumns = ({ onDelete }: RWColumnProps): ColumnsType<RukunWarg
         align: 'center',
         width: 100,
         render: (_, record) => (
-            <Popconfirm 
-                title="Hapus RW" 
-                description="Yakin ingin menghapus RW ini? Data RT dan Warga di dalamnya akan ikut terhapus."
-                onConfirm={() => onDelete(record.id)}
-                okText="Ya"
-                cancelText="Batal"
-                okButtonProps={{ danger: true }}
-            >
-                <Button danger size="small" icon={<Trash2 size={16} />} />
-            </Popconfirm>
+            <Tooltip title="Hapus RW">
+                <Button
+                    danger
+                    size="small"
+                    icon={<Trash2 size={16} />}
+                    onClick={() => onDelete(record)}
+                />
+            </Tooltip>
         ),
     },
 ];

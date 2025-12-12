@@ -24,6 +24,8 @@ export interface RtResponse {
 export interface RukunWarga {
 	id: string;
 	name: number;
+	rtCount: number;
+	userCount: number;
 	createdAt: string;
 	updatedAt: string;
 	rukunTetangga: RukunTetangga[];
