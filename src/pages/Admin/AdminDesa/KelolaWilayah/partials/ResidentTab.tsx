@@ -103,7 +103,7 @@ export default function ResidentTab() {
     const columns = getResidentColumns({
         pagination,
         onViewDetail: (id) => {
-            navigate(`/admin/master-data/warga/${id}`);
+            navigate(`/admin/kelola-wilayah/preview-warga/residentId=${id}`);
         },
         onEdit: handleEdit,
         onDelete: handleDelete

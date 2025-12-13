@@ -27,6 +27,7 @@ import Profile from "./pages/Profile/Profile";
 import AdminMedisProfile from "./pages/Admin/AdminMedis/ProfileAdmin/ProfileAdmin";
 import AdminDesaProfile from "./pages/Admin/AdminDesa/ProfileAdmin/ProfileAdmin";
 import ResidentLayout from "./layouts/Resident/MainLayout";
+import PreviewResident from "./pages/Admin/AdminDesa/KelolaWilayah/partials/PreviewResident";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -257,6 +258,14 @@ const router = createBrowserRouter([
                 element: (
                   <Suspense fallback={<Loading />}>
                     <KelolaWilayah />
+                  </Suspense>
+                ),
+              },
+              {
+                path: "preview-warga/:residentId",
+                element: (
+                  <Suspense fallback={<Loading />}>
+                    <PreviewResident />
                   </Suspense>
                 ),
               },
