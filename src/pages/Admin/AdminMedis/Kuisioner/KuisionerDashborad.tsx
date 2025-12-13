@@ -24,6 +24,12 @@ import { adminMedisService } from "../../../../service/adminMedisService";
 import QuestionManager from "./Partials/QuestionManager";
 import { useNavigate } from "react-router";
 
+const ONE_HOUR = 60;
+const ONE_DAY = 1440;       // 24 * 60
+const ONE_WEEK = 10080;     // 7 * 1440
+const ONE_MONTH = 43200;    // 30 * 1440  Notes: 30 days
+const ONE_YEAR = 525600;    // 365 * 1440
+
 export default function Kuisioner() {
   const navigate = useNavigate();
 
@@ -54,25 +60,56 @@ export default function Kuisioner() {
     setIsEditMode(false);
     setEditingId(null);
     form.resetFields();
-    form.setFieldsValue({ status: "draft", riskThreshold: 0 });
+    form.setFieldsValue({
+      status: "draft",
+      riskThreshold: 0,
+      tempUnit: 1,
+      tempDuration: 0
+    });
     setIsModalOpen(true);
   };
 
   const handleOpenEdit = (record: Questionnaire) => {
     setIsEditMode(true);
     setEditingId(record.id);
+
+    let unitValue = 1;
+    let displayValue = record.cooldownInMinutes || 0;
+
+    if (displayValue > 0) {
+      if (displayValue % ONE_YEAR === 0) {
+        unitValue = ONE_YEAR;
+        displayValue = displayValue / ONE_YEAR;
+      } else if (displayValue % ONE_MONTH === 0) {
+        unitValue = ONE_MONTH;
+        displayValue = displayValue / ONE_MONTH;
+      } else if (displayValue % ONE_WEEK === 0) {
+        unitValue = ONE_WEEK;
+        displayValue = displayValue / ONE_WEEK;
+      } else if (displayValue % ONE_DAY === 0) {
+        unitValue = ONE_DAY;
+        displayValue = displayValue / ONE_DAY;
+      } else if (displayValue % ONE_HOUR === 0) {
+        unitValue = ONE_HOUR;
+        displayValue = displayValue / ONE_HOUR;
+      }
+    }
+
     form.setFieldsValue({
       title: record.title,
       description: record.description,
       riskThreshold: record.riskThreshold,
-      cooldownInMinutes: record.cooldownInMinutes,
       status: record.status,
+      tempDuration: displayValue,
+      tempUnit: unitValue,
     });
     setIsModalOpen(true);
   };
 
   const handleSave = async (values: any) => {
     setModalLoading(true);
+    const calculatedMinutes = (values.tempDuration || 0) * (values.tempUnit || 1);
+
     try {
       if (isEditMode && editingId) {
         await adminMedisService.updateQuestionnaire(editingId, {
@@ -80,7 +117,7 @@ export default function Kuisioner() {
           description: values.description,
           status: values.status,
           riskThreshold: Number(values.riskThreshold),
-          cooldownInMinutes: Number(values.cooldownInMinutes)
+          cooldownInMinutes: calculatedMinutes,
         });
         message.success("Kuisioner berhasil diperbarui!");
       } else {
@@ -88,7 +125,7 @@ export default function Kuisioner() {
           title: values.title,
           description: values.description,
           riskThreshold: Number(values.riskThreshold),
-          cooldownInMinutes: Number(values.cooldownInMinutes),
+          cooldownInMinutes: calculatedMinutes,
           status: values.status as "draft" | "publish",
         };
         await adminMedisService.createQuestionnaire(payload);
@@ -248,23 +285,50 @@ export default function Kuisioner() {
             <Input.TextArea rows={3} placeholder="Deskripsi singkat..." />
           </Form.Item>
 
-          <Space className="!w-full">
-            <Form.Item label="Risk Threshold" name="riskThreshold">
-              <InputNumber min={0} className="!w-full" />
-            </Form.Item>
-            <Form.Item label="Masa Tenggang (Menit)" name="cooldownInMinutes">
-              <InputNumber min={0} className="!w-full" placeholder="Masukkan Masa Tenggang" />
-            </Form.Item>
-          </Space>
-
           <div className="grid grid-cols-2 gap-4">
-            <Form.Item label="Status" name="status">
-              <Select>
-                <Select.Option value="draft">Draft</Select.Option>
-                <Select.Option value="publish">Publish</Select.Option>
-              </Select>
+            <Form.Item label="Risk Threshold" name="riskThreshold">
+              <InputNumber min={0} className="!w-full" placeholder="0" />
+            </Form.Item>
+
+            <Form.Item label="Masa Tenggang" required className="flex-1">
+              <Space.Compact style={{ width: '100%' }}>
+                <Form.Item
+                  name="tempDuration"
+                  noStyle
+                  rules={[{ required: true, message: "Wajib diisi" }]}
+                >
+                  <InputNumber
+                    min={0}
+                    style={{ width: 'calc(100% - 90px)' }}
+                    placeholder="0"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="tempUnit"
+                  noStyle
+                  initialValue={1}
+                >
+                  <Select style={{ width: 100 }}>
+                    <Select.Option value={1}>Menit</Select.Option>
+                    <Select.Option value={ONE_HOUR}>Jam</Select.Option>
+                    <Select.Option value={ONE_DAY}>Hari</Select.Option>
+                    <Select.Option value={ONE_WEEK}>Minggu</Select.Option>
+                    <Select.Option value={ONE_MONTH}>Bulan</Select.Option>
+                    <Select.Option value={ONE_YEAR}>Tahun</Select.Option>
+                  </Select>
+                </Form.Item>
+
+              </Space.Compact>
             </Form.Item>
           </div>
+
+          <Form.Item label="Status" name="status">
+            <Select>
+              <Select.Option value="draft">Draft</Select.Option>
+              <Select.Option value="publish">Publish</Select.Option>
+            </Select>
+          </Form.Item>
 
           <div className="flex justify-end gap-2 mt-4">
             <Button onClick={() => setIsModalOpen(false)}>Batal</Button>

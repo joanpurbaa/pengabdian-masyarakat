@@ -15,9 +15,21 @@ interface KuisionerColumnProps {
 const formatDuration = (totalMinutes: number) => {
   if (!totalMinutes || totalMinutes <= 0) return "-";
 
-  const days = Math.floor(totalMinutes / (24 * 60));
-  const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
-  const minutes = totalMinutes % 60;
+  const ONE_HOUR = 60;
+  const ONE_DAY = 1440;
+  const ONE_WEEK = 10080;
+  const ONE_MONTH = 43200; // Notes: 30 hari
+  const ONE_YEAR = 525600; // Notes: 365 hari
+
+  if (totalMinutes % ONE_YEAR === 0) return `${totalMinutes / ONE_YEAR} Tahun`;
+  if (totalMinutes % ONE_MONTH === 0) return `${totalMinutes / ONE_MONTH} Bulan`;
+  if (totalMinutes % ONE_WEEK === 0) return `${totalMinutes / ONE_WEEK} Minggu`;
+  if (totalMinutes % ONE_DAY === 0) return `${totalMinutes / ONE_DAY} Hari`;
+  if (totalMinutes % ONE_HOUR === 0) return `${totalMinutes / ONE_HOUR} Jam`;
+
+  const days = Math.floor(totalMinutes / ONE_DAY);
+  const hours = Math.floor((totalMinutes % ONE_DAY) / ONE_HOUR);
+  const minutes = totalMinutes % ONE_HOUR;
 
   const parts = [];
   if (days > 0) parts.push(`${days} Hari`);
