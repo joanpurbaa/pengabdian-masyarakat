@@ -1,150 +1,130 @@
 import { useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { Form, Input, Button, Card, Alert, Typography } from "antd";
+import { Mail, Lock } from "lucide-react"; // Icon modern
 import { useAuth } from "../context/AuthContext";
-import { Loader2 } from "lucide-react";
-import type { LoginData } from "../service/authService";
 import { getErrorMessage } from "../utils/getErrorMessage";
+import { ROLE_ID } from "../constants";
+import type { LoginData } from "../service/authService";
+
+const { Title, Text } = Typography;
 
 export default function Login() {
-	const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate();
+  const { login, isLoading, error } = useAuth();
+  const [formError, setFormError] = useState<string | null>(null);
 
-	const activeTab = searchParams.get('tab') || 'warga'
+  const onFinish = async (values: LoginData) => {
+    setFormError(null);
+    try {
+      const response = await login({
+        email: values.email,
+        password: values.password,
+      });
 
-	const handleTabChange = (tab: string) => {
-		setSearchParams({ tab })
+      const userRoleId = response?.data?.RoleId;
 
-		setFormData(prev => ({...prev, email: "", password: ""}))
-	}
+      if (userRoleId === ROLE_ID.WARGA) {
+        navigate("/");
+      } else if (userRoleId === ROLE_ID.ADMIN_DESA) {
+        navigate("/admin/responden");
+      } else if (userRoleId === ROLE_ID.ADMIN_MEDIS) {
+        navigate("/admin-medis/responden");
+      } else {
+        console.warn("Role ID tidak dikenali:", userRoleId);
+        navigate("/"); // Fallback aman
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setFormError(getErrorMessage(err));
+    }
+  };
 
-	const [formData, setFormData] = useState<LoginData>({
-		email: "",
-		role: "",
-		password: "",
-	});
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <Card 
+        className="w-full max-w-md shadow-lg rounded-2xl border-gray-100 overflow-hidden"
+        bodyStyle={{ padding: "40px 32px" }}
+      >
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+             <img src="/icon.png" alt="Logo" className="w-16 h-16 object-contain" />
+          </div>
+          <Title level={3} className="!text-[#70B748] !mb-2">
+            Selamat Datang
+          </Title>
+          <Text type="secondary">
+            Silakan masuk untuk mengakses layanan desa
+          </Text>
+        </div>
 
-	const { login, isLoading, error } = useAuth();
-	const navigate = useNavigate();
+        {(error || formError) && (
+          <Alert
+            message="Gagal Masuk"
+            description={formError || getErrorMessage(error)}
+            type="error"
+            showIcon
+            className="mb-6 rounded-lg"
+          />
+        )}
 
-	const handleInputChange = (e: { target: { name: string; value: string } }) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-	};
+        <Form
+          name="login_form"
+          layout="vertical"
+          onFinish={onFinish}
+          requiredMark={false}
+          size="large"
+        >
+          <Form.Item
+            name="email"
+            label="Email"
+            rules={[
+              { required: true, message: "Mohon masukkan email Anda" },
+              { type: "email", message: "Format email tidak valid" },
+            ]}
+          >
+            <Input 
+              prefix={<Mail className="text-gray-400" size={18} />} 
+              placeholder="nama@email.com" 
+              className="rounded-lg"
+            />
+          </Form.Item>
 
-	const handleSubmit = async (e?: React.FormEvent) => {
-		if (e) e.preventDefault() // Handle browser refresh
+          <Form.Item
+            name="password"
+            label="Password"
+            rules={[{ required: true, message: "Mohon masukkan password Anda" }]}
+          >
+            <Input.Password 
+              prefix={<Lock className="text-gray-400" size={18} />} 
+              placeholder="Masukkan password" 
+              className="rounded-lg"
+            />
+          </Form.Item>
 
-		try {
-			await login(formData)
+          <Form.Item className="mt-8">
+            <Button
+              type="primary"
+              htmlType="submit"
+              block
+              loading={isLoading}
+              className="!bg-[#70B748] hover:!bg-[#5a9639] h-12 text-base font-semibold rounded-lg shadow-md hover:shadow-lg transition-all"
+            >
+              Masuk Sekarang
+            </Button>
+          </Form.Item>
+        </Form>
 
-			if (activeTab === "warga") {
-				navigate("/");
-			} else if (activeTab === "admin") {
-				navigate("/admin/responden");
-			} else if (activeTab === "medis") {
-				navigate("/admin-medis/responden");
-			}
-		} catch (err) {
-			console.error("Login error:", err);
-		}
-	};
-
-	return (
-		<div className="min-h-screen bg-gray-100 flex items-center justify-center p-2 sm:p-4">
-			<div className="bg-white rounded-lg shadow-lg p-4 sm:p-8 w-full max-w-md">
-				<h1 className="text-lg sm:text-2xl font-bold text-center text-[#70B748] mb-8">
-					Ayo masuk!
-				</h1>
-				<div className="flex mb-6 bg-gray-100 rounded-lg p-1">
-					<button
-						className={`cursor-pointer flex-1 py-2 px-4 rounded-md text-xs sm:text-base font-medium transition-colors ${
-							activeTab === "warga"
-								? "bg-[#70B748] text-white"
-								: "text-gray-600 hover:text-gray-800"
-						}`}
-						onClick={() => handleTabChange("warga")}>
-						Warga
-					</button>
-					<button
-						className={`cursor-pointer flex-1 py-2 px-4 rounded-md text-xs sm:text-base font-medium transition-colors ${
-							activeTab === "admin"
-								? "bg-[#70B748] text-white"
-								: "text-gray-600 hover:text-gray-800"
-						}`}
-						onClick={() => handleTabChange("admin")}>
-						Admin desa
-					</button>
-					<button
-						className={`cursor-pointer flex-1 py-2 px-4 rounded-md text-xs sm:text-base font-medium transition-colors ${
-							activeTab === "medis"
-								? "bg-[#70B748] text-white"
-								: "text-gray-600 hover:text-gray-800"
-						}`}
-						onClick={() => handleTabChange("medis")}>
-						Medis
-					</button>
-				</div>
-				<div className="space-y-4">
-					{error && (
-						<div className="bg-red-50 border border-red-200 rounded-lg p-4">
-							<p className="text-red-700 text-sm">{getErrorMessage(error)}</p>
-						</div>
-					)}
-
-					<div>
-						<label
-							htmlFor="email"
-							className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
-							Email
-						</label>
-						<input
-							type="email"
-							id="email"
-							name="email"
-							value={formData.email}
-							onChange={handleInputChange}
-							placeholder="Masukkan email"
-							className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748] placeholder-gray-400"
-							required
-						/>
-					</div>
-					<div>
-						<label
-							htmlFor="password"
-							className="block text-xs sm:text-base font-medium text-gray-700 mb-1">
-							Password
-						</label>
-						<input
-							type="password"
-							id="password"
-							name="password"
-							value={formData.password}
-							onChange={handleInputChange}
-							placeholder="Masukkan password"
-							className="w-full px-3 py-2 border border-gray-300 text-xs sm:text-base rounded-md focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:border-[#70B748] placeholder-gray-400"
-							required
-						/>
-					</div>
-					<button
-						type="button"
-						onClick={handleSubmit}
-						disabled={isLoading}
-						className="cursor-pointer w-full bg-[#70B748] text-white text-xs sm:text-base py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-[#70B748] focus:ring-offset-2 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center">
-						{isLoading ? <Loader2 className="animate-spin mr-2" size={16} /> : null}
-						{isLoading ? "Memproses..." : "Masuk"}
-					</button>
-				</div>
-				<p className="text-center text-xs sm:text-base text-gray-600 mt-4">
-					Belum punya akun?{" "}
-					<Link
-						to={"/daftar"}
-						className="text-[#70B748] hover:text-green-600 font-medium">
-						daftar
-					</Link>
-				</p>
-			</div>
-		</div>
-	);
+        <div className="text-center mt-4">
+          <Text className="text-gray-500">Belum punya akun? </Text>
+          <Link 
+            to="/daftar" 
+            className="!text-[#70B748] !hover:text-[#5a9639] font-semibold hover:underline"
+          >
+            Daftar disini
+          </Link>
+        </div>
+      </Card>
+    </div>
+  );
 }

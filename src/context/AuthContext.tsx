@@ -11,33 +11,19 @@ interface User {
 	email: string;
 	accessToken: string;
 	role?: string;
+	RoleId: string;
 }
 
 interface AuthContextType {
 	user: User | null;
-	login: (data: LoginData) => Promise<void>;
+	login: (data: LoginData) => Promise<any>;
 	register: (data: RegisterData) => Promise<void>;
 	logout: () => void;
 	isLoading: boolean;
 	error: APIError | null
-	isAdminDesa: boolean;
-	isAdminMedis: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const ADMIN_CREDENTIALS = {
-	desa: {
-		email: "admin.desa@example.com",
-		password: "bluestar648",
-		role: "admin_desa",
-	},
-	medis: {
-		email: "admin.medis@example.com",
-		password: "bluestar648",
-		role: "admin_medis",
-	},
-};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
@@ -62,77 +48,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<APIError | null>(null);
 
-	const isAdminDesa =
-		user?.email === ADMIN_CREDENTIALS.desa.email || user?.role === "admin_desa";
-	const isAdminMedis =
-		user?.email === ADMIN_CREDENTIALS.medis.email || user?.role === "admin_medis";
-
 	useEffect(() => {
-		const token = localStorage.getItem("authToken");
-		const userData = localStorage.getItem("userData");
+        if (user?.accessToken) {
+            axios.defaults.headers.common["Authorization"] = `Bearer ${user.accessToken}`;
+        }
+    }, [user]);
 
-		if (token && userData) {
-			try {
-				const parsedUser: User = JSON.parse(userData);
-				setUser(parsedUser);
-				axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-			} catch (err) {
-				console.error("Error parsing user data:", err);
-				localStorage.removeItem("authToken");
-				localStorage.removeItem("userData");
-			}
-		}
-	}, []);
+	const login = async (loginData: LoginData) => {
+        setIsLoading(true);
+        setError(null);
 
-	const login = async (loginData: LoginData): Promise<void> => {
-		setIsLoading(true);
-		setError(null);
+        try {
+            const response = await authService.login(loginData);
 
-		try {
-			let userWithRole = { ...loginData };
+            // Validasi Response
+            if (response?.statusCode === 200 && response?.data) {
+                const { data } = response;
 
-			if (
-				loginData.email === ADMIN_CREDENTIALS.desa.email &&
-				loginData.password === ADMIN_CREDENTIALS.desa.password
-			) {
-				userWithRole = { ...loginData, role: ADMIN_CREDENTIALS.desa.role };
-			} else if (
-				loginData.email === ADMIN_CREDENTIALS.medis.email &&
-				loginData.password === ADMIN_CREDENTIALS.medis.password
-			) {
-				userWithRole = { ...loginData, role: ADMIN_CREDENTIALS.medis.role };
-			}
+                const userData: User = {
+                    uid: data.uid,
+                    fullname: data.fullname,
+                    email: data.email,
+                    accessToken: data.accessToken,
+                    RoleId: data.RoleId,
+                };
 
-			const response = await authService.login(userWithRole);
+                setUser(userData);
+                localStorage.setItem("authToken", userData.accessToken);
+                localStorage.setItem("userData", JSON.stringify(userData));
 
-			if (response.statusCode === 200 && response.data) {
-				const userData: User = {
-					uid: response.data.uid,
-					fullname: response.data.fullname,
-					email: response.data.email,
-					accessToken: response.data.accessToken,
-					role: userWithRole.role,
-				};
-
-				setUser(userData);
-				localStorage.setItem("authToken", userData.accessToken);
-				localStorage.setItem("userData", JSON.stringify(userData));
-
-				axios.defaults.headers.common[
-					"Authorization"
-				] = `Bearer ${userData.accessToken}`;
-			} else {
-				throw new Error(response.message || "Login failed");
-			}
-		} catch (err: any) {
-			console.log("Catch Error:", err)
-			setError(err as APIError);
-
-			throw err;
-		} finally {
-			setIsLoading(false);
-		}
-	};
+                axios.defaults.headers.common["Authorization"] = `Bearer ${userData.accessToken}`;
+                
+                return response; 
+            } else {
+                throw new Error(response.message || "Login failed");
+            }
+        } catch (err: any) {
+            console.error("Login Error Catch:", err);
+            setError(err as APIError);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
 	const register = async (registerData: RegisterData): Promise<void> => {
 		setIsLoading(true);
@@ -164,6 +122,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		queryClient.removeQueries();
 		localStorage.removeItem("authToken");
 		localStorage.removeItem("userData");
+		delete axios.defaults.headers.common["Authorization"];
 	};
 
 	return (
@@ -175,8 +134,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				logout,
 				isLoading,
 				error,
-				isAdminDesa,
-				isAdminMedis,
 			}}>
 			{children}
 		</AuthContext.Provider>

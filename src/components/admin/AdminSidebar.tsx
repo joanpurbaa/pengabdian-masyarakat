@@ -56,7 +56,7 @@ export default function AdminSideBar({
 				}>
 				<li
 					className={`flex ${responsiveSidebar && "justify-center"} items-center ${
-						currentSection === "kelola-rw" || currentSection === "kuisioner"
+						currentSection === "kelola-wilayah" || currentSection === "kuisioner"
 							? "bg-[#70B748] text-white text-base"
 							: "bg-transparent text-zinc-600 hover:text-[#70B748] text-base font-normal"
 					} gap-[20px] p-[10px] rounded-[8px]`}>

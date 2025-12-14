@@ -7,6 +7,7 @@ import type {
 	QueryParams,
 	Questionnaire,
 	QuestionnaireByIdResponse,
+	RtResponse,
 	RTSummary,
 	RWSummary,
 	SummarizeAllResponse,
@@ -88,7 +89,7 @@ export const adminDesaService = {
 	},
 
 	async getRT(rwId: string) {
-		const response = await api.get(`/v1/rukun-warga/${rwId}`);
+		const response = await api.get<RtResponse>(`/v1/rukun-warga/${rwId}`);
 
 		return response.data;
 	},
