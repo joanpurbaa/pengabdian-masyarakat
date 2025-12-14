@@ -2,7 +2,7 @@ import { api } from "./api";
 
 export interface LoginData {
 	email: string;
-	role?: string
+	RoleId?: string
 	password: string;
 }
 
@@ -29,6 +29,7 @@ export interface AuthResponse {
 		uid: string;
 		fullname: string;
 		email: string;
+		RoleId: string;
 		accessToken: string;
 		role?: string;
 	};
@@ -39,6 +40,7 @@ export interface UserData {
 	fullname: string;
 	email: string;
 	role?: string;
+	RoleId?: string;
 	accessToken: string;
 }
 

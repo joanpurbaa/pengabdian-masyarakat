@@ -92,7 +92,7 @@ export const getResidentColumns = ({
                         onClick: () => {
                             Modal.confirm({
                                 title: 'Hapus Warga?',
-                                content: `Apakah Anda yakin ingin menghapus data ${record.fullname}? Tindakan ini tidak dapat dibatalkan.`,
+                                content: `Apakah Anda yakin ingin menghapus data warga "${record.fullname}"? Tindakan ini tidak dapat dibatalkan.`,
                                 okText: 'Ya, Hapus',
                                 okType: 'danger',
                                 cancelText: 'Batal',

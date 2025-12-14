@@ -19,6 +19,7 @@ export interface RtResponse {
 	message: string;
 	data: RukunWarga;
 	metadata: Metadata;
+	userCount: number
 }
 
 export interface RukunWarga {
@@ -36,6 +37,7 @@ export interface RukunTetangga {
 	id: string;
 	name: number;
 	createdAt: string;
+	userCount: number;
 	updatedAt: string;
 	RukunWargaId: string;
 }

@@ -1,10 +1,10 @@
-import { Button, Popconfirm } from "antd";
+import { Button, Tooltip } from "antd";
 import { Trash2 } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import type { RukunTetangga } from "../../../../../types/adminDesaService";
 
 interface RTColumnProps {
-    onDelete: (id: string) => void;
+    onDelete: (record: RukunTetangga) => void;
 }
 
 export const getRTColumns = ({ onDelete }: RTColumnProps): ColumnsType<RukunTetangga> => [
@@ -19,13 +19,14 @@ export const getRTColumns = ({ onDelete }: RTColumnProps): ColumnsType<RukunTeta
         title: 'Nama RT',
         dataIndex: 'name',
         key: 'name',
-        render: (text) => <span className="font-medium">RT {text}</span>,
+        render: (text) => <span className="font-medium">RT {String(text).padStart(2, '0')}</span>,
     },
     {
         title: 'Total Warga',
         dataIndex: 'userCount',
         key: 'userCount',
         align: 'center',
+        render: (count) => <span className="text-gray-600">{count} Warga</span>
     },
     {
         title: 'Aksi',
@@ -33,16 +34,14 @@ export const getRTColumns = ({ onDelete }: RTColumnProps): ColumnsType<RukunTeta
         align: 'center',
         width: 100,
         render: (_, record) => (
-            <Popconfirm 
-                title="Hapus RT" 
-                description="Yakin ingin menghapus RT ini?"
-                onConfirm={() => onDelete(record.id)}
-                okText="Ya"
-                cancelText="Batal"
-                okButtonProps={{ danger: true }}
-            >
-                <Button danger size="small" icon={<Trash2 size={16} />} />
-            </Popconfirm>
+            <Tooltip title="Hapus RT">
+                <Button 
+                    danger 
+                    size="small" 
+                    icon={<Trash2 size={16} />} 
+                    onClick={() => onDelete(record)} 
+                />
+            </Tooltip>
         ),
     },
 ];

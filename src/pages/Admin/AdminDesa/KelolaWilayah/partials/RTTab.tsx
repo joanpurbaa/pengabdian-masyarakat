@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Table, Button, Modal, Form, InputNumber, Select, message, Card } from "antd";
-import { Plus } from "lucide-react";
+import { Table, Button, Modal, Form, InputNumber, Select, message, Alert } from "antd";
+import { AlertTriangle, Plus } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminDesaService } from "../../../../../service/adminDesaService";
 import { getRTColumns } from "../columns/RTColumn";
@@ -8,7 +8,10 @@ import type { RukunTetangga } from "../../../../../types/adminDesaService";
 
 export default function RTTab() {
     const queryClient = useQueryClient();
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [selectedRT, setSelectedRT] = useState<RukunTetangga | null>(null);
     const [selectedRW, setSelectedRW] = useState<string | null>(null);
     const [form] = Form.useForm();
 
@@ -43,14 +46,27 @@ export default function RTTab() {
         onSuccess: () => {
             message.success({ content: "RT dihapus", key: "deleteRT" });
             queryClient.invalidateQueries({ queryKey: ["list-rt", selectedRW] });
+            setIsDeleteModalOpen(false);
+            setSelectedRT(null);
         },
         onError: () => {
             message.error({ content: "Gagal menghapus RT", key: "deleteRT" });
         }
     });
 
+    const handleDeleteClick = (record: RukunTetangga) => {
+        setSelectedRT(record);
+        setIsDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (selectedRT) {
+            deleteMutation.mutate(selectedRT.id);
+        }
+    };
+
     const columns = getRTColumns({
-        onDelete: (id) => deleteMutation.mutate(id)
+        onDelete: handleDeleteClick
     });
 
     const dataSource = (rtData?.data?.rukunTetangga || []) as unknown as RukunTetangga[];
@@ -113,6 +129,59 @@ export default function RTTab() {
                         <InputNumber min={1} className="!w-full" placeholder="Contoh: 3" />
                     </Form.Item>
                 </Form>
+            </Modal>
+
+            <Modal
+                title={
+                    <div className="flex items-center gap-2 text-red-600">
+                        <AlertTriangle size={20} />
+                        <span>Konfirmasi Hapus Wilayah</span>
+                    </div>
+                }
+                open={isDeleteModalOpen}
+                onCancel={() => setIsDeleteModalOpen(false)}
+                footer={[
+                    <Button key="cancel" onClick={() => setIsDeleteModalOpen(false)}>
+                        Batal
+                    </Button>,
+                    <Button 
+                        key="delete" 
+                        type="primary" 
+                        danger 
+                        loading={deleteMutation.isPending}
+                        onClick={confirmDelete}
+                    >
+                        Ya, Hapus RT
+                    </Button>
+                ]}
+                centered
+            >
+                {selectedRT && (
+                    <div className="flex flex-col gap-4 py-2">
+                        <p className="text-gray-600">
+                            Apakah Anda yakin ingin menghapus 
+                            <span className="font-bold text-gray-800"> RT {selectedRT.name}</span>?
+                        </p>
+
+                        <div className="bg-red-50 border border-red-100 rounded-lg p-4">
+                            <p className="text-red-800 font-medium mb-2 text-sm">
+                                Dampak Penghapusan:
+                            </p>
+                            <ul className="list-disc list-inside text-sm text-red-700 space-y-1">
+                                <li>
+                                    <span className="font-bold">{selectedRT.userCount} Data Warga</span> di dalam RT ini akan hilang permanen.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <Alert
+                            message="Tindakan ini tidak dapat dibatalkan!"
+                            type="warning"
+                            showIcon
+                            className="text-xs"
+                        />
+                    </div>
+                )}
             </Modal>
         </div>
     );
