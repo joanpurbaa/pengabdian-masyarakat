@@ -28,6 +28,10 @@ import AdminMedisProfile from "./pages/Admin/AdminMedis/ProfileAdmin/ProfileAdmi
 import AdminDesaProfile from "./pages/Admin/AdminDesa/ProfileAdmin/ProfileAdmin";
 import ResidentLayout from "./layouts/Resident/MainLayout";
 import PreviewResident from "./pages/Admin/AdminDesa/KelolaWilayah/partials/PreviewResident";
+import { RoleGuard } from "./components/RoleGuard";
+import { ROLE_ID } from "./constants";
+import Unauthorized from "./pages/Fallbacks/Unauthorized";
+import NotFound from "./pages/Fallbacks/NotFound";
 
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
@@ -142,12 +146,32 @@ const router = createBrowserRouter([
     element: <Register />,
   },
   {
+    path: "/unauthorized",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <Unauthorized />
+      </Suspense>
+    ),
+  },
+  {
+    path: "*",
+    element: (
+      <Suspense fallback={<Loading />}>
+        <NotFound />
+      </Suspense>
+    ),
+  },
+  {
     path: "/",
     element: <ProtectedLayout />,
     children: [
       {
         path: "/",
-        element: <ResidentLayout />,
+        element: (
+          <RoleGuard allowedRoleIds={[ROLE_ID.WARGA]}>
+            <ResidentLayout />
+          </RoleGuard>
+        ),
         children: [
           {
             path: "/",
@@ -174,7 +198,11 @@ const router = createBrowserRouter([
       // Admin routes - Home page
       {
         path: "admin",
-        element: <AdminDesaLayout />,
+        element: (
+          <RoleGuard allowedRoleIds={[ROLE_ID.ADMIN_DESA]}>
+            <AdminDesaLayout />
+          </RoleGuard>
+        ),
         children: [
           {
             index: true,
@@ -262,9 +290,9 @@ const router = createBrowserRouter([
       {
         path: "/admin-medis",
         element: (
-          <Suspense fallback={<Loading />}>
+          <RoleGuard allowedRoleIds={[ROLE_ID.ADMIN_MEDIS]}>
             <AdminMediLayout />
-          </Suspense>
+          </RoleGuard>
         ),
         children: [
           {
