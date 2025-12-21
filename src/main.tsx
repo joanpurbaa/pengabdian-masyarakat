@@ -66,10 +66,7 @@ const DesaWargaDashboard = lazy(
     )
 );
 
-const HistorySection = lazy(() => import("./pages/HistorySection"));
 const Result = lazy(() => import("./pages/Result/Result"));
-
-const Admin = lazy(() => import("./pages/Admin"));
 const Quiz = lazy(() => import("./pages/Quiz/Quiz"));
 
 axios.defaults.withCredentials = true;
@@ -172,10 +169,6 @@ const router = createBrowserRouter([
             path: "/result/:id",
             element: <Result />,
           },
-          {
-            path: "/history",
-            element: <HistorySection />,
-          },
         ],
       },
       // Admin routes - Home page
@@ -228,14 +221,6 @@ const router = createBrowserRouter([
                 element: (
                   <Suspense fallback={<Loading />}>
                     <DesaWargaDashboard />
-                  </Suspense>
-                ),
-              },
-              {
-                path: "/admin/responden/:rwId/:rtId/:keluargaId/history",
-                element: (
-                  <Suspense fallback={<Loading />}>
-                    <HistorySection />
                   </Suspense>
                 ),
               },
@@ -335,33 +320,12 @@ const router = createBrowserRouter([
                 element: <MedisResult />,
               },
               {
-                path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history",
-                element: <HistorySection />,
-              },
-              {
                 path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/history/tes",
                 element: <Result />,
-              },
-              {
-                path: "/admin-medis/responden/:rwId/:rtId/:keluargaId/:anggotaName",
-                element: <Admin />,
               },
             ],
           },
           // Kelola RW Routes
-          {
-            path: "kelola-rw",
-            children: [
-              {
-                path: "/admin-medis/kelola-rw/:rwId",
-                element: <Admin />,
-              },
-              {
-                path: "/admin-medis/kelola-rw/:rwId/:rtId",
-                element: <Admin />,
-              },
-            ],
-          },
           {
             path: "/admin-medis/kuisioner",
             element: <KuisionerDashboard />,
