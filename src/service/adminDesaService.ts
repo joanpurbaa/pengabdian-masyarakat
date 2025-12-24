@@ -89,7 +89,7 @@ export const adminDesaService = {
 		return response;
 	},
 
-	async getRT(params: GetParams, rwId: string) {
+	async getRT(params?: GetParams, rwId?: string) {
 		const response = await api.get<RtResponse>(`/v1/rukun-warga/${rwId}`, { params });
 
 		return response.data;
