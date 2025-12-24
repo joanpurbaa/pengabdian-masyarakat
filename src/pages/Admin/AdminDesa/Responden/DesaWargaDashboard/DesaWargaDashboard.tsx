@@ -69,7 +69,7 @@ export default function DesaWargaDashboard() {
     try {
       const qRes = await adminDesaService.getQuestionnaireById(questionnaireId);
 
-      const rtRes = await adminDesaService.getRT(rwId);
+      const rtRes = await adminDesaService.getRT({order: "[['createdAt', 'desc']]"}, rwId);
       let rwName = `RW ${rwId}`;
       let rtName = `RT ${rtId}`;
 

@@ -10,7 +10,7 @@ import {
   Descriptions,
   Result,
 } from "antd";
-import { Mail, Edit, ShieldCheck, ArrowLeft, Heart } from "lucide-react";
+import { Mail, Edit, ShieldCheck, ArrowLeft } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import { adminMedisService } from "../../../../service/adminMedisService";
@@ -75,7 +75,6 @@ export default function AdminProfile() {
 
   const data = response?.data;
   const profilePictureUrl = getImageUrl(data.profilePicture);
-  const role = data?.role?.name
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
